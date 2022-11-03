@@ -14,6 +14,8 @@ public class BlueHome extends LinearOpMode {
     private SampleMecanumDrive drive;
     private Utilities utilities;
 
+    private int initialWaitTime = 0;
+
     private final Pose2d blueHome = new Pose2d(-36, 60, 270);
 
     private TrajectorySequence trajectoryTo12; //check coordinate system in notebook
@@ -32,7 +34,13 @@ public class BlueHome extends LinearOpMode {
         drive.setPoseEstimate(blueHome);
         buildTrajectories();
 
+        waitForStart();
+        if(!opModeIsActive()) {return;}
 
+        utilities.wait(initialWaitTime, telemetry);
+
+        drive.followTrajectorySequence(trajectoryTo12);
+        utilities.liftArm("high");
 
     }
     private void buildTrajectories()
