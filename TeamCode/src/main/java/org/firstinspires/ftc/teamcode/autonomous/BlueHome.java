@@ -14,6 +14,7 @@ public class BlueHome extends LinearOpMode
 {
     private SampleMecanumDrive drive;
     private Utilities utilities;
+    private RobotVision robotVision;
 
     private int initialWaitTime = 0;
 
@@ -34,6 +35,8 @@ public class BlueHome extends LinearOpMode
         hardware.initializeClawServos(hardwareMap);
         hardware.initializeSupplementaryMotors(hardwareMap);
 
+        robotVision = new RobotVision(hardwareMap);
+        int identifier = robotVision.identify();
         utilities = new Utilities(hardware);
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(blueHome);
