@@ -51,48 +51,75 @@ public class Utilities
         }
 
     }
+
+    public void dropCone (double power, int time, Telemetry telemetry)
+    {
+        hardware.liftArm.setPower(power);
+        wait(time, telemetry);
+        hardware.liftArm.setPower(0);
+        hardware.grabServo.setPosition(.66);
+        hardware.grabServo.setPosition(.33);
+        hardware.liftArm.setPower(-power);
+        wait(time, telemetry);
+        hardware.liftArm.setPower(0);
+    }
+
     public void groundJunction (Telemetry telemetry)
     {
-        hardware.liftArm.setPower(.5);
-        wait(1, telemetry);
-        hardware.liftArm.setPower(0);
-        hardware.grabServo.setPosition(.66);
-        hardware.grabServo.setPosition(.33);
-        hardware.liftArm.setPower(-.5);
-        wait(1, telemetry);
-        hardware.liftArm.setPower(0);
+        dropCone(.4,1, telemetry);
     }
+
     public void lowJunction (Telemetry telemetry)
     {
-        hardware.liftArm.setPower(.8);
-        wait(4, telemetry);
-        hardware.liftArm.setPower(0);
-        hardware.grabServo.setPosition(.66);
-        hardware.grabServo.setPosition(.33);
-        hardware.liftArm.setPower(-.8);
-        wait(4, telemetry);
-        hardware.liftArm.setPower(0);
+        dropCone(.8,5, telemetry);
     }
+
     public void midJunction (Telemetry telemetry)
     {
-        hardware.liftArm.setPower(.8);
-        wait(7, telemetry);
-        hardware.liftArm.setPower(0);
-        hardware.grabServo.setPosition(.66);
-        hardware.grabServo.setPosition(.33);
-        hardware.liftArm.setPower(-.8);
-        wait(7, telemetry);
-        hardware.liftArm.setPower(0);
+        dropCone(.8,7, telemetry);
     }
+
     public void highJunction (Telemetry telemetry)
     {
-        hardware.liftArm.setPower(.8);
-        wait(10, telemetry);
-        hardware.liftArm.setPower(0);
-        hardware.grabServo.setPosition(.66);
-        hardware.grabServo.setPosition(.33);
-        hardware.liftArm.setPower(-.8);
-        wait(10, telemetry);
-        hardware.liftArm.setPower(0);
+        dropCone(.8, 10, telemetry);
     }
+
+//        public void dropCone ()
+//    {
+//        hardware.grabServo.setPosition(.66);
+//        hardware.grabServo.setPosition(.33);
+//    }
+//    public void lowJunction (Telemetry telemetry)
+//    {
+//        hardware.liftArm.setPower(.8);
+//        wait(4, telemetry);
+//        hardware.liftArm.setPower(0);
+//        hardware.grabServo.setPosition(.66);
+//        hardware.grabServo.setPosition(.33);
+//        hardware.liftArm.setPower(-.8);
+//        wait(4, telemetry);
+//        hardware.liftArm.setPower(0);
+//    }
+//    public void midJunction (Telemetry telemetry)
+//    {
+//        hardware.liftArm.setPower(.8);
+//        wait(7, telemetry);
+//        hardware.liftArm.setPower(0);
+//        hardware.grabServo.setPosition(.66);
+//        hardware.grabServo.setPosition(.33);
+//        hardware.liftArm.setPower(-.8);
+//        wait(7, telemetry);
+//        hardware.liftArm.setPower(0);
+//    }
+//    public void highJunction (Telemetry telemetry)
+//    {
+//        hardware.liftArm.setPower(.8);
+//        wait(10, telemetry);
+//        hardware.liftArm.setPower(0);
+//        hardware.grabServo.setPosition(.66);
+//        hardware.grabServo.setPosition(.33);
+//        hardware.liftArm.setPower(-.8);
+//        wait(10, telemetry);
+//        hardware.liftArm.setPower(0);
+//    }
 }
