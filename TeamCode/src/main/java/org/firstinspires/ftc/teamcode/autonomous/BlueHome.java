@@ -10,7 +10,8 @@ import org.firstinspires.ftc.teamcode.hardware.RigatoniHardware;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Autonomous(name="BlueHome")
-public class BlueHome extends LinearOpMode {
+public class BlueHome extends LinearOpMode
+{
     private SampleMecanumDrive drive;
     private Utilities utilities;
 
@@ -40,7 +41,7 @@ public class BlueHome extends LinearOpMode {
         utilities.wait(initialWaitTime, telemetry);
 
         drive.followTrajectorySequence(trajectoryTo12);
-        utilities.liftArm("high");
+        utilities.highJunction(telemetry);
 
     }
     private void buildTrajectories()
