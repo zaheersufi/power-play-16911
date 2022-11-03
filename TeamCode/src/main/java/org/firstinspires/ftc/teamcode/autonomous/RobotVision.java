@@ -13,6 +13,7 @@ public class RobotVision
 {
     private OpenCvCamera camera;
     private HardwareMap hardwareMap;
+    private Pipeline pipeline;
     public RobotVision(HardwareMap hardwareMap)
     {
         this.hardwareMap = hardwareMap;
@@ -53,7 +54,7 @@ public class RobotVision
         // NOTE: this must be called *before* you call startStreaming(...)
         camera.setViewportRenderer(OpenCvCamera.ViewportRenderer.GPU_ACCELERATED);
 
-        //camera.setPipeline(yourPipeline);
+        camera.setPipeline(pipeline);
 
         return 0;
     }
