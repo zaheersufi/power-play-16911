@@ -20,7 +20,6 @@ public class BlueHome extends LinearOpMode
 
     private final Pose2d blueHome = new Pose2d(-36, 60, Math.toRadians(270));
 
-
     private TrajectorySequence trajectoryTo12; //check coordinate system in notebook
     private TrajectorySequence trajectoryToParking3;
     private TrajectorySequence trajectoryToParking2;
@@ -50,10 +49,12 @@ public class BlueHome extends LinearOpMode
         drive.followTrajectorySequence(trajectoryTo12);
         utilities.wait(12, telemetry);
         utilities.highJunction(telemetry);
-        //if(identifier)
-        {
-
-        }
+        if(identifier==0)
+            drive.followTrajectorySequence(trajectoryToParking1);
+        else if (identifier == 1)
+            drive.followTrajectorySequence(trajectoryToParking2);
+        else
+            drive.followTrajectorySequence(trajectoryToParking3);
 
     }
     private void buildTrajectories()
