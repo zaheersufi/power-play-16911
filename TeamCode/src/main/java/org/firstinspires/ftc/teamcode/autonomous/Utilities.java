@@ -51,8 +51,48 @@ public class Utilities
         }
 
     }
-    public void groundJunction ()
+    public void groundJunction (Telemetry telemetry)
     {
-
+        hardware.liftArm.setPower(.5);
+        wait(1, telemetry);
+        hardware.liftArm.setPower(0);
+        hardware.grabServo.setPosition(.66);
+        hardware.grabServo.setPosition(.33);
+        hardware.liftArm.setPower(-.5);
+        wait(1, telemetry);
+        hardware.liftArm.setPower(0);
+    }
+    public void lowJunction (Telemetry telemetry)
+    {
+        hardware.liftArm.setPower(.8);
+        wait(4, telemetry);
+        hardware.liftArm.setPower(0);
+        hardware.grabServo.setPosition(.66);
+        hardware.grabServo.setPosition(.33);
+        hardware.liftArm.setPower(-.8);
+        wait(4, telemetry);
+        hardware.liftArm.setPower(0);
+    }
+    public void midJunction (Telemetry telemetry)
+    {
+        hardware.liftArm.setPower(.8);
+        wait(7, telemetry);
+        hardware.liftArm.setPower(0);
+        hardware.grabServo.setPosition(.66);
+        hardware.grabServo.setPosition(.33);
+        hardware.liftArm.setPower(-.8);
+        wait(7, telemetry);
+        hardware.liftArm.setPower(0);
+    }
+    public void highJunction (Telemetry telemetry)
+    {
+        hardware.liftArm.setPower(.8);
+        wait(10, telemetry);
+        hardware.liftArm.setPower(0);
+        hardware.grabServo.setPosition(.66);
+        hardware.grabServo.setPosition(.33);
+        hardware.liftArm.setPower(-.8);
+        wait(10, telemetry);
+        hardware.liftArm.setPower(0);
     }
 }
