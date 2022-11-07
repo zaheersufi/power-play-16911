@@ -81,7 +81,7 @@ public class RigatoniHardware
         grabServo.setDirection(Servo.Direction.FORWARD);
         grabServo.setPosition(0.33);
         rotServo.setDirection(Servo.Direction.FORWARD);
-        rotServo.setPosition(0.5);
+        rotServo.setPosition(.5);
     }
     public void initializeVerticalClaw(HardwareMap hardwareMap)
     {

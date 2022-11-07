@@ -28,12 +28,14 @@ public class RigatoniHorizontalClaw extends OpMode
     }
 
     @Override
-    public void loop() {
+    public void loop()
+    {
         drive();
         moveArm();
         rotateClaw();
     }
-    public void drive() {
+    public void drive()
+    {
         // Mecanum drivecode
         double y = -gamepad1.left_stick_y; // Remember, this is reversed!
         double x = gamepad1.left_stick_x; // Counteract imperfect strafing
@@ -119,8 +121,8 @@ public class RigatoniHorizontalClaw extends OpMode
         if(gamepad2.square)
             hardware.grabServo.setPosition(.330); //.370
         if(gamepad2.left_bumper)
-            hardware.rotServo.setPosition(.5);
+            hardware.rotServo.setPosition(0);
         if(gamepad2.right_bumper)
-            hardware.rotServo.setPosition(1);
+            hardware.rotServo.setPosition(.5);
     }
 }
