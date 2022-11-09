@@ -122,7 +122,7 @@ public class RigatoniVerticalClaw extends OpMode
         if (gamepad2.triangle)
             hardware.grabServo.setPosition(.70);
         if (gamepad2.cross)
-            hardware.grabServo.setPosition(.10);
+            hardware.grabServo.setPosition(.07);
         if(gamepad2.left_bumper)
             hardware.rotServo.setPosition(.5);
         if(gamepad2.right_bumper)
