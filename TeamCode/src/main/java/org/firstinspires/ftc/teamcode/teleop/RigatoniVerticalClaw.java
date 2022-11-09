@@ -20,6 +20,7 @@ public class RigatoniVerticalClaw extends OpMode
     @Override
     public void init()
     {
+        hardware = new RigatoniHardware();
         Assert.assertNotNull(hardwareMap);
         hardware.initializePrimaryMotors(hardwareMap);
         hardware.initializeClawServos(hardwareMap);
@@ -96,7 +97,7 @@ public class RigatoniVerticalClaw extends OpMode
     public void moveArm()
     {
         //triggers = linear pulley
-        hardware.liftArm.setPower((gamepad2.right_trigger - gamepad2.left_trigger)*.5);
+        hardware.liftArm.setPower((gamepad2.right_trigger - gamepad2.left_trigger)*.8);
     }
     public void rotateClaw()
     {
@@ -122,9 +123,9 @@ public class RigatoniVerticalClaw extends OpMode
             hardware.grabServo.setPosition(.70);
         if (gamepad2.cross)
             hardware.grabServo.setPosition(.10);
-        if(gamepad2.right_bumper)
-            hardware.rotServo.setPosition(1);
         if(gamepad2.left_bumper)
             hardware.rotServo.setPosition(.5);
+        if(gamepad2.right_bumper)
+            hardware.rotServo.setPosition(1);
     }
 }
