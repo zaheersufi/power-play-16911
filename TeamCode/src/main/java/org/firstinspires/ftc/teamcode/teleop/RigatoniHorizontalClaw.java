@@ -21,6 +21,7 @@ public class RigatoniHorizontalClaw extends OpMode
     @Override
     public void init()
     {
+        buttonTime = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         hardware = new RigatoniHardware();
         Assert.assertNotNull(hardwareMap);
         hardware.initializePrimaryMotors(hardwareMap);
@@ -118,7 +119,7 @@ public class RigatoniHorizontalClaw extends OpMode
     public void moveArm()
     {
         //triggers = linear pulley
-        hardware.liftArm.setPower((gamepad2.right_trigger - gamepad2.left_trigger)*.5);
+        hardware.liftArm.setPower((gamepad2.right_trigger - gamepad2.left_trigger)*1);
     }
     public void rotateClaw()
     {
