@@ -15,6 +15,7 @@ public class BlueHome extends LinearOpMode
     private SampleMecanumDrive drive;
     private Utilities utilities;
     private RobotVision robotVision;
+    RigatoniHardware hardware;
 
     private int initialWaitTime = 0;
 
@@ -28,14 +29,15 @@ public class BlueHome extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        RigatoniHardware hardware = new RigatoniHardware(); //Horizontal Claw
+        hardware = new RigatoniHardware(); //Horizontal Claw
         Assert.assertNotNull(hardwareMap);
         hardware.initializePrimaryMotors(hardwareMap);
         hardware.initializeClawServos(hardwareMap);
         hardware.initializeSupplementaryMotors(hardwareMap);
 
-        robotVision = new RobotVision(hardwareMap);
-        int identifier = robotVision.identify();
+        //robotVision = new RobotVision(hardwareMap);
+        //int identifier = robotVision.identify();
+        int identifier = 0;
         utilities = new Utilities(hardware);
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(blueHome);

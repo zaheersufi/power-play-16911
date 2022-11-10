@@ -14,6 +14,7 @@ public class RigatoniVerticalClaw extends OpMode
     RigatoniHardware hardware;
     final double FAST_SPEED = .8;
     final double SLOW_SPEED = .5;
+    final double SUPER_SLOW_SPEED = .3;
     double slowConstant = FAST_SPEED;
 
     ElapsedTime buttonTime = null;
@@ -84,6 +85,26 @@ public class RigatoniVerticalClaw extends OpMode
             buttonTime.reset();
         }
         else if (gamepad1.square && slowConstant == SLOW_SPEED && buttonTime.time() >= 500)
+        {
+            slowConstant = FAST_SPEED;
+            buttonTime.reset();
+        }
+        else if(gamepad1.square && slowConstant == SUPER_SLOW_SPEED && buttonTime.time() >= 500)
+        {
+            slowConstant = SUPER_SLOW_SPEED;
+            buttonTime.reset();
+        }
+        if (gamepad1.circle && slowConstant == FAST_SPEED && buttonTime.time() >= 500)
+        {
+            slowConstant = SUPER_SLOW_SPEED;
+            buttonTime.reset();
+        }
+        else if (gamepad1.circle && slowConstant == SLOW_SPEED && buttonTime.time() >= 500)
+        {
+            slowConstant = FAST_SPEED;
+            buttonTime.reset();
+        }
+        else if(gamepad1.circle && slowConstant == SUPER_SLOW_SPEED && buttonTime.time() >= 500)
         {
             slowConstant = FAST_SPEED;
             buttonTime.reset();
