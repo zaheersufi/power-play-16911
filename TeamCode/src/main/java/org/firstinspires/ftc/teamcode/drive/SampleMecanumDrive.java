@@ -18,6 +18,8 @@ import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationCon
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.BHI260IMU;
+import com.qualcomm.hardware.bosch.BNO055IMUImpl;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -91,6 +93,15 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
 
         // TODO: adjust the names of the following hardware devices to match your configuration
+        //imu = hardwareMap.get(BNO055IMUImpl.class, "imu");
+
+//        BNO055IMU.Parameters paramters = new BNO055IMU.Parameters();
+//        paramters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+//        imu.initialize(paramters);
+//        BHI260IMU.InterimParameterClassDoNotUse paramters = new BHI260IMU.InterimParameterClassDoNotUse();
+//        paramters.
+//        imu.initialize(paramters);
+
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
