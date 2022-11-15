@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.autonomous;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.robotcore.internal.system.Assert;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -35,6 +37,7 @@ public class BlueHome extends LinearOpMode
         hardware.initializeClawServos(hardwareMap);
         hardware.initializeSupplementaryMotors(hardwareMap);
 
+        turnOnEncoders(hardware);
         //robotVision = new RobotVision(hardwareMap);
         //int identifier = robotVision.identify();
         int identifier = 0;
@@ -46,10 +49,11 @@ public class BlueHome extends LinearOpMode
         waitForStart();
         if(!opModeIsActive()) {return;}
 
+        utilities.openClaw(false);
         utilities.wait(initialWaitTime, telemetry);
 
         drive.followTrajectorySequence(trajectoryTo12);
-        utilities.wait(12, telemetry);
+        // utilities.wait(1200, telemetry);
         utilities.highJunction(telemetry);
         if(identifier==0)
             drive.followTrajectorySequence(trajectoryToParking1);
@@ -58,6 +62,14 @@ public class BlueHome extends LinearOpMode
         else
             drive.followTrajectorySequence(trajectoryToParking3);
 
+    }
+    private void turnOnEncoders(RigatoniHardware hardware)
+    {
+        for(DcMotorEx motor : hardware.motors)
+        {
+            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+        hardware.liftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
     private void buildTrajectories()
     {
