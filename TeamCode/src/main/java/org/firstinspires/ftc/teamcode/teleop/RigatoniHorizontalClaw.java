@@ -124,20 +124,6 @@ public class RigatoniHorizontalClaw extends OpMode
     }
     public void rotateClaw()
     {
-        //hardware.grabServo.setPower(gamepad2.left_stick_x * .2);
-//        if(gamepad2.circle)
-//            hardware.grabServo.setPosition(.87);
-//        if(gamepad2.square)
-//            hardware.grabServo.setPosition(.330); //.370
-//        double positionRotateServo = hardware.rotServo.getPosition();
-//        if(gamepad2.right_bumper && positionRotateServo != 0) //could be 0, .5, or 1 depending on orientation
-//        {
-//            hardware.rotServo.setPosition(1);
-//        }
-//        if(gamepad2.left_bumper && positionRotateServo != .5) //could be 0, .5, 1 depending on orientation
-//        {
-//            hardware.rotServo.setPosition(.5);
-//        }
         if(gamepad2.square)
             hardware.grabServo.setPosition(1);
         if(gamepad2.circle)

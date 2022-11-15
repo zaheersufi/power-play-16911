@@ -14,10 +14,12 @@ public class Utilities
     {
         this.hardware = hardware;
     }
-    public void openClaw()
+    public void openClaw(boolean shouldOpen)
     {
-        hardware.grabServo.setPosition(0.2);
-        hardware.grabServo.setPosition(0.0);
+        if(!shouldOpen)
+            hardware.grabServo.setPosition(1.0);
+        else
+            hardware.grabServo.setPosition(0.0);
     }
     public void wait(int waitTime, Telemetry telemetry)
     {
@@ -33,7 +35,7 @@ public class Utilities
     }
     public void rotateClaw(int position)
     {
-        hardware.rotServo.setPosition (position);
+        hardware.rotServo.setPosition(position);
     }
     public void liftArm(String pos)
     {
@@ -57,8 +59,7 @@ public class Utilities
         hardware.liftArm.setPower(power);
         wait(time, telemetry);
         hardware.liftArm.setPower(0);
-        hardware.grabServo.setPosition(.66);
-        hardware.grabServo.setPosition(.33);
+        openClaw(true);
         hardware.liftArm.setPower(-power);
         wait(time, telemetry);
         hardware.liftArm.setPower(0);
@@ -66,22 +67,22 @@ public class Utilities
 
     public void groundJunction (Telemetry telemetry)
     {
-        dropCone(.4,1, telemetry);
+        dropCone(.4,100, telemetry);
     }
 
     public void lowJunction (Telemetry telemetry)
     {
-        dropCone(.8,5, telemetry);
+        dropCone(.8,400, telemetry);
     }
 
     public void midJunction (Telemetry telemetry)
     {
-        dropCone(.8,7, telemetry);
+        dropCone(.8,550, telemetry);
     }
 
     public void highJunction (Telemetry telemetry)
     {
-        dropCone(.8, 10, telemetry);
+        dropCone(.8, 750, telemetry);
     }
 
 //        public void dropCone ()
