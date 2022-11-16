@@ -64,20 +64,20 @@ public class Left extends LinearOpMode
         trajectoryTo12 = drive.trajectorySequenceBuilder(blueHome)
                 .turn(Math.toRadians(-90))
                 .forward(24)
-                .strafeRight(34)
+                .strafeLeft(34)
                 .build();
         trajectoryToParking3 = drive.trajectorySequenceBuilder(blueHome)
-                .strafeRight(14)
+                .strafeLeft(14)
                 .turn(Math.toRadians(180))
                 .forward(47)
                 .build();
         trajectoryToParking2 = drive.trajectorySequenceBuilder(blueHome)
-                .strafeRight(14)
+                .strafeLeft(14)
                 .turn(Math.toRadians(180))
                 .forward(24)
                 .build();
         trajectoryToParking1 = drive.trajectorySequenceBuilder(blueHome)
-                .strafeRight(14)
+                .strafeLeft(14)
                 .turn(Math.toRadians(180))
                 .build();
     }
