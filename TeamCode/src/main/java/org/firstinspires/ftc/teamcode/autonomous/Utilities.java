@@ -43,6 +43,7 @@ public class Utilities
         hardware.liftArm.setPower(power);
         wait(time, telemetry);
         hardware.liftArm.setPower(0);
+        wait(1000, telemetry);
         openClaw(true);
         hardware.liftArm.setPower(-power);
         wait(time, telemetry);
@@ -66,7 +67,7 @@ public class Utilities
 
     public void highJunction (Telemetry telemetry)
     {
-        dropCone(.8, 12000, telemetry);
+        dropCone(.8, 5200, telemetry);
     }
 
 //        public void dropCone ()

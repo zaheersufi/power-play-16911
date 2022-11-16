@@ -79,7 +79,7 @@ public class RigatoniHardware
 //        rotServo = hardwareMap.get(Servo.class, RigatoniIds.ROT_SERVO);
 
         grabServo.setDirection(Servo.Direction.FORWARD);
-        grabServo.setPosition(0.33);
+        grabServo.setPosition(1);
 //        rotServo.setDirection(Servo.Direction.FORWARD);
 //        rotServo.setPosition(.5);
     }
