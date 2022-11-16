@@ -71,7 +71,6 @@ public class BlueHome extends LinearOpMode
         hardware.rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         hardware.liftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
-    //ssss
     private void buildTrajectories()
     {
         trajectoryTo12 = drive.trajectorySequenceBuilder(blueHome)
