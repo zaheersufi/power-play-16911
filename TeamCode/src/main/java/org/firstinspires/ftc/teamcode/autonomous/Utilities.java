@@ -37,22 +37,6 @@ public class Utilities
     {
         hardware.rotServo.setPosition(position);
     }
-    public void liftArm(String pos)
-    {
-        switch(pos)
-        {
-            case "floor":
-                //hardwareMap.liftArm.
-                break;
-            case "low":
-                break;
-            case "medium":
-                break;
-            case "high":
-
-        }
-
-    }
 
     public void dropCone (double power, int time, Telemetry telemetry)
     {
