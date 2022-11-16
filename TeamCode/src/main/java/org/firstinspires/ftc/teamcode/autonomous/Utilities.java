@@ -13,7 +13,6 @@ public class Utilities
 {
 
     private RigatoniHardware hardware;
-    private TrajectorySequence goForward;
     SampleMecanumDrive drive;
     Utilities(RigatoniHardware hardware)
     {
@@ -45,12 +44,13 @@ public class Utilities
 
     public void dropCone (double power, int time, Telemetry telemetry, SampleMecanumDrive drive)
     {
+        BlueHome home = new BlueHome();
         hardware.liftArm.setPower(power);
         wait(time, telemetry);
         hardware.liftArm.setPower(0);
         wait(1000, telemetry);
         this.drive = drive;
-        drive.followTrajectorySequence(goForward);
+        home.moveForward();
         openClaw(true);
         hardware.liftArm.setPower(-power);
         wait(time, telemetry);
@@ -76,12 +76,7 @@ public class Utilities
     {
         dropCone(.8, 5200, telemetry, drive);
     }
-    public void buildTrajectory()
-    {
-        goForward = drive.trajectorySequenceBuilder(new Pose2d())
-                .forward(1)
-                .build();
-    }
+
 //        public void dropCone ()
 //    {
 //        hardware.grabServo.setPosition(.66);

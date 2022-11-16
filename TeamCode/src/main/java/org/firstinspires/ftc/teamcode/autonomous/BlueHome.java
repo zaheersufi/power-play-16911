@@ -4,8 +4,9 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.internal.system.Assert;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.RigatoniHardware;
@@ -17,11 +18,13 @@ public class BlueHome extends LinearOpMode
     private SampleMecanumDrive drive;
     private Utilities utilities;
     private RobotVision robotVision;
+    private TrajectorySequence goForward;
     RigatoniHardware hardware;
 
     private int initialWaitTime = 0;
 
     private final Pose2d blueHome = new Pose2d(-36, 60, Math.toRadians(270));
+    private final Pose2d beforeJunction = new Pose2d(-15, 24, Math.toRadians(0));
 
     private TrajectorySequence trajectoryTo12; //check coordinate system in notebook
     private TrajectorySequence trajectoryToParking3;
@@ -53,7 +56,7 @@ public class BlueHome extends LinearOpMode
         utilities.wait(initialWaitTime, telemetry);
 
         drive.followTrajectorySequence(trajectoryTo12);
-        utilities.highJunction(telemetry, drive);
+        highJunction(telemetry, drive);
         if(identifier==0)
             drive.followTrajectorySequence(trajectoryToParking1);
         else if (identifier == 1)
@@ -61,6 +64,47 @@ public class BlueHome extends LinearOpMode
         else
             drive.followTrajectorySequence(trajectoryToParking3);
 
+    }
+    public void moveForward()
+    {
+        drive.followTrajectorySequence(goForward);
+    }
+    public void wait(int waitTime, Telemetry telemetry)
+    {
+        ElapsedTime time = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+        time.reset();
+        while (time.time() < waitTime)
+        {
+            telemetry.addData("Status", "Waiting");
+            telemetry.addData("Wait Time", waitTime / 1000);
+            telemetry.addData("Time Left", (waitTime - time.time()) / 1000);
+            telemetry.update();
+        }
+    }
+    public void dropCone (double power, int time, Telemetry telemetry, SampleMecanumDrive drive)
+    {
+        hardware.liftArm.setPower(power);
+        wait(time, telemetry);
+        hardware.liftArm.setPower(0);
+        wait(1000, telemetry);
+        moveForward();
+        openClaw(true);
+        openClaw(true);
+        openClaw(false);
+        hardware.liftArm.setPower(-power);
+        wait(time, telemetry);
+        hardware.liftArm.setPower(0);
+    }
+    public void openClaw(boolean shouldOpen)
+    {
+        if(!shouldOpen)
+            hardware.grabServo.setPosition(1.0);
+        else
+            hardware.grabServo.setPosition(0.0);
+    }
+    public void highJunction (Telemetry telemetry, SampleMecanumDrive drive)
+    {
+        dropCone(.8, 5700, telemetry, drive);
     }
     private void turnOnEncoders(RigatoniHardware hardware)
     {
@@ -76,22 +120,25 @@ public class BlueHome extends LinearOpMode
                 .forward(6)
                 .turn(Math.toRadians(90))
                 .forward(21)
-                .strafeRight(34)
+                .strafeRight(35)
                 .build();
-        trajectoryToParking3 = drive.trajectorySequenceBuilder(blueHome)
+        trajectoryToParking3 = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .strafeRight(14)
                 .turn(Math.toRadians(180))
                 .forward(47)
                 .build();
-        trajectoryToParking2 = drive.trajectorySequenceBuilder(blueHome)
+        trajectoryToParking2 = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .strafeRight(14)
                 .turn(Math.toRadians(180))
                 .forward(24)
                 .build();
-        trajectoryToParking1 = drive.trajectorySequenceBuilder(blueHome)
+        trajectoryToParking1 = drive.trajectorySequenceBuilder(beforeJunction)
                 .strafeRight(14)
                 .turn(Math.toRadians(180))
+                .back(4)
                 .build();
-
+        goForward = drive.trajectorySequenceBuilder(beforeJunction)
+                .forward(3)
+                .build();
     }
 }
