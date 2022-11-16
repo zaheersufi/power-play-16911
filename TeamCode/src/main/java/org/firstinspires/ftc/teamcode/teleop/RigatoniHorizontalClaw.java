@@ -35,7 +35,6 @@ public class RigatoniHorizontalClaw extends OpMode
         drive();
         moveArm();
         rotateClaw();
-        telemetry.update();
     }
     public void drive()
     {
@@ -124,9 +123,9 @@ public class RigatoniHorizontalClaw extends OpMode
     }
     public void rotateClaw()
     {
-        if(gamepad2.square)
+        if(gamepad2.left_bumper)
             hardware.grabServo.setPosition(1);
-        if(gamepad2.circle)
+        if(gamepad2.right_bumper)
             hardware.grabServo.setPosition(0);
     }
 }

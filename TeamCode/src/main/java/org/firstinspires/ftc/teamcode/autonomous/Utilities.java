@@ -44,13 +44,10 @@ public class Utilities
 
     public void dropCone (double power, int time, Telemetry telemetry, SampleMecanumDrive drive)
     {
-        BlueHome home = new BlueHome();
         hardware.liftArm.setPower(power);
         wait(time, telemetry);
         hardware.liftArm.setPower(0);
         wait(1000, telemetry);
-        this.drive = drive;
-        home.moveForward();
         openClaw(true);
         hardware.liftArm.setPower(-power);
         wait(time, telemetry);

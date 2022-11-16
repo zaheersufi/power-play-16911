@@ -89,8 +89,6 @@ public class BlueHome extends LinearOpMode
         wait(1000, telemetry);
         moveForward();
         openClaw(true);
-        openClaw(true);
-        openClaw(false);
         hardware.liftArm.setPower(-power);
         wait(time, telemetry);
         hardware.liftArm.setPower(0);
@@ -104,7 +102,7 @@ public class BlueHome extends LinearOpMode
     }
     public void highJunction (Telemetry telemetry, SampleMecanumDrive drive)
     {
-        dropCone(.8, 5700, telemetry, drive);
+        dropCone(.8, 5300, telemetry, drive);
     }
     private void turnOnEncoders(RigatoniHardware hardware)
     {
@@ -120,7 +118,7 @@ public class BlueHome extends LinearOpMode
                 .forward(6)
                 .turn(Math.toRadians(90))
                 .forward(21)
-                .strafeRight(35)
+                .strafeRight(36.8)
                 .build();
         trajectoryToParking3 = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .strafeRight(14)
@@ -138,7 +136,7 @@ public class BlueHome extends LinearOpMode
                 .back(4)
                 .build();
         goForward = drive.trajectorySequenceBuilder(beforeJunction)
-                .forward(3)
+                .forward(4.5)
                 .build();
     }
 }
