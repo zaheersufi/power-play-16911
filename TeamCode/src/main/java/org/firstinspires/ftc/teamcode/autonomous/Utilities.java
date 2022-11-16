@@ -66,7 +66,7 @@ public class Utilities
 
     public void highJunction (Telemetry telemetry)
     {
-        dropCone(.8, 750, telemetry);
+        dropCone(.8, 12000, telemetry);
     }
 
 //        public void dropCone ()
