@@ -74,7 +74,7 @@ public class BlueHome extends LinearOpMode
     {
         trajectoryTo12 = drive.trajectorySequenceBuilder(blueHome)
                 .turn(Math.toRadians(90))
-                .forward(24)
+                .forward(30)
                 .strafeRight(34)
                 .build();
         trajectoryToParking3 = drive.trajectorySequenceBuilder(blueHome)
