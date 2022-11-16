@@ -53,7 +53,7 @@ public class BlueHome extends LinearOpMode
         utilities.wait(initialWaitTime, telemetry);
 
         drive.followTrajectorySequence(trajectoryTo12);
-        utilities.highJunction(telemetry);
+        utilities.highJunction(telemetry, drive);
         if(identifier==0)
             drive.followTrajectorySequence(trajectoryToParking1);
         else if (identifier == 1)
@@ -75,7 +75,7 @@ public class BlueHome extends LinearOpMode
         trajectoryTo12 = drive.trajectorySequenceBuilder(blueHome)
                 .forward(6)
                 .turn(Math.toRadians(90))
-                .forward(23)
+                .forward(21)
                 .strafeRight(34)
                 .build();
         trajectoryToParking3 = drive.trajectorySequenceBuilder(blueHome)

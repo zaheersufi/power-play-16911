@@ -1,15 +1,20 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.RigatoniHardware;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 //Horizontal Claw Utilities
 public class Utilities
 {
 
     private RigatoniHardware hardware;
+    private TrajectorySequence goForward;
+    SampleMecanumDrive drive;
     Utilities(RigatoniHardware hardware)
     {
         this.hardware = hardware;
@@ -38,38 +43,45 @@ public class Utilities
 //        hardware.rotServo.setPosition(position);
     }
 
-    public void dropCone (double power, int time, Telemetry telemetry)
+    public void dropCone (double power, int time, Telemetry telemetry, SampleMecanumDrive drive)
     {
         hardware.liftArm.setPower(power);
         wait(time, telemetry);
         hardware.liftArm.setPower(0);
         wait(1000, telemetry);
+        this.drive = drive;
+        drive.followTrajectorySequence(goForward);
         openClaw(true);
         hardware.liftArm.setPower(-power);
         wait(time, telemetry);
         hardware.liftArm.setPower(0);
     }
 
-    public void groundJunction (Telemetry telemetry)
-    {
-        dropCone(.4,100, telemetry);
-    }
+//    public void groundJunction (Telemetry telemetry)
+//    {
+//        dropCone(.4,100, telemetry);
+//    }
+//
+//    public void lowJunction (Telemetry telemetry)
+//    {
+//        dropCone(.8,400, telemetry);
+//    }
+//
+//    public void midJunction (Telemetry telemetry)
+//    {
+//        dropCone(.8,550, telemetry);
+//    }
 
-    public void lowJunction (Telemetry telemetry)
+    public void highJunction (Telemetry telemetry, SampleMecanumDrive drive)
     {
-        dropCone(.8,400, telemetry);
+        dropCone(.8, 5200, telemetry, drive);
     }
-
-    public void midJunction (Telemetry telemetry)
+    public void buildTrajectory()
     {
-        dropCone(.8,550, telemetry);
+        goForward = drive.trajectorySequenceBuilder(new Pose2d())
+                .forward(1)
+                .build();
     }
-
-    public void highJunction (Telemetry telemetry)
-    {
-        dropCone(.8, 5200, telemetry);
-    }
-
 //        public void dropCone ()
 //    {
 //        hardware.grabServo.setPosition(.66);

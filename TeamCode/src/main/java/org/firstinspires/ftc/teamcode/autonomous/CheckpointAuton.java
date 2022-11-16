@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.RigatoniHardware;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
+@Autonomous(name="Checkpoint Autonomous")
 public class CheckpointAuton extends LinearOpMode
 {
     private SampleMecanumDrive drive;
@@ -53,14 +54,7 @@ public class CheckpointAuton extends LinearOpMode
         utilities.openClaw(false);
         utilities.wait(initialWaitTime, telemetry);
 
-        drive.followTrajectorySequence(trajectoryTo12);
-        utilities.highJunction(telemetry);
-        if(identifier==0)
-            drive.followTrajectorySequence(trajectoryToParking1);
-        else if (identifier == 1)
-            drive.followTrajectorySequence(trajectoryToParking2);
-        else
-            drive.followTrajectorySequence(trajectoryToParking3);
+        drive.followTrajectorySequence(trajectorySlamCone);
 
     }
     private void turnOnEncoders(RigatoniHardware hardware)

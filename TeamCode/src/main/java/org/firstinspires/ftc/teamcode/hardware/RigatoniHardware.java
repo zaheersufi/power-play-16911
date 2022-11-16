@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.internal.system.Assert;
 import org.firstinspires.ftc.teamcode.hardware.RigatoniIds;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 
 //HARDWARE FOR HORIZONTAL CLAW
