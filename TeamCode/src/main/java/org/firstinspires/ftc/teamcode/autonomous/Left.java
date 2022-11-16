@@ -49,7 +49,6 @@ public class Left extends LinearOpMode
         utilities.wait(initialWaitTime, telemetry);
 
         drive.followTrajectorySequence(trajectoryTo12);
-        utilities.wait(12, telemetry);
         utilities.highJunction(telemetry);
         if(identifier==0)
             drive.followTrajectorySequence(trajectoryToParking1);
