@@ -65,10 +65,10 @@ public class BlueHome extends LinearOpMode
     }
     private void turnOnEncoders(RigatoniHardware hardware)
     {
-        for(DcMotorEx motor : hardware.motors)
-        {
-            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
+        hardware.leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hardware.leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hardware.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hardware.rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         hardware.liftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
     private void buildTrajectories()

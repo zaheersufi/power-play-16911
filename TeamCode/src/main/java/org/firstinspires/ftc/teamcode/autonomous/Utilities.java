@@ -35,7 +35,7 @@ public class Utilities
     }
     public void rotateClaw(int position)
     {
-        hardware.rotServo.setPosition(position);
+//        hardware.rotServo.setPosition(position);
     }
 
     public void dropCone (double power, int time, Telemetry telemetry)

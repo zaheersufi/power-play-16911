@@ -26,7 +26,7 @@ public class RigatoniHardware
 
     // CLaw Servos
     public Servo grabServo = null;
-    public Servo rotServo = null;
+//    public Servo rotServo = null;
 
 
     //    public void init(HardwareMap hardwareMap)
@@ -76,22 +76,22 @@ public class RigatoniHardware
     {
         // Claw Servos
         grabServo = hardwareMap.get(Servo.class, RigatoniIds.GRAB_SERVO);
-        rotServo = hardwareMap.get(Servo.class, RigatoniIds.ROT_SERVO);
+//        rotServo = hardwareMap.get(Servo.class, RigatoniIds.ROT_SERVO);
 
         grabServo.setDirection(Servo.Direction.FORWARD);
         grabServo.setPosition(0.33);
-        rotServo.setDirection(Servo.Direction.FORWARD);
-        rotServo.setPosition(.5);
+//        rotServo.setDirection(Servo.Direction.FORWARD);
+//        rotServo.setPosition(.5);
     }
     public void initializeVerticalClaw(HardwareMap hardwareMap)
     {
         grabServo = hardwareMap.get(Servo.class, RigatoniIds.GRAB_SERVO);
-        rotServo = hardwareMap.get(Servo.class, RigatoniIds.ROT_SERVO);
+//        rotServo = hardwareMap.get(Servo.class, RigatoniIds.ROT_SERVO);
 
         grabServo.setDirection(Servo.Direction.FORWARD);
         grabServo.setPosition(.1);
-        rotServo.setDirection(Servo.Direction.FORWARD);
-        rotServo.setPosition(.5);
+//        rotServo.setDirection(Servo.Direction.FORWARD);
+//        rotServo.setPosition(.5);
     }
     public void initializeSupplementaryMotors(HardwareMap hardwareMap)
     {
