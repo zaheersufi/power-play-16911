@@ -128,9 +128,5 @@ public class RigatoniHorizontalClaw extends OpMode
             hardware.grabServo.setPosition(1);
         if(gamepad2.circle)
             hardware.grabServo.setPosition(0);
-//        if(gamepad2.right_bumper)
-//            hardware.rotServo.setPosition(1);
-//        if(gamepad2.left_bumper)
-//            hardware.rotServo.setPosition(.5);
     }
 }

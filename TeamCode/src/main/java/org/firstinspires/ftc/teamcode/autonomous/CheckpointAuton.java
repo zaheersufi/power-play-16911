@@ -11,8 +11,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.RigatoniHardware;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
-@Autonomous(name="BlueHome")
-public class BlueHome extends LinearOpMode
+public class CheckpointAuton extends LinearOpMode
 {
     private SampleMecanumDrive drive;
     private Utilities utilities;
@@ -27,6 +26,8 @@ public class BlueHome extends LinearOpMode
     private TrajectorySequence trajectoryToParking3;
     private TrajectorySequence trajectoryToParking2;
     private TrajectorySequence trajectoryToParking1;
+    private TrajectorySequence trajectorySlamCone;
+    private TrajectorySequence trajectoryMoveForward;
 
     @Override
     public void runOpMode()
@@ -72,26 +73,9 @@ public class BlueHome extends LinearOpMode
     }
     private void buildTrajectories()
     {
-        trajectoryTo12 = drive.trajectorySequenceBuilder(blueHome)
-                .forward(6)
-                .turn(Math.toRadians(90))
-                .forward(23)
-                .strafeRight(34)
+        trajectorySlamCone = drive.trajectorySequenceBuilder(blueHome)
+                .strafeRight(16)
+                .forward(3)
                 .build();
-        trajectoryToParking3 = drive.trajectorySequenceBuilder(blueHome)
-                .strafeRight(14)
-                .turn(Math.toRadians(180))
-                .forward(47)
-                .build();
-        trajectoryToParking2 = drive.trajectorySequenceBuilder(blueHome)
-                .strafeRight(14)
-                .turn(Math.toRadians(180))
-                .forward(24)
-                .build();
-        trajectoryToParking1 = drive.trajectorySequenceBuilder(blueHome)
-                .strafeRight(14)
-                .turn(Math.toRadians(180))
-                .build();
-
     }
 }
