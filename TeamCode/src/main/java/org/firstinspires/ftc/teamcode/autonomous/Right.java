@@ -12,8 +12,8 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.RigatoniHardware;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
-@Autonomous(name="BlueHome")
-public class BlueHome extends LinearOpMode
+@Autonomous(name="Right")
+public class Right extends LinearOpMode
 {
     private SampleMecanumDrive drive;
     private Utilities utilities;
@@ -22,7 +22,7 @@ public class BlueHome extends LinearOpMode
 
     private int initialWaitTime = 0;
 
-    private final Pose2d blueHome = new Pose2d(-36, 60, Math.toRadians(270));
+    private final Pose2d blueHome = new Pose2d(-36, 60, Math.toRadians(270)); //Pose 2D based on Blue Right
     private final Pose2d beforeJunction = new Pose2d(-15, 24, Math.toRadians(0));
 
     private TrajectorySequence trajectoryTo12; //check coordinate system in notebook
