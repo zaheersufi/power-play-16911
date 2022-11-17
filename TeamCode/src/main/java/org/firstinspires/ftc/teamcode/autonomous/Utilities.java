@@ -18,13 +18,6 @@ public class Utilities
     {
         this.hardware = hardware;
     }
-    public void openClaw(boolean shouldOpen)
-    {
-        if(!shouldOpen)
-            hardware.grabServo.setPosition(1.0);
-        else
-            hardware.grabServo.setPosition(0.0);
-    }
     public void wait(int waitTime, Telemetry telemetry)
     {
         ElapsedTime time = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
@@ -37,22 +30,37 @@ public class Utilities
             telemetry.update();
         }
     }
-    public void rotateClaw(int position)
+    public void openClaw(boolean shouldOpen)
     {
-//        hardware.rotServo.setPosition(position);
+        if(!shouldOpen)
+            hardware.grabServo.setPosition(1.0);
+        else
+            hardware.grabServo.setPosition(0.0);
     }
-
-    public void dropCone (double power, int time, Telemetry telemetry, SampleMecanumDrive drive)
+    public void liftArm(double power, int time, Telemetry telemetry, SampleMecanumDrive drive)
     {
         hardware.liftArm.setPower(power);
         wait(time, telemetry);
         hardware.liftArm.setPower(0);
         wait(1000, telemetry);
-        openClaw(true);
+    }
+    public void lowerArm(double power, int time, Telemetry telemetry, SampleMecanumDrive drive)
+    {
         hardware.liftArm.setPower(-power);
         wait(time, telemetry);
         hardware.liftArm.setPower(0);
     }
+//    public void dropCone (double power, int time, Telemetry telemetry, SampleMecanumDrive drive)
+//    {
+//        hardware.liftArm.setPower(power);
+//        wait(time, telemetry);
+//        hardware.liftArm.setPower(0);
+//        wait(1000, telemetry);
+//        openClaw(true);
+//        hardware.liftArm.setPower(-power);
+//        wait(time, telemetry);
+//        hardware.liftArm.setPower(0);
+//    }
 
 //    public void groundJunction (Telemetry telemetry)
 //    {
@@ -69,10 +77,10 @@ public class Utilities
 //        dropCone(.8,550, telemetry);
 //    }
 
-    public void highJunction (Telemetry telemetry, SampleMecanumDrive drive)
-    {
-        dropCone(.8, 5200, telemetry, drive);
-    }
+//    public void highJunction (Telemetry telemetry, SampleMecanumDrive drive)
+//    {
+//        dropCone(.8, 5200, telemetry, drive);
+//    }
 
 //        public void dropCone ()
 //    {

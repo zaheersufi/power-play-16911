@@ -18,7 +18,6 @@ public class BlueHome extends LinearOpMode
     private SampleMecanumDrive drive;
     private Utilities utilities;
     private RobotVision robotVision;
-    private TrajectorySequence goForward;
     RigatoniHardware hardware;
 
     private int initialWaitTime = 0;
@@ -30,6 +29,7 @@ public class BlueHome extends LinearOpMode
     private TrajectorySequence trajectoryToParking3;
     private TrajectorySequence trajectoryToParking2;
     private TrajectorySequence trajectoryToParking1;
+    private TrajectorySequence goForward;
 
     @Override
     public void runOpMode()
@@ -69,40 +69,13 @@ public class BlueHome extends LinearOpMode
     {
         drive.followTrajectorySequence(goForward);
     }
-    public void wait(int waitTime, Telemetry telemetry)
-    {
-        ElapsedTime time = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
-        time.reset();
-        while (time.time() < waitTime)
-        {
-            telemetry.addData("Status", "Waiting");
-            telemetry.addData("Wait Time", waitTime / 1000);
-            telemetry.addData("Time Left", (waitTime - time.time()) / 1000);
-            telemetry.update();
-        }
-    }
-    public void dropCone (double power, int time, Telemetry telemetry, SampleMecanumDrive drive)
-    {
-        hardware.liftArm.setPower(power);
-        wait(time, telemetry);
-        hardware.liftArm.setPower(0);
-        wait(1000, telemetry);
-        moveForward();
-        openClaw(true);
-        hardware.liftArm.setPower(-power);
-        wait(time, telemetry);
-        hardware.liftArm.setPower(0);
-    }
-    public void openClaw(boolean shouldOpen)
-    {
-        if(!shouldOpen)
-            hardware.grabServo.setPosition(1.0);
-        else
-            hardware.grabServo.setPosition(0.0);
-    }
     public void highJunction (Telemetry telemetry, SampleMecanumDrive drive)
     {
-        dropCone(.8, 5400, telemetry, drive);
+        //dropCone(.8, 5400, telemetry, drive);
+        utilities.liftArm(.8, 5400, telemetry, drive);
+        moveForward();
+        utilities.openClaw(true);
+        utilities.lowerArm(.8, 5400, telemetry, drive);
     }
     private void turnOnEncoders(RigatoniHardware hardware)
     {
