@@ -1,25 +1,24 @@
-//  java -jar "C:\Users\lgran\Desktop\EOCV-Sim-3.4.2-all.jar"
+package org.firstinspires.ftc.teamcode.autonomous;//  java -jar "C:\Users\lgran\Desktop\EOCV-Sim-3.4.2-all.jar"
 
 
-
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 
 
-public class PowerPlayPipeline extends OpenCvPipeline
+public class PowerPlayPipeline_HSV extends OpenCvPipeline
 {
     /**
     * Define and initialize the robot's Telemetry
     */
     private final Telemetry telemetry;
-    public PowerPlayPipeline(Telemetry telemetry) {
+    public PowerPlayPipeline_HSV(Telemetry telemetry) {
         this.telemetry = telemetry;
     }
 
@@ -34,35 +33,41 @@ public class PowerPlayPipeline extends OpenCvPipeline
         CENTER,
         RIGHT
     }
-    Destination destination;
+    volatile Destination destination = Destination.CENTER;
+
 
 
     /**
-    * Color cosntants
-    * (all values are in the CIELAB color scale.
-    * See more: https://en.wikipedia.org/wiki/CIELAB_color_space)
+    * Colors being used and their HUE values
+    * (all values HUE values are in the HSV color scale.
+    * See more: https://en.wikipedia.org/wiki/HSL_and_HSV)
     */
-    static final Scalar RED = new Scalar(52, 58, 41);       // NOT the best (a lot of red things)
-    static final Scalar BLUE = new Scalar(56, 17, -68);     // NOT the best (a lot of blue things)
-    static final Scalar YELLOW = new Scalar(97, -22, 94);   // Okay -> junctions are yellow (?)
-
-    static final Scalar BLACK = new Scalar(0, 0, 0);        // Pretty good
-    static final Scalar GREEN = new Scalar(48, -53, 51);    // Pretty good
-    static final Scalar PINK = new Scalar(63, 91, -58);     // Pretty good
-
-    // Array with all the colors being used
-    static final Scalar[] colors = new Scalar[]{RED,BLUE,GREEN,PINK,YELLOW,BLACK};
     // Labels for each color (what each color means)
-    static final String[] color_labels = new String[]{"RED","BLUE","GREEN","PINK","YELLOW","BLACK"};
+    static final String[] color_labels = new String[]{"YELLOW","CYAN","MAGENTA"};
+
+    static final Scalar YELLOW = new Scalar(255,255,0);
+    static final Scalar CYAN = new Scalar(0,255,255);
+    static final Scalar MAGENTA = new Scalar(255,0,255);
+    // Array with all the colors being used in RGB
+    static final Scalar[] RGB_COLORS = new Scalar[]{YELLOW, CYAN, MAGENTA};
+
+    static final int YELLOW_HUE = 30;
+    static final int CYAN_HUE = 90;
+    static final int MAGENTA_HUE = 150;
+    // Array with all the colors' hues being used
+    static final int[] COLOR_HUES = new int[]{YELLOW_HUE, CYAN_HUE, MAGENTA_HUE};
+
 
 
     /**
     * Core values that define the location and size of the region
     */
-    static final Point REGION_TOPLEFT_POINT = new Point(10,20);  // x,y (top left corner of the window is (0,0))
-    static final int REGION_WIDTH = 20;
-    static final int REGION_HEIGHT = 20;
+    static final Point REGION_TOPLEFT_POINT = new Point(250,150);  // x,y (top left corner of the window is (0,0))
+    static final int REGION_WIDTH = 30;
+    static final int REGION_HEIGHT = 30;
 
+
+    
     /**
     * Points which actually define the sample region rectangles, derived from above values
     * Example of how points A and B work to define a rectangle
@@ -78,17 +83,19 @@ public class PowerPlayPipeline extends OpenCvPipeline
     Point region_pointB = new Point(REGION_TOPLEFT_POINT.x + REGION_WIDTH, REGION_TOPLEFT_POINT.y + REGION_HEIGHT);
 
 
+
     /**
     * Working variables
     */
-    Mat region = new Mat(), LabRegion = new Mat();  // the subregion for the image that we care about (the analysis will be done on here)
-    Scalar average;         // the average/mean color of the region in CIELAB color scale
-    double[] dists = new double[colors.length]; // array of all the distances from the average color to each actual color
+    Mat region = new Mat(), hsvRegion = new Mat();  // the subregion for the image that we care about (the analysis will be done on here)
+    Scalar average;                                 // the average/mean color of the region in HSV color scale
+    double[] dists = new double[COLOR_HUES.length];     // array of all the distances from the average color to each actual color
+
 
 
     /**
     * Extract the region of interest from the original image
-    * Convert the RGB region of the image to the CIELAB color scale
+    * Convert the RGB region of the image to the HSV color scale
     *
     * @param    input   the input image from the camera in RGB color scale
     */
@@ -96,14 +103,14 @@ public class PowerPlayPipeline extends OpenCvPipeline
     public void init(Mat input)
     {
         region = input.submat(new Rect(region_pointA, region_pointB));  // extract the desired subregion
-        Imgproc.cvtColor(region, LabRegion, Imgproc.COLOR_RGB2Lab);     // convert the RGB region to CIELAB and save it in LabRegion
+        Imgproc.cvtColor(region, hsvRegion, Imgproc.COLOR_RGB2HSV);     // convert the RGB region to HSV and save it in HsvRegion
     }
 
 
 
     /**
     * Extract the region of interest from the origianl image
-    * Convert the RGB region of the image to the CIELAB color scale
+    * Convert the RGB region of the image to the HSV color scale
     *
     * @param  input   the input image from the camera in RGB color scale
     */
@@ -111,14 +118,9 @@ public class PowerPlayPipeline extends OpenCvPipeline
     public Mat processFrame(Mat input)
     {
         /**
-        * Compute the average CIELAB pixel value for the region and scale them.
-        * (We scale the values because these are 8-byte images, and each values is between 0-255.
-        * See more: https://docs.opencv.org/3.4/de/d25/imgproc_color_conversions.html)
+        * Compute the average HSV pixel value for the region.
         */
-        average = Core.mean(LabRegion);
-        average.val[0] = (int)(average.val[0]/2.55);
-        average.val[1] = (int)(average.val[1]-128);
-        average.val[2] = (int)(average.val[2]-128);
+        average = Core.mean(hsvRegion);
 
 
         /**
@@ -126,11 +128,8 @@ public class PowerPlayPipeline extends OpenCvPipeline
         * The smallest distance represents the color is closest to.
         * (See more: https://en.wikipedia.org/wiki/Color_difference)
         */
-        for(int i=0; i<colors.length; i++) {
-            // The distance is computed using 3-dimensional euclidean distance: Pythagorean formula.
-            dists[i] = Math.pow(colors[i].val[0]- average.val[0],2)
-                        + Math.pow(colors[i].val[1]- average.val[1],2)
-                        + Math.pow(colors[i].val[2]- average.val[2],2);
+        for(int i = 0; i< COLOR_HUES.length; i++) {
+            dists[i] = Math.abs(average.val[0] - COLOR_HUES[i]);
         }
 
         // Compare all distances to each other and determine the smallest.
@@ -151,9 +150,9 @@ public class PowerPlayPipeline extends OpenCvPipeline
 
 
         /**
-        * Show the closest color in the Telemetry.
-        * If no color was determined, show a warning.
-        */
+         * Show the closest color in the Telemetry.
+         * If no color was determined, show a warning.
+         */
         if (idx<0) telemetry.addData("WARNING: ", "undecided color"); // Make sure that a distance was determined.
         else telemetry.addData("COLOR: ", color_labels[idx]);
 
@@ -161,21 +160,30 @@ public class PowerPlayPipeline extends OpenCvPipeline
 
 
         /**
-        * Draw a rectangle showing the sample region on the screen.
-        * Simply a visual aid. Serves no functional purpose.
-        */
+         * Update the destination depending on the color.
+         */
+        if (idx==0) destination = Destination.LEFT;         // LEFT if Yellow
+        else if (idx==1) destination = Destination.CENTER;  // CENTER if Cyan
+        else if (idx==2) destination = Destination.RIGHT;   // RIGHT if Magenta
+
+
+        /**
+         * Draw a rectangle showing the sample region on the screen.
+         * Simply a visual aid. Serves no functional purpose.
+         */
         Imgproc.rectangle(
                 input, // Buffer to draw on
                 region_pointA, // First point which defines the rectangle
                 region_pointB, // Second point which defines the rectangle
-                new Scalar(255,0,0), // The color the rectangle is drawn in
+                RGB_COLORS[idx], // The color the rectangle is drawn in
                 2); // Thickness of the rectangle lines
 
+
         /**
-        * Render the 'input' buffer to the viewport. But note this is not
-        * simply rendering the raw camera feed, because we called functions
-        * to add some annotations to this buffer earlier up.
-        */
+         * Render the 'input' buffer to the viewport. But note this is not
+         * simply rendering the raw camera feed, because we called functions
+         * to add some annotations to this buffer earlier up.
+         */
         return input;
     }
 
