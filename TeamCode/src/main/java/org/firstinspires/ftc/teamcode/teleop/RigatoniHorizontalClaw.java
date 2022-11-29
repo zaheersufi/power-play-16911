@@ -9,7 +9,8 @@ import org.firstinspires.ftc.teamcode.hardware.RigatoniHardware;
 import org.firstinspires.ftc.teamcode.hardware.RigatoniHardware;
 
 @TeleOp(name="RigatoniHorizontalClaw")
-public class RigatoniHorizontalClaw extends OpMode
+public class
+RigatoniHorizontalClaw extends OpMode
 {
     private RigatoniHardware hardware;
     final double FAST_SPEED = .8;

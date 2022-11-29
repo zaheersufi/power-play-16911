@@ -157,8 +157,8 @@ public class PowerPlayPipeline_HSV extends OpenCvPipeline
          * Update the destination depending on the color.
          */
         if (idx==0) destination = 0;         // LEFT if Yellow
-        else if (idx==1) destination = 0;  // CENTER if Cyan
-        else if (idx==2) destination = 0;   // RIGHT if Magenta
+        else if (idx==1) destination = 1;  // CENTER if Cyan
+        else if (idx==2) destination = 2;   // RIGHT if Magenta
 
 
         /**
