@@ -10,6 +10,10 @@ import org.firstinspires.ftc.robotcore.internal.system.Assert;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.RigatoniHardware;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvInternalCamera;
 
 @Autonomous(name="Left")
 public class Left extends LinearOpMode
@@ -30,6 +34,9 @@ public class Left extends LinearOpMode
     private TrajectorySequence trajectoryToParking1;
     private TrajectorySequence goForward;
 
+    OpenCvInternalCamera webcam;
+    PowerPlayPipeline_HSV pipeline;
+
     @Override
     public void runOpMode()
     {
@@ -41,9 +48,28 @@ public class Left extends LinearOpMode
 
         turnOnEncoders(hardware);
 
-        //robotVision = new RobotVision(hardwareMap);
-        //int identifier = robotVision.identify();
-        int identifier = 0;
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        webcam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
+        pipeline = new PowerPlayPipeline_HSV(telemetry);
+        webcam.setPipeline(pipeline);
+
+        webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
+
+        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener(){
+            @Override
+            public void onOpened() {
+                webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);
+            }
+
+            @Override
+            public void onError(int errorCode) {
+                telemetry.addData("Error", "*Camera could not be opened*");
+                telemetry.update();
+            }
+        });
+
+
+        int identifier = pipeline.getDestination();
         utilities = new Utilities(hardware);
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(blueHome);
