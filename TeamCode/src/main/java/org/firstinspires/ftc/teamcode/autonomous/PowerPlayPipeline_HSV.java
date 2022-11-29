@@ -27,13 +27,7 @@ public class PowerPlayPipeline_HSV extends OpenCvPipeline
     /**
     * Enum to define the possible destinations for the robot
     */
-    public enum Destination
-    {
-        LEFT,
-        CENTER,
-        RIGHT
-    }
-    volatile Destination destination = Destination.CENTER;
+    volatile int destination = 0;
 
 
 
@@ -162,9 +156,9 @@ public class PowerPlayPipeline_HSV extends OpenCvPipeline
         /**
          * Update the destination depending on the color.
          */
-        if (idx==0) destination = Destination.LEFT;         // LEFT if Yellow
-        else if (idx==1) destination = Destination.CENTER;  // CENTER if Cyan
-        else if (idx==2) destination = Destination.RIGHT;   // RIGHT if Magenta
+        if (idx==0) destination = 0;         // LEFT if Yellow
+        else if (idx==1) destination = 0;  // CENTER if Cyan
+        else if (idx==2) destination = 0;   // RIGHT if Magenta
 
 
         /**
@@ -194,7 +188,7 @@ public class PowerPlayPipeline_HSV extends OpenCvPipeline
     *
     * @return  the robot's destination as indicated by hte previous analysis
     */
-    public Destination getDestination()
+    public int getDestination()
     {
         return destination;
     }
