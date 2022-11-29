@@ -6,6 +6,7 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.QRCodeDetector;
 import org.openftc.easyopencv.OpenCvPipeline;
+import java.util.HashMap;
 
 public class qrScanner extends OpenCvPipeline {
 
@@ -14,6 +15,7 @@ public class qrScanner extends OpenCvPipeline {
 
     public qrScanner(Telemetry telemetry) {
         this.telemetry = telemetry;
+
     }
 
     /*  Create a qrScanner object to decode the qr code, a new Mat object called
@@ -21,7 +23,7 @@ public class qrScanner extends OpenCvPipeline {
     define a string value that is to be used for destinations as the name suggests */
     QRCodeDetector qrcode = new QRCodeDetector();
     Mat points = new Mat();
-    String destination;
+    static String destination;
 
 
     @Override
@@ -44,7 +46,7 @@ public class qrScanner extends OpenCvPipeline {
 
     }
 
-    public String getDest(){return destination;}
+    public static String  getDest(){return destination;}
 
 
 }

@@ -11,6 +11,11 @@ import org.firstinspires.ftc.robotcore.internal.system.Assert;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.RigatoniHardware;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvInternalCamera;
+
 
 @Autonomous(name="Right")
 public class Right extends LinearOpMode
@@ -30,6 +35,8 @@ public class Right extends LinearOpMode
     private TrajectorySequence trajectoryToParking2;
     private TrajectorySequence trajectoryToParking1;
     private TrajectorySequence goForward;
+    OpenCvInternalCamera webcam;
+    qrScanner pipeline;
 
     @Override
     public void runOpMode()
@@ -57,6 +64,31 @@ public class Right extends LinearOpMode
 
         drive.followTrajectorySequence(trajectoryTo12);
         highJunction(telemetry, drive);
+
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        webcam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
+        pipeline = new qrScanner(telemetry);
+        webcam.setPipeline(pipeline);
+
+        webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
+
+        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener(){
+            @Override
+            public void onOpened() {
+                webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);
+            }
+
+            @Override
+            public void onError(int errorCode) {
+                telemetry.addData("Error", "*Camera could not be opened*");
+                telemetry.update();
+            }
+        });
+
+        String destination = qrScanner.getDest();
+        identifier = Integer.parseInt(destination);
+
+
         if(identifier==0)
             drive.followTrajectorySequence(trajectoryToParking1);
         else if (identifier == 1)
