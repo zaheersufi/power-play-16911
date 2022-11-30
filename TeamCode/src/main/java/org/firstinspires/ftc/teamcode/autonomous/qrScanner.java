@@ -13,17 +13,14 @@ public class qrScanner extends OpenCvPipeline {
     //set up robot's telemetry
     private final Telemetry telemetry;
 
-    public qrScanner(Telemetry telemetry) {
-        this.telemetry = telemetry;
-
-    }
+    public qrScanner(Telemetry telemetry) {this.telemetry = telemetry;}
 
     /*  Create a qrScanner object to decode the qr code, a new Mat object called
     points to store the points on the image where the detectAndDecode method returns as well as
     define a string value that is to be used for destinations as the name suggests */
     QRCodeDetector qrcode = new QRCodeDetector();
     Mat points = new Mat();
-    static String destination;
+    String destination;
 
 
     @Override
@@ -46,7 +43,7 @@ public class qrScanner extends OpenCvPipeline {
 
     }
 
-    public static String  getDest(){return destination;}
+    public String  getDest(){return destination;}
 
 
 }
