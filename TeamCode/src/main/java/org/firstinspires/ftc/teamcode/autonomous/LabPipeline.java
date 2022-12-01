@@ -13,13 +13,13 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 
 
-public class PowerPlayPipeline_CIELab extends OpenCvPipeline
+public class LabPipeline extends OpenCvPipeline
 {
     /**
     * Define and initialize the robot's Telemetry
     */
     private final Telemetry telemetry;
-    public PowerPlayPipeline_CIELab(Telemetry telemetry) {
+    public LabPipeline(Telemetry telemetry) {
         this.telemetry = telemetry;
     }
 

@@ -35,7 +35,7 @@ public class Left extends LinearOpMode
     private TrajectorySequence goForward;
 
     OpenCvInternalCamera webcam;
-    PowerPlayPipeline_HSV pipeline;
+    HsvPipeline pipeline;
 
     @Override
     public void runOpMode()
@@ -50,7 +50,7 @@ public class Left extends LinearOpMode
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
-        pipeline = new PowerPlayPipeline_HSV(telemetry);
+        pipeline = new HsvPipeline(telemetry);
         webcam.setPipeline(pipeline);
 
         webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
