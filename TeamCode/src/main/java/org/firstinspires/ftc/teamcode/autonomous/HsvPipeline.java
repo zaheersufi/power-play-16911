@@ -1,5 +1,4 @@
-package org.firstinspires.ftc.teamcode.autonomous;//  java -jar "C:\Users\lgran\Desktop\EOCV-Sim-3.4.2-all.jar"
-
+package org.firstinspires.ftc.teamcode.autonomous;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
@@ -12,13 +11,13 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 
 
-public class PowerPlayPipeline_HSV extends OpenCvPipeline
+public class HsvPipeline extends OpenCvPipeline
 {
     /**
     * Define and initialize the robot's Telemetry
     */
     private final Telemetry telemetry;
-    public PowerPlayPipeline_HSV(Telemetry telemetry) {
+    public HsvPipeline(Telemetry telemetry) {
         this.telemetry = telemetry;
     }
 
@@ -27,7 +26,7 @@ public class PowerPlayPipeline_HSV extends OpenCvPipeline
     /**
     * Enum to define the possible destinations for the robot
     */
-    volatile int destination = 0;
+    private volatile int destination = 0;
 
 
 
@@ -56,8 +55,8 @@ public class PowerPlayPipeline_HSV extends OpenCvPipeline
     /**
     * Core values that define the location and size of the region
     */
-    static final Point REGION_TOPLEFT_POINT = new Point(150,90);  // x,y (top left corner of the window is (0,0))
-    static final int REGION_WIDTH = 20;
+    static final Point REGION_TOPLEFT_POINT = new Point(250,150);  // x,y (top left corner of the window is (0,0))
+    static final int REGION_WIDTH = 30;
     static final int REGION_HEIGHT = 30;
 
 
@@ -73,17 +72,17 @@ public class PowerPlayPipeline_HSV extends OpenCvPipeline
     *   ------------------------
     *
     */
-    Point region_pointA = new Point(REGION_TOPLEFT_POINT.x, REGION_TOPLEFT_POINT.y);
-    Point region_pointB = new Point(REGION_TOPLEFT_POINT.x + REGION_WIDTH, REGION_TOPLEFT_POINT.y + REGION_HEIGHT);
+    final Point REGION_POINT_A = new Point(REGION_TOPLEFT_POINT.x, REGION_TOPLEFT_POINT.y);
+    final Point REGION_POINT_B = new Point(REGION_TOPLEFT_POINT.x + REGION_WIDTH, REGION_TOPLEFT_POINT.y + REGION_HEIGHT);
 
 
 
     /**
     * Working variables
     */
-    Mat region = new Mat(), hsvRegion = new Mat();  // the subregion for the image that we care about (the analysis will be done on here)
-    Scalar average;                                 // the average/mean color of the region in HSV color scale
-    double[] dists = new double[COLOR_HUES.length];     // array of all the distances from the average color to each actual color
+    private Mat region = new Mat(), hsvRegion = new Mat();      // the subregion for the image that we care about (the analysis will be done on here)
+    private double average;                                     // the average/mean hue of the region
+    private double[] distances = new double[COLOR_HUES.length]; // array of all the distances from the average color to each actual color
 
 
 
@@ -93,29 +92,28 @@ public class PowerPlayPipeline_HSV extends OpenCvPipeline
     *
     * @param    input   the input image from the camera in RGB color scale
     */
-    public void extract(Mat input)
-    {
-        region = input.submat(new Rect(region_pointA, region_pointB));  // extract the desired subregion
-        Imgproc.cvtColor(region, hsvRegion, Imgproc.COLOR_RGB2HSV);     // convert the RGB region to HSV and save it in HsvRegion
+    public void extractRegion(Mat input) {
+        region = input.submat(new Rect(REGION_POINT_A, REGION_POINT_B));    // extract the desired subregion
+        Imgproc.cvtColor(region, hsvRegion, Imgproc.COLOR_RGB2HSV);         // convert the RGB region to HSV and save it in hsvRegion
     }
 
 
-
+    
     /**
-    * Get the initial image and extract the region in HSV scale.
+    * Extract the region when the robot is initialized
     *
     * @param    input   the input image from the camera in RGB color scale
     */
     @Override
     public void init(Mat input)
     {
-        extract(input);
+        extractRegion(input);
     }
 
 
 
     /**
-    * Extract the region of interest from the origianl image
+    * Extract the region of interest from the original image
     * Convert the RGB region of the image to the HSV color scale
     *
     * @param  input   the input image from the camera in RGB color scale
@@ -123,12 +121,12 @@ public class PowerPlayPipeline_HSV extends OpenCvPipeline
     @Override
     public Mat processFrame(Mat input)
     {
-        extract(input);
-
         /**
-        * Compute the average HSV pixel value for the region.
+        * Extract the region of interest in HSV, and
+        * compute the average hue value for the region.
         */
-        average = Core.mean(hsvRegion);
+        extractRegion(input);
+        average = Core.mean(hsvRegion).val[0];
 
 
         /**
@@ -137,15 +135,15 @@ public class PowerPlayPipeline_HSV extends OpenCvPipeline
         * (See more: https://en.wikipedia.org/wiki/Color_difference)
         */
         for(int i = 0; i< COLOR_HUES.length; i++) {
-            dists[i] = Math.abs(average.val[0] - COLOR_HUES[i]);
+            distances[i] = Math.abs(average - COLOR_HUES[i]);
         }
 
         // Compare all distances to each other and determine the smallest.
         int idx = -1;
-        for(int i=0; i< dists.length; i++) {
+        for(int i = 0; i< distances.length; i++) {
             boolean smaller = true;
-            for (double dist : dists) {
-                if (dists[i] > dist) {
+            for (double dist : distances) {
+                if (distances[i] > dist) {
                     smaller = false;
                     break;
                 }
@@ -158,40 +156,38 @@ public class PowerPlayPipeline_HSV extends OpenCvPipeline
 
 
         /**
-         * Show the closest color in the Telemetry.
-         * If no color was determined, show a warning.
-         */
-        if (idx<0) telemetry.addData("WARNING: ", "undecided color"); // Make sure that a distance was determined.
-        else telemetry.addData("COLOR: ", color_labels[idx]);
-
-        telemetry.addData("Avgs: ", average); // Show the average color, just in case.
-
-
-        /**
-         * Update the destination depending on the color.
-         */
-        if (idx==0) destination = 0;         // LEFT if Yellow
-        else if (idx==1) destination = 1;  // CENTER if Cyan
+        * Update the destination depending on the color.
+        */
+        if (idx==0) destination = 0;        // LEFT if Yellow
+        else if (idx==1) destination = 1;   // CENTER if Cyan
         else if (idx==2) destination = 2;   // RIGHT if Magenta
 
 
         /**
-         * Draw a rectangle showing the sample region on the screen.
-         * Simply a visual aid. Serves no functional purpose.
-         */
+        * Draw a rectangle showing the sample region on the screen.
+        * Simply a visual aid. Serves no functional purpose.
+        */
         Imgproc.rectangle(
-                input, // Buffer to draw on
-                region_pointA, // First point which defines the rectangle
-                region_pointB, // Second point which defines the rectangle
-                RGB_COLORS[idx], // The color the rectangle is drawn in
-                2); // Thickness of the rectangle lines
+            input,              // Buffer to draw on
+            REGION_POINT_A,     // First point which defines the rectangle
+            REGION_POINT_B,     // Second point which defines the rectangle
+            RGB_COLORS[idx],    // The color the rectangle is drawn in
+            2);         // Thickness of the rectangle lines
 
 
         /**
-         * Render the 'input' buffer to the viewport. But note this is not
-         * simply rendering the raw camera feed, because we called functions
-         * to add some annotations to this buffer earlier up.
-         */
+        * Show the destination in the Telemetry.
+        * If no color was determined, show a warning.
+        */
+        if (idx<0) telemetry.addData("WARNING: ", "undecided color"); // Make sure that a distance was determined.
+        else telemetry.addData("Destination: ", destination);
+
+
+        /**
+        * Render the 'input' buffer to the viewport. But note this is not
+        * simply rendering the raw camera feed, because we called functions
+        * to add some annotations to this buffer earlier up.
+        */
         return input;
     }
 
@@ -200,7 +196,7 @@ public class PowerPlayPipeline_HSV extends OpenCvPipeline
     /**
     * Get the destination/position the element indicates.
     *
-    * @return  the robot's destination as indicated by hte previous analysis
+    * @return       the robot's destination as indicated by the previous analysis
     */
     public int getDestination()
     {

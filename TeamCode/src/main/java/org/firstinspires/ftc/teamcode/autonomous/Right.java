@@ -85,7 +85,7 @@ public class Right extends LinearOpMode
             }
         });
 
-        String destination = qrScanner.getDest();
+        String destination = pipeline.getDest();
         identifier = Integer.parseInt(destination);
 
 
