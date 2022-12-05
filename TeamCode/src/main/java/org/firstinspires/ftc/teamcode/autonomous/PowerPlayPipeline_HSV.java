@@ -56,8 +56,8 @@ public class PowerPlayPipeline_HSV extends OpenCvPipeline
     /**
     * Core values that define the location and size of the region
     */
-    static final Point REGION_TOPLEFT_POINT = new Point(250,150);  // x,y (top left corner of the window is (0,0))
-    static final int REGION_WIDTH = 30;
+    static final Point REGION_TOPLEFT_POINT = new Point(150,90);  // x,y (top left corner of the window is (0,0))
+    static final int REGION_WIDTH = 20;
     static final int REGION_HEIGHT = 30;
 
 
@@ -93,11 +93,23 @@ public class PowerPlayPipeline_HSV extends OpenCvPipeline
     *
     * @param    input   the input image from the camera in RGB color scale
     */
-    @Override
-    public void init(Mat input)
+    public void extract(Mat input)
     {
         region = input.submat(new Rect(region_pointA, region_pointB));  // extract the desired subregion
         Imgproc.cvtColor(region, hsvRegion, Imgproc.COLOR_RGB2HSV);     // convert the RGB region to HSV and save it in HsvRegion
+    }
+
+
+
+    /**
+    * Get the initial image and extract the region in HSV scale.
+    *
+    * @param    input   the input image from the camera in RGB color scale
+    */
+    @Override
+    public void init(Mat input)
+    {
+        extract(input);
     }
 
 
@@ -111,6 +123,8 @@ public class PowerPlayPipeline_HSV extends OpenCvPipeline
     @Override
     public Mat processFrame(Mat input)
     {
+        extract(input);
+
         /**
         * Compute the average HSV pixel value for the region.
         */
