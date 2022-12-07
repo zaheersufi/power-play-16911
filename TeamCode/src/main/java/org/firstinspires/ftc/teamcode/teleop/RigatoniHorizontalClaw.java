@@ -124,9 +124,9 @@ RigatoniHorizontalClaw extends OpMode
     }
     public void rotateClaw()
     {
-        if(gamepad2.left_bumper)
+        if(gamepad2.square)
             hardware.grabServo.setPosition(1);
-        if(gamepad2.right_bumper)
+        if(gamepad2.circle)
             hardware.grabServo.setPosition(0);
     }
 }
