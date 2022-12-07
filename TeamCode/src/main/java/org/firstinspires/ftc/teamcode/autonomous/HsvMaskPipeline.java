@@ -54,9 +54,9 @@ public class HsvMaskPipeline extends OpenCvPipeline
     /**
      * Core values that define the location and size of the region
      */
-    static final Point REGION_TOPLEFT_POINT = new Point(50,90);  // x,y (top left corner of the window is (0,0))
+    static final Point REGION_TOPLEFT_POINT = new Point(50,85);  // x,y (top left corner of the window is (0,0))
     static final int REGION_WIDTH = 40;
-    static final int REGION_HEIGHT = 60;
+    static final int REGION_HEIGHT = 55;
 
 
     /**

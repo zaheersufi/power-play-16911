@@ -27,8 +27,8 @@ public class Left extends LinearOpMode
     private int initialWaitTime = 0;
 
 
-    private final Pose2d blueHome = new Pose2d(-36, 60, Math.toRadians(270));
-    private final Pose2d beforeJunction = new Pose2d(-15, 24, Math.toRadians(0));
+    private final Pose2d blueHome = new Pose2d(-36, -60, Math.toRadians(90));
+    private final Pose2d beforeJunction = new Pose2d(-15, -24, Math.toRadians(0));
 
 
     private TrajectorySequence trajectoryTo12; //check coordinate system in notebook
@@ -130,7 +130,7 @@ public class Left extends LinearOpMode
                 .forward(6)
                 .turn(Math.toRadians(-90))
                 .forward(21)
-                .strafeLeft(37)
+                .strafeLeft(39)
                 .build();
         trajectoryToParking3 = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .strafeLeft(14)
@@ -148,7 +148,7 @@ public class Left extends LinearOpMode
                 .back(4)
                 .build();
         goForward = drive.trajectorySequenceBuilder(beforeJunction)
-                .forward(4.5)
+                .forward(5.5)
                 .build();
     }
 }
