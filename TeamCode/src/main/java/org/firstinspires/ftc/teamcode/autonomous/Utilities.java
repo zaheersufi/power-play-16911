@@ -37,14 +37,14 @@ public class Utilities
         else
             hardware.grabServo.setPosition(0.0);
     }
-    public void liftArm(double power, int time, Telemetry telemetry, SampleMecanumDrive drive)
+    public void liftArm(double power, int time, Telemetry telemetry)
     {
         hardware.liftArm.setPower(power);
         wait(time, telemetry);
         hardware.liftArm.setPower(0);
         wait(1000, telemetry);
     }
-    public void lowerArm(double power, int time, Telemetry telemetry, SampleMecanumDrive drive)
+    public void lowerArm(double power, int time, Telemetry telemetry)
     {
         hardware.liftArm.setPower(-power);
         wait(time, telemetry);

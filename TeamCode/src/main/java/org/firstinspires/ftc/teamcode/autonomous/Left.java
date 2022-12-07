@@ -23,10 +23,13 @@ public class Left extends LinearOpMode
     private RobotVision robotVision;
     RigatoniHardware hardware;
 
+
     private int initialWaitTime = 0;
+
 
     private final Pose2d blueHome = new Pose2d(-36, 60, Math.toRadians(270));
     private final Pose2d beforeJunction = new Pose2d(-15, 24, Math.toRadians(0));
+
 
     private TrajectorySequence trajectoryTo12; //check coordinate system in notebook
     private TrajectorySequence trajectoryToParking3;
@@ -34,8 +37,10 @@ public class Left extends LinearOpMode
     private TrajectorySequence trajectoryToParking1;
     private TrajectorySequence goForward;
 
+
     OpenCvInternalCamera webcam;
-    HsvPipeline pipeline;
+    HsvMaskPipeline pipeline;
+
 
     @Override
     public void runOpMode()
@@ -50,7 +55,7 @@ public class Left extends LinearOpMode
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
-        pipeline = new HsvPipeline(telemetry);
+        pipeline = new HsvMaskPipeline(telemetry);
         webcam.setPipeline(pipeline);
 
         webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
@@ -58,7 +63,7 @@ public class Left extends LinearOpMode
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener(){
             @Override
             public void onOpened() {
-                webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);
+                webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_RIGHT);
             }
 
             @Override
@@ -91,6 +96,8 @@ public class Left extends LinearOpMode
             drive.followTrajectorySequence(trajectoryToParking3);
 
     }
+
+
     private void turnOnEncoders(RigatoniHardware hardware)
     {
         hardware.leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -99,18 +106,24 @@ public class Left extends LinearOpMode
         hardware.rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         hardware.liftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
+
+
     public void moveForward()
     {
         drive.followTrajectorySequence(goForward);
     }
+
+
     public void highJunction (Telemetry telemetry, SampleMecanumDrive drive)
     {
         //dropCone(.8, 5400, telemetry, drive);
-        utilities.liftArm(.8, 5400, telemetry, drive);
+        utilities.liftArm(.8, 5400, telemetry);
         moveForward();
         utilities.openClaw(true);
-        utilities.lowerArm(.8, 5400, telemetry, drive);
+        utilities.lowerArm(.8, 5400, telemetry);
     }
+
+
     private void buildTrajectories()
     {
         trajectoryTo12 = drive.trajectorySequenceBuilder(blueHome)

@@ -22,12 +22,10 @@ public class HsvPipeline extends OpenCvPipeline
     }
 
 
-
     /**
-    * Enum to define the possible destinations for the robot
+    * Enum to define the possible destination for the robot
     */
     private volatile int destination = 0;
-
 
 
     /**
@@ -36,7 +34,7 @@ public class HsvPipeline extends OpenCvPipeline
     * See more: https://en.wikipedia.org/wiki/HSL_and_HSV)
     */
     // Labels for each color (what each color means)
-    static final String[] color_labels = new String[]{"YELLOW","CYAN","MAGENTA"};
+    static final String[] COLOR_LABELS = new String[]{"Yellow","Cyan","Magenta"};
 
     static final Scalar YELLOW = new Scalar(255,255,0);
     static final Scalar CYAN = new Scalar(0,255,255);
@@ -51,30 +49,18 @@ public class HsvPipeline extends OpenCvPipeline
     static final int[] COLOR_HUES = new int[]{YELLOW_HUE, CYAN_HUE, MAGENTA_HUE};
 
 
-
     /**
     * Core values that define the location and size of the region
     */
-    static final Point REGION_TOPLEFT_POINT = new Point(250,150);  // x,y (top left corner of the window is (0,0))
-    static final int REGION_WIDTH = 30;
-    static final int REGION_HEIGHT = 30;
-
-
+    static final Point REGION_TOPLEFT_POINT = new Point(50,110);  // x,y (top left corner of the window is (0,0))
+    static final int REGION_WIDTH = 35;
+    static final int REGION_HEIGHT = 35;
     
     /**
     * Points which actually define the sample region rectangles, derived from above values
-    * Example of how points A and B work to define a rectangle
-    *
-    *   ------------------------
-    *   | (0,0) Point A        |
-    *   |                      |
-    *   |      Point B (70,50) |
-    *   ------------------------
-    *
     */
     final Point REGION_POINT_A = new Point(REGION_TOPLEFT_POINT.x, REGION_TOPLEFT_POINT.y);
     final Point REGION_POINT_B = new Point(REGION_TOPLEFT_POINT.x + REGION_WIDTH, REGION_TOPLEFT_POINT.y + REGION_HEIGHT);
-
 
 
     /**
@@ -83,7 +69,6 @@ public class HsvPipeline extends OpenCvPipeline
     private Mat region = new Mat(), hsvRegion = new Mat();      // the subregion for the image that we care about (the analysis will be done on here)
     private double average;                                     // the average/mean hue of the region
     private double[] distances = new double[COLOR_HUES.length]; // array of all the distances from the average color to each actual color
-
 
 
     /**
@@ -97,7 +82,6 @@ public class HsvPipeline extends OpenCvPipeline
         Imgproc.cvtColor(region, hsvRegion, Imgproc.COLOR_RGB2HSV);         // convert the RGB region to HSV and save it in hsvRegion
     }
 
-
     
     /**
     * Extract the region when the robot is initialized
@@ -109,7 +93,6 @@ public class HsvPipeline extends OpenCvPipeline
     {
         extractRegion(input);
     }
-
 
 
     /**

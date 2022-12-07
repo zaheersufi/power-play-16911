@@ -36,7 +36,7 @@ public class Right extends LinearOpMode
     private TrajectorySequence trajectoryToParking1;
     private TrajectorySequence goForward;
     OpenCvInternalCamera webcam;
-    qrScanner pipeline;
+    HsvMaskPipeline pipeline;
 
     @Override
     public void runOpMode()
@@ -48,9 +48,6 @@ public class Right extends LinearOpMode
         hardware.initializeSupplementaryMotors(hardwareMap);
 
         turnOnEncoders(hardware);
-        //robotVision = new RobotVision(hardwareMap);
-        //int identifier = robotVision.identify();
-        int identifier = 0;
         utilities = new Utilities(hardware);
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(blueHome);
@@ -67,7 +64,7 @@ public class Right extends LinearOpMode
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
-        pipeline = new qrScanner(telemetry);
+        pipeline = new HsvMaskPipeline(telemetry);
         webcam.setPipeline(pipeline);
 
         webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
@@ -85,9 +82,7 @@ public class Right extends LinearOpMode
             }
         });
 
-        String destination = pipeline.getDest();
-        identifier = Integer.parseInt(destination);
-
+        int identifier = pipeline.getDestination();
 
         if(identifier==0)
             drive.followTrajectorySequence(trajectoryToParking1);
@@ -104,10 +99,10 @@ public class Right extends LinearOpMode
     public void highJunction (Telemetry telemetry, SampleMecanumDrive drive)
     {
         //dropCone(.8, 5400, telemetry, drive);
-        utilities.liftArm(.8, 5400, telemetry, drive);
+        utilities.liftArm(.8, 5400, telemetry);
         moveForward();
         utilities.openClaw(true);
-        utilities.lowerArm(.8, 5400, telemetry, drive);
+        utilities.lowerArm(.8, 5400, telemetry);
     }
     private void turnOnEncoders(RigatoniHardware hardware)
     {
