@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.internal.system.Assert;
@@ -20,11 +21,9 @@ public class Left extends LinearOpMode
 {
     private SampleMecanumDrive drive;
     private Utilities utilities;
-    private RobotVision robotVision;
-    RigatoniHardware hardware;
-
-
-    private int initialWaitTime = 0;
+    private RigatoniHardware hardware;
+    private OpenCvInternalCamera webcam;
+    private HsvMaskPipeline pipeline;
 
 
     private final Pose2d blueHome = new Pose2d(-36, -60, Math.toRadians(90));
@@ -38,43 +37,29 @@ public class Left extends LinearOpMode
     private TrajectorySequence goForward;
 
 
-    OpenCvInternalCamera webcam;
-    HsvMaskPipeline pipeline;
+    private final int initialWaitTime = 0;
+
 
 
     @Override
     public void runOpMode()
     {
-        hardware = new RigatoniHardware(); //Horizontal Claw
         Assert.assertNotNull(hardwareMap);
+
+        hardware = new RigatoniHardware();
         hardware.initializePrimaryMotors(hardwareMap);
         hardware.initializeClawServos(hardwareMap);
         hardware.initializeSupplementaryMotors(hardwareMap);
 
-        turnOnEncoders(hardware);
 
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        webcam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
-        pipeline = new HsvMaskPipeline(telemetry);
-        webcam.setPipeline(pipeline);
-
-        webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
-
-        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener(){
-            @Override
-            public void onOpened() {
-                webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_RIGHT);
-            }
-
-            @Override
-            public void onError(int errorCode) {
-                telemetry.addData("Error", "*Camera could not be opened*");
-                telemetry.update();
-            }
-        });
-
-
+        turnOnEncoders();
         utilities = new Utilities(hardware);
+
+
+        pipeline = new HsvMaskPipeline(telemetry);
+        setUpCamera();
+
+
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(blueHome);
         buildTrajectories();
@@ -92,7 +77,7 @@ public class Left extends LinearOpMode
 
 
         drive.followTrajectorySequence(trajectoryTo12);
-        highJunction(telemetry, drive);
+        highJunction();
 
         if(identifier == 0)
             drive.followTrajectorySequence(trajectoryToParking1);
@@ -104,31 +89,18 @@ public class Left extends LinearOpMode
     }
 
 
-    private void turnOnEncoders(RigatoniHardware hardware)
+
+
+    public void highJunction ()
     {
-        hardware.leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        hardware.leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        hardware.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        hardware.rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        hardware.liftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-
-    public void moveForward()
-    {
-        drive.followTrajectorySequence(goForward);
-    }
-
-
-    public void highJunction (Telemetry telemetry, SampleMecanumDrive drive)
-    {
-        //dropCone(.8, 5400, telemetry, drive);
         utilities.liftArm(.8, 5300, telemetry);
-        moveForward();
+        drive.followTrajectorySequence(goForward);
         utilities.lowerArm(.8, 500, telemetry);
         utilities.openClaw(true);
         utilities.lowerArm(.8, 5300, telemetry);
+
     }
+
 
 
     private void buildTrajectories()
@@ -139,25 +111,67 @@ public class Left extends LinearOpMode
                 .forward(21)
                 .strafeLeft(37)
                 .build();
+
         goForward = drive.trajectorySequenceBuilder(trajectoryTo12.end()) //trajectoryTo12.end()
                 .forward(5.5)
                 .build();
+
         trajectoryToParking1 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
                 .strafeLeft(12)
                 .turn(Math.toRadians(180))
                 .forward(43)
                 .strafeLeft(1)
                 .build();
+
         trajectoryToParking2 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
                 .strafeLeft(14)
                 .turn(Math.toRadians(180))
                 .forward(22)
                 .build();
+
         trajectoryToParking3 = drive.trajectorySequenceBuilder(goForward.end()) //beforeJunction goForward.end())
                 .strafeLeft(14)
                 .turn(Math.toRadians(180))
                 .back(2)
                 .build();
+
+    }
+
+
+
+    private void turnOnEncoders()
+    {
+        hardware.leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hardware.leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hardware.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hardware.rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hardware.liftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+    }
+
+
+
+    public void setUpCamera()
+    {
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        webcam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
+
+        webcam.setPipeline(pipeline);
+
+        webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
+
+        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener(){
+            @Override
+            public void onOpened() {
+                webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_RIGHT);
+            }
+
+            @Override
+            public void onError(int errorCode) {
+                telemetry.addData("ERROR", "*Camera could not be opened*");
+                telemetry.update();
+            }
+        });
 
     }
 }
