@@ -99,10 +99,11 @@ public class Right extends LinearOpMode
     public void highJunction (Telemetry telemetry, SampleMecanumDrive drive)
     {
         //dropCone(.8, 5400, telemetry, drive);
-        utilities.liftArm(.8, 5400, telemetry);
+        utilities.liftArm(.8, 5200, telemetry);
         moveForward();
         utilities.openClaw(true);
-        utilities.lowerArm(.8, 5400, telemetry);
+        utilities.lowerArm(.8, 500, telemetry);
+        utilities.lowerArm(.8, 5200, telemetry);
     }
     private void turnOnEncoders(RigatoniHardware hardware)
     {
@@ -120,23 +121,23 @@ public class Right extends LinearOpMode
                 .forward(21)
                 .strafeRight(37)
                 .build();
-        trajectoryToParking3 = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .strafeRight(14)
-                .turn(Math.toRadians(180))
-                .forward(47)
-                .build();
-        trajectoryToParking2 = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .strafeRight(14)
-                .turn(Math.toRadians(180))
-                .forward(24)
-                .build();
-        trajectoryToParking1 = drive.trajectorySequenceBuilder(beforeJunction)
-                .strafeRight(14)
-                .turn(Math.toRadians(180))
-                .back(4)
-                .build();
-        goForward = drive.trajectorySequenceBuilder(beforeJunction)
+        goForward = drive.trajectorySequenceBuilder(trajectoryTo12.end())
                 .forward(4.5)
+                .build();
+        trajectoryToParking3 = drive.trajectorySequenceBuilder(goForward.end())
+                .strafeRight(14)
+                .turn(Math.toRadians(180))
+                .forward(43)
+                .build();
+        trajectoryToParking2 = drive.trajectorySequenceBuilder(goForward.end())
+                .strafeRight(14)
+                .turn(Math.toRadians(180))
+                .forward(22)
+                .build();
+        trajectoryToParking1 = drive.trajectorySequenceBuilder(goForward.end())
+                .strafeRight(14)
+                .turn(Math.toRadians(180))
+                .back(2)
                 .build();
     }
 }

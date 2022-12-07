@@ -74,7 +74,6 @@ public class Left extends LinearOpMode
         });
 
 
-        int identifier = pipeline.getDestination();
         utilities = new Utilities(hardware);
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(blueHome);
@@ -86,9 +85,16 @@ public class Left extends LinearOpMode
         utilities.openClaw(false);
         utilities.wait(initialWaitTime, telemetry);
 
+        int identifier = pipeline.getDestination();
+
+        telemetry.addData("Parking", identifier);
+        telemetry.update();
+
+
         drive.followTrajectorySequence(trajectoryTo12);
         highJunction(telemetry, drive);
-        if(identifier==0)
+
+        if(identifier == 0)
             drive.followTrajectorySequence(trajectoryToParking1);
         else if (identifier == 1)
             drive.followTrajectorySequence(trajectoryToParking2);
@@ -117,10 +123,11 @@ public class Left extends LinearOpMode
     public void highJunction (Telemetry telemetry, SampleMecanumDrive drive)
     {
         //dropCone(.8, 5400, telemetry, drive);
-        utilities.liftArm(.8, 5400, telemetry);
+        utilities.liftArm(.8, 5300, telemetry);
         moveForward();
+        utilities.lowerArm(.8, 500, telemetry);
         utilities.openClaw(true);
-        utilities.lowerArm(.8, 5400, telemetry);
+        utilities.lowerArm(.8, 5300, telemetry);
     }
 
 
@@ -130,25 +137,27 @@ public class Left extends LinearOpMode
                 .forward(6)
                 .turn(Math.toRadians(-90))
                 .forward(21)
-                .strafeLeft(39)
+                .strafeLeft(37)
                 .build();
-        trajectoryToParking3 = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .strafeLeft(14)
-                .turn(Math.toRadians(180))
-                .forward(47)
-                .build();
-        trajectoryToParking2 = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .strafeLeft(14)
-                .turn(Math.toRadians(180))
-                .forward(24)
-                .build();
-        trajectoryToParking1 = drive.trajectorySequenceBuilder(beforeJunction)
-                .strafeLeft(14)
-                .turn(Math.toRadians(180))
-                .back(4)
-                .build();
-        goForward = drive.trajectorySequenceBuilder(beforeJunction)
+        goForward = drive.trajectorySequenceBuilder(trajectoryTo12.end()) //trajectoryTo12.end()
                 .forward(5.5)
                 .build();
+        trajectoryToParking1 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
+                .strafeLeft(12)
+                .turn(Math.toRadians(180))
+                .forward(43)
+                .strafeLeft(1)
+                .build();
+        trajectoryToParking2 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
+                .strafeLeft(14)
+                .turn(Math.toRadians(180))
+                .forward(22)
+                .build();
+        trajectoryToParking3 = drive.trajectorySequenceBuilder(goForward.end()) //beforeJunction goForward.end())
+                .strafeLeft(14)
+                .turn(Math.toRadians(180))
+                .back(2)
+                .build();
+
     }
 }

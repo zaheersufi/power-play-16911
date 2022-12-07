@@ -54,7 +54,7 @@ public class HsvMaskPipeline extends OpenCvPipeline
     /**
      * Core values that define the location and size of the region
      */
-    static final Point REGION_TOPLEFT_POINT = new Point(50,85);  // x,y (top left corner of the window is (0,0))
+    static final Point REGION_TOPLEFT_POINT = new Point(45,70);  // x,y (top left corner of the window is (0,0))
     static final int REGION_WIDTH = 40;
     static final int REGION_HEIGHT = 55;
 
@@ -154,7 +154,7 @@ public class HsvMaskPipeline extends OpenCvPipeline
          */
         if (idx==0) destination = 0;        // LEFT if Yellow
         else if (idx==1) destination = 1;   // CENTER if Cyan
-        else if (idx==2) destination = 2;   // RIGHT if Magenta
+        else destination = 2;               // RIGHT if Magenta
 
 
         /**
@@ -170,11 +170,10 @@ public class HsvMaskPipeline extends OpenCvPipeline
 
 
         /**
-         * Show the destination in the Telemetry.
-         * If no color was determined, show a warning.
+         * Show the certainty in the Telemetry.
          */
-        if (idx<0) telemetry.addData("WARNING: ", "undecided color"); // Make sure that a distance was determined.
-        else telemetry.addData("Certainty: ", sums[0]+" "+ sums[1]+" "+ sums[2]);
+        telemetry.addData("Certainty: ", sums[0]+" "+ sums[1]+" "+ sums[2]);
+//        telemetry.update();
 
 
         /**
