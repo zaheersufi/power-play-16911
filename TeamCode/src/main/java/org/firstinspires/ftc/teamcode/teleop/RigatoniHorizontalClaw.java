@@ -66,18 +66,31 @@ RigatoniHorizontalClaw extends OpMode
             rightFrontPower /= max;
             rightRearPower /= max;
         }
-
-        if (gamepad1.dpad_up || gamepad1.dpad_right)
+        if(gamepad1.dpad_up)
+        {
+            leftFrontPower = 1;
+            rightRearPower = 1;
+            leftRearPower = 1;
+            rightFrontPower = 1;
+        }
+        else if (gamepad1.dpad_right)
+        {
+            leftFrontPower = 1;
+            rightRearPower = 1;
+            rightFrontPower = -1;
+            leftRearPower = -1;
+        }
+        else if (gamepad1.dpad_left)
         {
             leftFrontPower = -1;
             rightRearPower = -1;
             rightFrontPower = 1;
             leftRearPower = 1;
         }
-        else if (gamepad1.dpad_down || gamepad1.dpad_left)
+        else if (gamepad1.dpad_down)
         {
-            leftFrontPower = 1;
-            rightRearPower = 1;
+            leftFrontPower = -1;
+            rightRearPower = -1;
             rightFrontPower = -1;
             leftRearPower = -1;
         }

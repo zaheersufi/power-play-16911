@@ -97,7 +97,7 @@ public class Left extends LinearOpMode
         drive.followTrajectorySequence(goForward);
         utilities.lowerArm(.8, 500, telemetry);
         utilities.openClaw(true);
-        utilities.lowerArm(.8, 5300, telemetry);
+        utilities.lowerArm(.8, 4800, telemetry);
 
     }
 
