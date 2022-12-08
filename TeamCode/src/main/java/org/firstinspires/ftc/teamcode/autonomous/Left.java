@@ -37,7 +37,7 @@ public class Left extends LinearOpMode
     private TrajectorySequence goForward;
 
 
-    private final int initialWaitTime = 0;
+    private final int initialWaitTime = 500;
 
 
 
@@ -62,13 +62,14 @@ public class Left extends LinearOpMode
         waitForStart();
         if(!opModeIsActive()) {return;}
 
-        utilities.openClaw(false);
-        utilities.wait(initialWaitTime, telemetry);
-
         pipeline = new HsvMaskPipeline(telemetry);
         setUpCamera();
 
+        utilities.wait(initialWaitTime, telemetry);
+        utilities.openClaw(false);
+
         int identifier = pipeline.getDestination();
+
 
         telemetry.addData("Parking", identifier);
         telemetry.update();

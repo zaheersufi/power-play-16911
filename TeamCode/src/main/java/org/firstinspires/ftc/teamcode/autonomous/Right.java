@@ -37,7 +37,7 @@ public class Right extends LinearOpMode
     private TrajectorySequence goForward;
 
 
-    private final int initialWaitTime = 0;
+    private final int initialWaitTime = 500;
 
 
 
@@ -55,6 +55,7 @@ public class Right extends LinearOpMode
         turnOnEncoders();
         utilities = new Utilities(hardware);
 
+
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(blueHome);
         buildTrajectories();
@@ -62,14 +63,16 @@ public class Right extends LinearOpMode
         waitForStart();
         if(!opModeIsActive()) {return;}
 
-        utilities.openClaw(false);
-        utilities.wait(initialWaitTime, telemetry);
 
         pipeline = new HsvMaskPipeline(telemetry);
         setUpCamera();
 
-        int identifier = pipeline.getDestination();
 
+        utilities.wait(initialWaitTime, telemetry);
+        utilities.openClaw(false);
+
+
+        int identifier = pipeline.getDestination();
         telemetry.addData("Parking", identifier);
         telemetry.update();
 
