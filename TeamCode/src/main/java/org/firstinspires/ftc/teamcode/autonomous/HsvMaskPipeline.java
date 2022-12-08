@@ -10,7 +10,6 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 
-
 public class HsvMaskPipeline extends OpenCvPipeline
 {
     /**
@@ -54,8 +53,8 @@ public class HsvMaskPipeline extends OpenCvPipeline
     /**
      * Core values that define the location and size of the region
      */
-    static final Point REGION_TOPLEFT_POINT = new Point(45,70);  // x,y (top left corner of the window is (0,0))
-    static final int REGION_WIDTH = 40;
+    static final Point REGION_TOPLEFT_POINT = new Point(45,62);  // x,y (top left corner of the window is (0,0))
+    static final int REGION_WIDTH = 50;
     static final int REGION_HEIGHT = 55;
 
 
@@ -152,9 +151,9 @@ public class HsvMaskPipeline extends OpenCvPipeline
         /**
          * Update the destination depending on the color.
          */
-        if (idx==0) destination = 0;        // LEFT if Yellow
-        else if (idx==1) destination = 1;   // CENTER if Cyan
-        else destination = 2;               // RIGHT if Magenta
+        if (idx==0) destination = 1;        // LEFT if Yellow
+        else if (idx==1) destination = 2;   // CENTER if Cyan
+        else destination = 3;               // RIGHT if Magenta
 
 
         /**
@@ -167,13 +166,6 @@ public class HsvMaskPipeline extends OpenCvPipeline
                 REGION_POINT_B,     // Second point which defines the rectangle
                 RGB_COLORS[idx],    // The color the rectangle is drawn in
                 2);         // Thickness of the rectangle lines
-
-
-        /**
-         * Show the certainty in the Telemetry.
-         */
-        telemetry.addData("Certainty: ", sums[0]+" "+ sums[1]+" "+ sums[2]);
-//        telemetry.update();
 
 
         /**

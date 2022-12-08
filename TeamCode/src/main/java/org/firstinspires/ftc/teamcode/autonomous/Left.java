@@ -79,9 +79,9 @@ public class Left extends LinearOpMode
         drive.followTrajectorySequence(trajectoryTo12);
         highJunction();
 
-        if(identifier == 0)
+        if(identifier == 1)
             drive.followTrajectorySequence(trajectoryToParking1);
-        else if (identifier == 1)
+        else if (identifier == 2)
             drive.followTrajectorySequence(trajectoryToParking2);
         else
             drive.followTrajectorySequence(trajectoryToParking3);
@@ -113,13 +113,13 @@ public class Left extends LinearOpMode
                 .build();
 
         goForward = drive.trajectorySequenceBuilder(trajectoryTo12.end()) //trajectoryTo12.end()
-                .forward(5.5)
+                .forward(6)
                 .build();
 
         trajectoryToParking1 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
                 .strafeLeft(12)
                 .turn(Math.toRadians(180))
-                .forward(43)
+                .forward(44)
                 .strafeLeft(1)
                 .build();
 

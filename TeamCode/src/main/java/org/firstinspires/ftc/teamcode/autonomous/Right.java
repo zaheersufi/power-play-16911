@@ -4,7 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.internal.system.Assert;
@@ -16,7 +16,6 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
-
 @Autonomous(name="Right")
 public class Right extends LinearOpMode
 {
@@ -27,8 +26,9 @@ public class Right extends LinearOpMode
     private HsvMaskPipeline pipeline;
 
 
-    private final Pose2d blueHome = new Pose2d(-36, 60, Math.toRadians(270)); //Pose 2D based on Blue Right
+    private final Pose2d blueHome = new Pose2d(-36, 60, Math.toRadians(270));
     private final Pose2d beforeJunction = new Pose2d(-15, 24, Math.toRadians(0));
+
 
     private TrajectorySequence trajectoryTo12; //check coordinate system in notebook
     private TrajectorySequence trajectoryToParking3;
@@ -36,24 +36,29 @@ public class Right extends LinearOpMode
     private TrajectorySequence trajectoryToParking1;
     private TrajectorySequence goForward;
 
-    private int initialWaitTime = 0;
+
+    private final int initialWaitTime = 0;
+
+
 
     @Override
     public void runOpMode()
     {
         Assert.assertNotNull(hardwareMap);
 
-        hardware = new RigatoniHardware(); //Horizontal Claw
+        hardware = new RigatoniHardware();
         hardware.initializePrimaryMotors(hardwareMap);
         hardware.initializeClawServos(hardwareMap);
         hardware.initializeSupplementaryMotors(hardwareMap);
 
-        turnOnEncoders();
 
+        turnOnEncoders();
         utilities = new Utilities(hardware);
+
 
         pipeline = new HsvMaskPipeline(telemetry);
         setUpCamera();
+
 
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(blueHome);
@@ -65,36 +70,75 @@ public class Right extends LinearOpMode
         utilities.openClaw(false);
         utilities.wait(initialWaitTime, telemetry);
 
-
         int identifier = pipeline.getDestination();
 
         telemetry.addData("Parking", identifier);
         telemetry.update();
 
-        drive.followTrajectorySequence(trajectoryTo12);
-        highJunction(telemetry, drive);
 
-        if(identifier==0)
+        drive.followTrajectorySequence(trajectoryTo12);
+        highJunction();
+
+        if(identifier == 1)
             drive.followTrajectorySequence(trajectoryToParking1);
-        else if (identifier == 1)
+        else if (identifier == 2)
             drive.followTrajectorySequence(trajectoryToParking2);
         else
             drive.followTrajectorySequence(trajectoryToParking3);
 
     }
-    public void moveForward()
+
+
+
+
+    public void highJunction ()
     {
-        drive.followTrajectorySequence(goForward);
-    }
-    public void highJunction (Telemetry telemetry, SampleMecanumDrive drive)
-    {
-        //dropCone(.8, 5400, telemetry, drive);
         utilities.liftArm(.8, 5300, telemetry);
-        moveForward();
-        utilities.openClaw(true);
+        drive.followTrajectorySequence(goForward);
         utilities.lowerArm(.8, 500, telemetry);
+        utilities.openClaw(true);
         utilities.lowerArm(.8, 4800, telemetry);
+
     }
+
+
+
+    private void buildTrajectories()
+    {
+        trajectoryTo12 = drive.trajectorySequenceBuilder(blueHome)
+                .forward(6)
+                .turn(Math.toRadians(90))
+                .forward(21)
+                .strafeLeft(37)
+                .build();
+
+        goForward = drive.trajectorySequenceBuilder(trajectoryTo12.end()) //trajectoryTo12.end()
+                .forward(6)
+                .build();
+
+        trajectoryToParking1 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
+                .strafeLeft(12)
+                .turn(Math.toRadians(180))
+                .forward(44)
+                .strafeLeft(1)
+                .build();
+
+        trajectoryToParking2 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
+                .strafeLeft(14)
+                .turn(Math.toRadians(180))
+                .forward(22)
+                .build();
+
+        trajectoryToParking3 = drive.trajectorySequenceBuilder(goForward.end()) //beforeJunction goForward.end())
+                .strafeLeft(14)
+                .turn(Math.toRadians(180))
+                .back(2)
+                .build();
+
+    }
+
+
+
     private void turnOnEncoders()
     {
         hardware.leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -102,35 +146,11 @@ public class Right extends LinearOpMode
         hardware.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         hardware.rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         hardware.liftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
     }
-    private void buildTrajectories()
-    {
-        trajectoryTo12 = drive.trajectorySequenceBuilder(blueHome)
-                .forward(6)
-                .turn(Math.toRadians(90))
-                .forward(21)
-                .strafeRight(37)
-                .build();
-        goForward = drive.trajectorySequenceBuilder(trajectoryTo12.end())
-                .forward(5.5)
-                .build();
-        trajectoryToParking3 = drive.trajectorySequenceBuilder(goForward.end())
-                .strafeRight(12)
-                .turn(Math.toRadians(180))
-                .forward(43)
-                .strafeRight(1)
-                .build();
-        trajectoryToParking2 = drive.trajectorySequenceBuilder(goForward.end())
-                .strafeRight(14)
-                .turn(Math.toRadians(180))
-                .forward(22)
-                .build();
-        trajectoryToParking1 = drive.trajectorySequenceBuilder(goForward.end())
-                .strafeRight(14)
-                .turn(Math.toRadians(180))
-                .back(2)
-                .build();
-    }
+
+
+
     public void setUpCamera()
     {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
