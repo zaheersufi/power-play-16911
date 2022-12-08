@@ -55,11 +55,6 @@ public class Left extends LinearOpMode
         turnOnEncoders();
         utilities = new Utilities(hardware);
 
-
-        pipeline = new HsvMaskPipeline(telemetry);
-        setUpCamera();
-
-
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(blueHome);
         buildTrajectories();
@@ -69,6 +64,9 @@ public class Left extends LinearOpMode
 
         utilities.openClaw(false);
         utilities.wait(initialWaitTime, telemetry);
+
+        pipeline = new HsvMaskPipeline(telemetry);
+        setUpCamera();
 
         int identifier = pipeline.getDestination();
 

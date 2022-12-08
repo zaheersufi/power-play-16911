@@ -55,11 +55,6 @@ public class Right extends LinearOpMode
         turnOnEncoders();
         utilities = new Utilities(hardware);
 
-
-        pipeline = new HsvMaskPipeline(telemetry);
-        setUpCamera();
-
-
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(blueHome);
         buildTrajectories();
@@ -69,6 +64,9 @@ public class Right extends LinearOpMode
 
         utilities.openClaw(false);
         utilities.wait(initialWaitTime, telemetry);
+
+        pipeline = new HsvMaskPipeline(telemetry);
+        setUpCamera();
 
         int identifier = pipeline.getDestination();
 
@@ -109,30 +107,30 @@ public class Right extends LinearOpMode
                 .forward(6)
                 .turn(Math.toRadians(90))
                 .forward(21)
-                .strafeLeft(37)
+                .strafeRight(39)
                 .build();
 
         goForward = drive.trajectorySequenceBuilder(trajectoryTo12.end()) //trajectoryTo12.end()
                 .forward(6)
                 .build();
 
-        trajectoryToParking1 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
-                .strafeLeft(12)
+        trajectoryToParking1 = drive.trajectorySequenceBuilder(goForward.end()) //beforeJunction goForward.end())
+                .strafeRight(14)
                 .turn(Math.toRadians(180))
-                .forward(44)
-                .strafeLeft(1)
+                .back(2)
                 .build();
 
         trajectoryToParking2 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
-                .strafeLeft(14)
+                .strafeRight(14)
                 .turn(Math.toRadians(180))
                 .forward(22)
                 .build();
 
-        trajectoryToParking3 = drive.trajectorySequenceBuilder(goForward.end()) //beforeJunction goForward.end())
-                .strafeLeft(14)
+        trajectoryToParking3 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
+                .strafeRight(12)
                 .turn(Math.toRadians(180))
-                .back(2)
+                .forward(44)
+                .strafeRight(1)
                 .build();
 
     }

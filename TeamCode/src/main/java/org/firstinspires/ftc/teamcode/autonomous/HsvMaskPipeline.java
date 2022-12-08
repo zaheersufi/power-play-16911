@@ -24,7 +24,7 @@ public class HsvMaskPipeline extends OpenCvPipeline
     /**
      * Enum to define the possible destination for the robot
      */
-    private volatile int destination = 0;
+    private volatile int destination = 2;
 
 
     /**
