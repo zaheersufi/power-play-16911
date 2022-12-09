@@ -36,7 +36,7 @@ public class Right extends LinearOpMode
     private TrajectorySequence goForward;
 
 
-    private final int initialWaitTime = 500;
+    private final int initialWaitTime = 0;
 
 
 
@@ -106,8 +106,8 @@ public class Right extends LinearOpMode
         trajectoryTo12 = drive.trajectorySequenceBuilder(blueHome)
                 .forward(6)
                 .turn(Math.toRadians(90))
-                .forward(21)
-                .strafeRight(40)
+                .forward(19)
+                .strafeRight(38)
                 .build();
 
         goForward = drive.trajectorySequenceBuilder(trajectoryTo12.end()) //trajectoryTo12.end()
@@ -115,13 +115,12 @@ public class Right extends LinearOpMode
                 .build();
 
         trajectoryToParking1 = drive.trajectorySequenceBuilder(goForward.end()) //beforeJunction goForward.end())
-                .strafeRight(14)
+                .strafeRight(12)
                 .turn(Math.toRadians(180))
-                .back(2)
                 .build();
 
         trajectoryToParking2 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
-                .strafeRight(14)
+                .strafeRight(12)
                 .turn(Math.toRadians(180))
                 .forward(22)
                 .build();
