@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.RigatoniHardware;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
-@Autonomous(name="Test Autonomous")
+//@Autonomous(name="Test Autonomous")
 public class TestAuton extends LinearOpMode {
     private SampleMecanumDrive drive;
     private RigatoniHardware hardware;

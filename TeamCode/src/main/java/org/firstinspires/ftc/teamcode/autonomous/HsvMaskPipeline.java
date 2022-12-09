@@ -83,16 +83,16 @@ public class HsvMaskPipeline extends OpenCvPipeline
     }
 
 
-//    /**
-//     * Extract the region when the robot is initialized
-//     *
-//     * @param    input   the input image from the camera in RGB color scale
-//     */
-//    @Override
-//    public void init(Mat input)
-//    {
-//        extractRegion(input);
-//    }
+    /**
+     * Extract the region when the robot is initialized
+     *
+     * @param    input   the input image from the camera in RGB color scale
+     */
+    @Override
+    public void init(Mat input)
+    {
+        extractRegion(input);
+    }
 
 
     /**
@@ -141,15 +141,9 @@ public class HsvMaskPipeline extends OpenCvPipeline
         /**
          * Update the destination depending on the color.
          */
-        if (idx==0){
-            destination = 1;        // LEFT if Yellow
-        }
-        else if (idx==1){
-            destination = 2;   // CENTER if Cyan
-        }
-        else{
-            destination = 3;               // RIGHT if Magenta
-        }
+        if (idx==0) destination = 1;        // LEFT if Yellow
+        else if (idx==1) destination = 2;   // CENTER if Cyan
+        else destination = 3;               // RIGHT if Magenta
 
 
         /**
@@ -184,8 +178,6 @@ public class HsvMaskPipeline extends OpenCvPipeline
      */
     public int getDestination()
     {
-        telemetry.addData("Dest ", destination);
-        telemetry.update();
         return destination;
     }
 

@@ -36,7 +36,7 @@ public class Right extends LinearOpMode
     private TrajectorySequence goForward;
 
 
-    private final int initialWaitTime = 0;
+    private final int initialWaitTime = 250;
 
 
 
@@ -62,6 +62,7 @@ public class Right extends LinearOpMode
                 telemetry.update();
             }
         });
+
 
         Assert.assertNotNull(hardwareMap);
 

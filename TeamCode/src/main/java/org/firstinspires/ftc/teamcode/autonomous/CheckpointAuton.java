@@ -11,12 +11,11 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.RigatoniHardware;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
-@Autonomous(name="Checkpoint Autonomous")
+//@Autonomous(name="Checkpoint Autonomous")
 public class CheckpointAuton extends LinearOpMode
 {
     private SampleMecanumDrive drive;
     private Utilities utilities;
-    private RobotVision robotVision;
     RigatoniHardware hardware;
 
     private int initialWaitTime = 0;
