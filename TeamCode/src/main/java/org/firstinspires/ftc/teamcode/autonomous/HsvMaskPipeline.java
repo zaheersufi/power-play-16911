@@ -22,7 +22,7 @@ public class HsvMaskPipeline extends OpenCvPipeline
 
 
     /**
-     * Enum to define the possible destination for the robot
+     * Int to define the possible destination for the robot
      */
     private volatile int destination = 2;
 
@@ -68,7 +68,7 @@ public class HsvMaskPipeline extends OpenCvPipeline
     /**
      * Working variables
      */
-    private Mat region = new Mat(), hsvRegion = new Mat();      // the subregion for the image that we care about (the analysis will be done on here)
+    Mat hsvRegion = new Mat();      // the subregion for the image that we care about (the analysis will be done on here)
     private double[] sums = new double[COLOR_HUES.length]; // array of all the distances from the average color to each actual color
 
 
@@ -79,21 +79,20 @@ public class HsvMaskPipeline extends OpenCvPipeline
      * @param    input   the input image from the camera in RGB color scale
      */
     public void extractRegion(Mat input) {
-        region = input.submat(new Rect(REGION_POINT_A, REGION_POINT_B));    // extract the desired subregion
-        Imgproc.cvtColor(region, hsvRegion, Imgproc.COLOR_RGB2HSV);         // convert the RGB region to HSV and save it in hsvRegion
+        Imgproc.cvtColor(input.submat(new Rect(REGION_POINT_A, REGION_POINT_B)), hsvRegion, Imgproc.COLOR_RGB2HSV);         // convert the RGB region to HSV and save it in hsvRegion
     }
 
 
-    /**
-     * Extract the region when the robot is initialized
-     *
-     * @param    input   the input image from the camera in RGB color scale
-     */
-    @Override
-    public void init(Mat input)
-    {
-        extractRegion(input);
-    }
+//    /**
+//     * Extract the region when the robot is initialized
+//     *
+//     * @param    input   the input image from the camera in RGB color scale
+//     */
+//    @Override
+//    public void init(Mat input)
+//    {
+//        extractRegion(input);
+//    }
 
 
     /**
@@ -138,22 +137,19 @@ public class HsvMaskPipeline extends OpenCvPipeline
             }
         }
 
-        double total = 0;
-        for (double s : sums) {
-            total += s;
-        }
-
-        for(int i = 0; i< sums.length; i++) {
-            sums[i] = (int)(sums[i]/total*1000)/1000.0;
-        }
-
 
         /**
          * Update the destination depending on the color.
          */
-        if (idx==0) destination = 1;        // LEFT if Yellow
-        else if (idx==1) destination = 2;   // CENTER if Cyan
-        else destination = 3;               // RIGHT if Magenta
+        if (idx==0){
+            destination = 1;        // LEFT if Yellow
+        }
+        else if (idx==1){
+            destination = 2;   // CENTER if Cyan
+        }
+        else{
+            destination = 3;               // RIGHT if Magenta
+        }
 
 
         /**
@@ -166,6 +162,9 @@ public class HsvMaskPipeline extends OpenCvPipeline
                 REGION_POINT_B,     // Second point which defines the rectangle
                 RGB_COLORS[idx],    // The color the rectangle is drawn in
                 2);         // Thickness of the rectangle lines
+
+
+        hsvRegion.release();
 
 
         /**
@@ -185,6 +184,8 @@ public class HsvMaskPipeline extends OpenCvPipeline
      */
     public int getDestination()
     {
+        telemetry.addData("Dest ", destination);
+        telemetry.update();
         return destination;
     }
 

@@ -27,7 +27,6 @@ public class Left extends LinearOpMode
 
 
     private final Pose2d blueHome = new Pose2d(-36, -60, Math.toRadians(90));
-    private final Pose2d beforeJunction = new Pose2d(-15, -24, Math.toRadians(0));
 
 
     private TrajectorySequence trajectoryTo12; //check coordinate system in notebook
@@ -42,35 +41,35 @@ public class Left extends LinearOpMode
 
 
     @Override
-    public void runOpMode()
+    public void runOpMode() throws InterruptedException
     {
+        pipeline = new HsvMaskPipeline(telemetry);
+        setUpCamera(pipeline);
+
         Assert.assertNotNull(hardwareMap);
 
         hardware = new RigatoniHardware();
         hardware.initializePrimaryMotors(hardwareMap);
         hardware.initializeClawServos(hardwareMap);
         hardware.initializeSupplementaryMotors(hardwareMap);
-
-
-        turnOnEncoders();
         utilities = new Utilities(hardware);
 
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(blueHome);
+
+        turnOnEncoders();
+
+
         buildTrajectories();
+        utilities.openClaw(false);
 
         waitForStart();
         if(!opModeIsActive()) {return;}
 
-        pipeline = new HsvMaskPipeline(telemetry);
-        setUpCamera();
-
         utilities.wait(initialWaitTime, telemetry);
-        utilities.openClaw(false);
-
-        int identifier = pipeline.getDestination();
 
 
+        final int identifier = pipeline.getDestination();
         telemetry.addData("Parking", identifier);
         telemetry.update();
 
@@ -86,7 +85,6 @@ public class Left extends LinearOpMode
             drive.followTrajectorySequence(trajectoryToParking3);
 
     }
-
 
 
 
@@ -108,11 +106,11 @@ public class Left extends LinearOpMode
                 .forward(6)
                 .turn(Math.toRadians(-90))
                 .forward(21)
-                .strafeLeft(37)
+                .strafeLeft(38)
                 .build();
 
         goForward = drive.trajectorySequenceBuilder(trajectoryTo12.end()) //trajectoryTo12.end()
-                .forward(6)
+                .forward(5)
                 .build();
 
         trajectoryToParking1 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
@@ -150,13 +148,11 @@ public class Left extends LinearOpMode
 
 
 
-    public void setUpCamera()
+    public void setUpCamera(HsvMaskPipeline pipeline)
     {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
-
         webcam.setPipeline(pipeline);
-
         webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
 
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener(){
@@ -164,10 +160,9 @@ public class Left extends LinearOpMode
             public void onOpened() {
                 webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_RIGHT);
             }
-
             @Override
             public void onError(int errorCode) {
-                telemetry.addData("ERROR", "*Camera could not be opened*");
+                telemetry.addData("ERROR", "*Camera could not be opened* "+errorCode);
                 telemetry.update();
             }
         });
