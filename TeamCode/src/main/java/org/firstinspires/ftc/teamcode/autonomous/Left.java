@@ -43,8 +43,25 @@ public class Left extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        webcam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
+
         pipeline = new HsvMaskPipeline(telemetry);
-        setUpCamera(pipeline);
+        webcam.setPipeline(pipeline);
+
+        webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
+
+        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener(){
+            @Override
+            public void onOpened() {
+                webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_RIGHT);
+            }
+            @Override
+            public void onError(int errorCode) {
+                telemetry.addData("ERROR", "*Camera could not be opened* "+errorCode);
+                telemetry.update();
+            }
+        });
 
         Assert.assertNotNull(hardwareMap);
 
@@ -105,9 +122,9 @@ public class Left extends LinearOpMode
         trajectoryTo12 = drive.trajectorySequenceBuilder(blueHome)
                 .forward(6)
                 .turn(Math.toRadians(-90))
-                .forward(21)
+                .forward(21.25)
                 .strafeLeft(38)
-                .forward(1.5)
+                .forward(0.5)
                 .build();
 
         goForward = drive.trajectorySequenceBuilder(trajectoryTo12.end()) //trajectoryTo12.end()
@@ -117,7 +134,7 @@ public class Left extends LinearOpMode
         trajectoryToParking1 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
                 .strafeLeft(12)
                 .turn(Math.toRadians(180))
-                .forward(43)
+                .forward(43.5)
                 .strafeLeft(1)
                 .build();
 
