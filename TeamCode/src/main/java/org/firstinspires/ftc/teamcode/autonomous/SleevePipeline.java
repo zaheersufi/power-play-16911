@@ -10,13 +10,13 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 
-public class HsvMaskPipeline extends OpenCvPipeline
+public class SleevePipeline extends OpenCvPipeline
 {
     /**
      * Define and initialize the robot's Telemetry
      */
     private final Telemetry telemetry;
-    public HsvMaskPipeline(Telemetry telemetry) {
+    public SleevePipeline(Telemetry telemetry) {
         this.telemetry = telemetry;
     }
 

@@ -21,7 +21,7 @@ public class ParkingRight extends LinearOpMode
     private Utilities utilities;
     private RigatoniHardware hardware;
     private OpenCvInternalCamera webcam;
-    private HsvMaskPipeline pipeline;
+    private SleevePipeline pipeline;
 
 
     private final Pose2d blueHome = new Pose2d(-36, 60, Math.toRadians(270));
@@ -43,7 +43,7 @@ public class ParkingRight extends LinearOpMode
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
 
-        pipeline = new HsvMaskPipeline(telemetry);
+        pipeline = new SleevePipeline(telemetry);
         webcam.setPipeline(pipeline);
 
         webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
@@ -146,7 +146,7 @@ public class ParkingRight extends LinearOpMode
 
 
 
-    public void setUpCamera(HsvMaskPipeline pipeline)
+    public void setUpCamera(SleevePipeline pipeline)
     {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);

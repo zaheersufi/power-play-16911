@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -19,7 +18,7 @@ public class Test extends LinearOpMode
     private Utilities utilities;
     RigatoniHardware hardware;
     OpenCvInternalCamera webcam;
-    HsvMaskPipeline pipeline;
+    SleevePipeline pipeline;
     private ElapsedTime runtime = new ElapsedTime();
 
     private int initialWaitTime = 0;
@@ -39,7 +38,7 @@ public class Test extends LinearOpMode
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
-        pipeline = new HsvMaskPipeline(telemetry);
+        pipeline = new SleevePipeline(telemetry);
         webcam.setPipeline(pipeline);
 
         webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
