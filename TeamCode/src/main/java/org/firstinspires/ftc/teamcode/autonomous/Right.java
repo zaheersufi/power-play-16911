@@ -109,11 +109,11 @@ public class Right extends LinearOpMode
 
     public void highJunction ()
     {
-        utilities.liftArm(.8, 5300, telemetry);
+        utilities.liftArm(1, 4350, telemetry); // .8 5300
         drive.followTrajectorySequence(goForward);
-        utilities.lowerArm(.8, 500, telemetry);
+        utilities.lowerArm(1, 400, telemetry); //.8 500
         utilities.openClaw(true);
-        utilities.lowerArm(.8, 4800, telemetry);
+        utilities.lowerArm(1, 3950, telemetry); //.8 4800
 
     }
 
@@ -124,15 +124,16 @@ public class Right extends LinearOpMode
         trajectoryTo12 = drive.trajectorySequenceBuilder(blueHome)
                 .forward(6)
                 .turn(Math.toRadians(90))
-                .forward(19)
+                .forward(21.25)
                 .strafeRight(38)
+                .forward(0.5)
                 .build();
 
         goForward = drive.trajectorySequenceBuilder(trajectoryTo12.end()) //trajectoryTo12.end()
-                .forward(5)
+                .forward(3)
                 .build();
 
-        trajectoryToParking1 = drive.trajectorySequenceBuilder(goForward.end()) //beforeJunction goForward.end())
+        trajectoryToParking3 = drive.trajectorySequenceBuilder(goForward.end()) //beforeJunction goForward.end())
                 .strafeRight(12)
                 .turn(Math.toRadians(180))
                 .build();
@@ -143,11 +144,10 @@ public class Right extends LinearOpMode
                 .forward(22)
                 .build();
 
-        trajectoryToParking3 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
+        trajectoryToParking1 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
                 .strafeRight(12)
                 .turn(Math.toRadians(180))
-                .forward(44)
-                .strafeRight(1)
+                .forward(44.5)
                 .build();
 
     }
