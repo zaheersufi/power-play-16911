@@ -106,11 +106,11 @@ public class Left extends LinearOpMode
 
     public void highJunction ()
     {
-        utilities.liftArm(.8, 5300, telemetry);
+        utilities.liftArm(1, 4350, telemetry);
         drive.followTrajectorySequence(goForward);
-        utilities.lowerArm(.8, 500, telemetry);
+        utilities.lowerArm(1, 400, telemetry);
         utilities.openClaw(true);
-        utilities.lowerArm(.8, 4800, telemetry);
+        utilities.lowerArm(1, 3950, telemetry);
 
     }
 
@@ -122,19 +122,18 @@ public class Left extends LinearOpMode
                 .forward(6)
                 .turn(Math.toRadians(-90))
                 .forward(21.25)
-                .strafeLeft(38)
+                .strafeLeft(36)
                 .forward(0.5)
                 .build();
 
         goForward = drive.trajectorySequenceBuilder(trajectoryTo12.end()) //trajectoryTo12.end()
-                .forward(5)
+                .forward(3)
                 .build();
 
         trajectoryToParking1 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
                 .strafeLeft(12)
                 .turn(Math.toRadians(180))
-                .forward(43.5)
-                .strafeLeft(1)
+                .forward(44.5)
                 .build();
 
         trajectoryToParking2 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
