@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode.autonomous.splineauton;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -9,12 +9,12 @@ import org.firstinspires.ftc.teamcode.hardware.RigatoniHardware;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 //Horizontal Claw Utilities
-public class Utilities
+public class UtilitiesUpdated
 {
 
     private RigatoniHardware hardware;
     SampleMecanumDrive drive;
-    Utilities(RigatoniHardware hardware)
+    UtilitiesUpdated(RigatoniHardware hardware)
     {
         this.hardware = hardware;
     }
@@ -43,6 +43,7 @@ public class Utilities
         wait(time, telemetry);
         hardware.liftArm.setPower(0);
         wait(1000, telemetry);
+
     }
     public void lowerArm(double power, int time, Telemetry telemetry)
     {

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.internal.system.Assert;
@@ -28,6 +29,7 @@ RigatoniHorizontalClaw extends OpMode
         hardware.initializePrimaryMotors(hardwareMap);
         hardware.initializeClawServos(hardwareMap);
         hardware.initializeSupplementaryMotors(hardwareMap);
+        hardware.liftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     @Override
@@ -133,7 +135,11 @@ RigatoniHorizontalClaw extends OpMode
     public void moveArm()
     {
         //triggers = linear pulley
-        hardware.liftArm.setPower((gamepad2.right_trigger - gamepad2.left_trigger)*1);
+        //if(hardware.liftArm.getCurrentPosition() > 5 && gamepad2.right_trigger < 0)
+            //if(hardware.liftArm.getCurrentPosition() < 3000 (MAX POSITION) && gamepad2.right_trigger > 0)
+            telemetry.addData("Position: ", hardware.liftArm.getCurrentPosition());
+            hardware.liftArm.setPower((gamepad2.right_trigger - gamepad2.left_trigger)*1);
+            telemetry.update();
     }
     public void rotateClaw()
     {
