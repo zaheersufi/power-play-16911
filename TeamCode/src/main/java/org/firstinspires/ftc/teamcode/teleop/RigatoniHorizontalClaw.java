@@ -29,7 +29,9 @@ RigatoniHorizontalClaw extends OpMode
         hardware.initializePrimaryMotors(hardwareMap);
         hardware.initializeClawServos(hardwareMap);
         hardware.initializeSupplementaryMotors(hardwareMap);
+        hardware.liftArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         hardware.liftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
     }
 
     @Override
