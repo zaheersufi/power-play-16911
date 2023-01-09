@@ -18,8 +18,8 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
-@Autonomous(name="highAlliance")
-public class highAlliance extends LinearOpMode
+@Autonomous(name="highAllianceLeft ")
+public class highAllianceLeft extends LinearOpMode
 {
     private SampleMecanumDrive drive;
     private UtilitiesUpdated utilities;
@@ -28,13 +28,22 @@ public class highAlliance extends LinearOpMode
     private SleevePipeline pipeline;
 
 
-    private final Pose2d blueHome = new Pose2d(-36, 60, Math.toRadians(270));
-    private final Pose2d forwardTurn = new Pose2d(-15.75, 60, Math.toRadians(-90));
-    private final Pose2d infrontOfJunction = new Pose2d(-14.25, 22, Math.toRadians(0));
-    private final Pose2d moveForward = new Pose2d(-11.25, 22, Math.toRadians(0));
-    //doesn't go to moveForward *****
+    private final Pose2d blueHome = new Pose2d(36, 66, Math.toRadians(-90));
+    private final Pose2d otwJunction = new Pose2d(15.75, 60, Math.toRadians(-90));
+    private final Pose2d inFrontOfJunction = new Pose2d(13.25, 22, Math.toRadians(0));
+    private final Pose2d parkingOne = new Pose2d(13.25, 12, Math.toRadians(-180));
+    private final Pose2d otwTwo = new Pose2d(20, 13, Math.toRadians(-100));
+    private final Pose2d parkingTwo = new Pose2d(36, 12, Math.toRadians(-180));
+    private final Pose2d otw1Three = new Pose2d(20, 13, Math.toRadians(-150));
+    private final Pose2d otw2Three = new Pose2d(36, 12, Math.toRadians(-180));
+    private final Pose2d parkingThree = new Pose2d(58, 12, Math.toRadians(-180));
 
-    private Trajectory trajectoryToJunction;
+    private Trajectory trajectoryToHighAlliance;
+    private Trajectory trajectoryGoForward;
+    private Trajectory trajectoryToParkingOne;
+    private Trajectory trajectoryToParkingTwo;
+    private Trajectory trajectoryToParkingThree;
+    private Trajectory trajectoryGoBackward;
 
     private final int initialWaitTime = 250;
 
@@ -88,14 +97,54 @@ public class highAlliance extends LinearOpMode
         telemetry.addData("Parking", identifier);
         telemetry.update();
 
+        drive.followTrajectory(trajectoryToHighAlliance);
+        highJunction();
+
+        if(identifier == 1)
+            drive.followTrajectory(trajectoryToParkingOne);
+        else if (identifier == 2)
+            drive.followTrajectory(trajectoryToParkingTwo);
+        else
+            drive.followTrajectory(trajectoryToParkingThree);
+
     }
+
     private void buildTrajectories()
     {
-        trajectoryToJunction = drive.trajectoryBuilder(blueHome, -90)
-                .splineToSplineHeading(forwardTurn, -10)
-                .splineToSplineHeading(infrontOfJunction, -90)
+        trajectoryToHighAlliance = drive.trajectoryBuilder(blueHome, -90)
+                .splineToSplineHeading(otwJunction, -10)
+                .splineToSplineHeading(inFrontOfJunction, -90)
                 .build();
+        trajectoryGoForward = drive.trajectoryBuilder(trajectoryToHighAlliance.end(), 0)
+                .forward(5)
+                .build();
+        trajectoryGoBackward = drive.trajectoryBuilder(trajectoryGoForward.end(), 0)
+                .back(5)
+                .build();
+        trajectoryToParkingOne = drive.trajectoryBuilder(trajectoryGoBackward.end(), 0)
+                .splineToSplineHeading(parkingOne, -90)
+                .build();
+        trajectoryToParkingTwo = drive.trajectoryBuilder(trajectoryGoBackward.end(), 0)
+                .splineToSplineHeading(otwTwo, -160)
+                .splineToSplineHeading(parkingTwo, -180)
+                .build();
+        trajectoryToParkingThree = drive.trajectoryBuilder(trajectoryGoBackward.end(), 0)
+                .splineToSplineHeading(otw1Three, 190)
+                .splineToSplineHeading(otw2Three, 180)
+                .splineToSplineHeading(parkingThree, 180)
+                .build();
+        //we have to test if it is tangent or heading where it says startHeading, currently
+        //it is the heading and on the Pose2d it also has the heading with the Math.toRadians
+    }
 
+    public void highJunction ()
+    {
+        utilities.liftArm(1, 4350, telemetry);
+        drive.followTrajectory(trajectoryGoForward);
+        utilities.lowerArm(1, 400, telemetry);
+        utilities.openClaw(true);
+        drive.followTrajectory(trajectoryGoBackward);
+        utilities.lowerArm(1, 3950, telemetry);
     }
 
     private void turnOnEncoders()
