@@ -28,7 +28,6 @@ public class sweatyLeft extends LinearOpMode
 
 
     private TrajectorySequence trajectoryTo12; //check coordinate system in notebook
-    private TrajectorySequence trajectoryToParking3;
     private TrajectorySequence trajectoryToParking2;
     private TrajectorySequence trajectoryToParking1;
     private TrajectorySequence goForward;
@@ -121,13 +120,14 @@ public class sweatyLeft extends LinearOpMode
         trajectoryTo12 = drive.trajectorySequenceBuilder(blueHome)
                 .forward(6)
                 .turn(Math.toRadians(-90))
-                .forward(21.25)
-                .strafeLeft(36)
-                .forward(0.5)
+                .forward(24.25)
+                .turn(Math.toRadians(90))
+                .forward(56)
+                .turn(Math.toRadians(50))
                 .build();
 
         goForward = drive.trajectorySequenceBuilder(trajectoryTo12.end()) //trajectoryTo12.end()
-                .forward(3)
+                .forward(5)
                 .build();
 
         trajectoryToParking1 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
@@ -138,11 +138,10 @@ public class sweatyLeft extends LinearOpMode
                 .forward(22)
                 .build();
 
-        trajectoryToParking3 = drive.trajectorySequenceBuilder(goForward.end()) //beforeJunction goForward.end())
-                .build();
+
         adjustToParkingCenter = drive.trajectorySequenceBuilder(goForward.end())
                 .back(8.5)
-                .turn(Math.toRadians(-40))
+                .turn(Math.toRadians(-25))
                 .forward(3)
                 .build();
     }

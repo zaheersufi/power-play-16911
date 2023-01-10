@@ -30,7 +30,6 @@ public class sweatyRight extends LinearOpMode
     private TrajectorySequence trajectoryTo12; //check coordinate system in notebook
     private TrajectorySequence trajectoryToParking3;
     private TrajectorySequence trajectoryToParking2;
-    private TrajectorySequence trajectoryToParking1;
     private TrajectorySequence adjustToParkingCenter;
     private TrajectorySequence goForward;
 
@@ -90,7 +89,7 @@ public class sweatyRight extends LinearOpMode
         telemetry.addData("Parking", identifier);
         telemetry.update();
 
-
+        //highJunctionRunPosition();
         drive.followTrajectorySequence(trajectoryTo12);
         highJunction();
         drive.followTrajectorySequence(adjustToParkingCenter);
@@ -107,7 +106,7 @@ public class sweatyRight extends LinearOpMode
 
 
 
-    public void highJunction ()
+    public void highJunction()
     {
         utilities.liftArm(1, 4350, telemetry); // .8 5300
         drive.followTrajectorySequence(goForward);
@@ -116,18 +115,26 @@ public class sweatyRight extends LinearOpMode
         utilities.lowerArm(1, 3950, telemetry); //.8 4800
 
     }
-
+    public void highJunctionRunPosition()
+    {
+        hardware.liftArm.setTargetPosition(2100);
+        hardware.liftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        drive.followTrajectorySequence(goForward);
+        hardware.liftArm.setTargetPosition(1900);
+        utilities.openClaw(true);
+        hardware.liftArm.setTargetPosition(500);
+    }
 
 
     private void buildTrajectories()
     {
         trajectoryTo12 = drive.trajectorySequenceBuilder(blueHome)
                 .forward(6)
-                .turn(Math.toRadians(-90))
-                .forward(24.25)
                 .turn(Math.toRadians(90))
+                .forward(24.25)
+                .turn(Math.toRadians(-90))
                 .forward(50)
-                .turn(Math.toRadians(50))
+                .turn(Math.toRadians(-65))
                 .build();
 
         goForward = drive.trajectorySequenceBuilder(trajectoryTo12.end()) //trajectoryTo12.end()
@@ -142,12 +149,10 @@ public class sweatyRight extends LinearOpMode
                 .forward(22)
                 .build();
 
-        trajectoryToParking1 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
 
-                .build();
         adjustToParkingCenter = drive.trajectorySequenceBuilder(goForward.end())
                 .back(8.5)
-                .turn(Math.toRadians(-40))
+                .turn(Math.toRadians(-25))
                 .forward(3)
                 .build();
 
