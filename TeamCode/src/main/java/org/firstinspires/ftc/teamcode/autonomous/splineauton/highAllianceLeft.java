@@ -30,13 +30,13 @@ public class highAllianceLeft extends LinearOpMode
 
     private final Pose2d blueHome = new Pose2d(36, 66, Math.toRadians(-90));
     private final Pose2d otwJunction = new Pose2d(15.75, 60, Math.toRadians(-90));
-    private final Pose2d inFrontOfJunction = new Pose2d(13.25, 22, Math.toRadians(0));
-    private final Pose2d parkingOne = new Pose2d(13.25, 12, Math.toRadians(-180));
+    private final Pose2d inFrontOfJunction = new Pose2d(13.25, 22, Math.toRadians(-180));
+    private final Pose2d parkingThree = new Pose2d(13.25, 12, Math.toRadians(0));
     private final Pose2d otwTwo = new Pose2d(20, 13, Math.toRadians(-100));
     private final Pose2d parkingTwo = new Pose2d(36, 12, Math.toRadians(-180));
-    private final Pose2d otw1Three = new Pose2d(20, 13, Math.toRadians(-150));
-    private final Pose2d otw2Three = new Pose2d(36, 12, Math.toRadians(-180));
-    private final Pose2d parkingThree = new Pose2d(58, 12, Math.toRadians(-180));
+    private final Pose2d otw1One = new Pose2d(20, 13, Math.toRadians(-70));
+    private final Pose2d otw2One = new Pose2d(36, 12, Math.toRadians(0));
+    private final Pose2d parkingOne = new Pose2d(58, 12, Math.toRadians(0));
 
     private Trajectory trajectoryToHighAlliance;
     private Trajectory trajectoryGoForward;
@@ -112,26 +112,26 @@ public class highAllianceLeft extends LinearOpMode
     private void buildTrajectories()
     {
         trajectoryToHighAlliance = drive.trajectoryBuilder(blueHome, -90)
-                .splineToSplineHeading(otwJunction, -10)
+                .splineToSplineHeading(otwJunction, -120)
                 .splineToSplineHeading(inFrontOfJunction, -90)
                 .build();
-        trajectoryGoForward = drive.trajectoryBuilder(trajectoryToHighAlliance.end(), 0)
+        trajectoryGoForward = drive.trajectoryBuilder(trajectoryToHighAlliance.end(), -180)
                 .forward(5)
                 .build();
-        trajectoryGoBackward = drive.trajectoryBuilder(trajectoryGoForward.end(), 0)
+        trajectoryGoBackward = drive.trajectoryBuilder(trajectoryGoForward.end(), -180)
                 .back(5)
                 .build();
-        trajectoryToParkingOne = drive.trajectoryBuilder(trajectoryGoBackward.end(), 0)
+        trajectoryToParkingOne = drive.trajectoryBuilder(trajectoryGoBackward.end(), -180)
+                .splineToSplineHeading(otw1One, -10)
+                .splineToSplineHeading(otw2One, 0)
+                .splineToSplineHeading(parkingThree, 0)
+                .build();
+        trajectoryToParkingTwo = drive.trajectoryBuilder(trajectoryGoBackward.end(), -180)
+                .splineToSplineHeading(otwTwo, -15)
+                .splineToSplineHeading(parkingTwo, 0)
+                .build();
+        trajectoryToParkingThree = drive.trajectoryBuilder(trajectoryGoBackward.end(), -180)
                 .splineToSplineHeading(parkingOne, -90)
-                .build();
-        trajectoryToParkingTwo = drive.trajectoryBuilder(trajectoryGoBackward.end(), 0)
-                .splineToSplineHeading(otwTwo, -160)
-                .splineToSplineHeading(parkingTwo, -180)
-                .build();
-        trajectoryToParkingThree = drive.trajectoryBuilder(trajectoryGoBackward.end(), 0)
-                .splineToSplineHeading(otw1Three, 190)
-                .splineToSplineHeading(otw2Three, 180)
-                .splineToSplineHeading(parkingThree, 180)
                 .build();
         //we have to test if it is tangent or heading where it says startHeading, currently
         //it is the heading and on the Pose2d it also has the heading with the Math.toRadians
