@@ -111,26 +111,26 @@ public class highAllianceLeft extends LinearOpMode
 
     private void buildTrajectories()
     {
-        trajectoryToHighAlliance = drive.trajectoryBuilder(blueHome, -90)
+        trajectoryToHighAlliance = drive.trajectoryBuilder(blueHome, Math.toRadians(-90))
                 .splineToSplineHeading(otwJunction, -120)
                 .splineToSplineHeading(inFrontOfJunction, -90)
                 .build();
-        trajectoryGoForward = drive.trajectoryBuilder(trajectoryToHighAlliance.end(), -180)
+        trajectoryGoForward = drive.trajectoryBuilder(trajectoryToHighAlliance.end(), Math.toRadians(-180))
                 .forward(5)
                 .build();
-        trajectoryGoBackward = drive.trajectoryBuilder(trajectoryGoForward.end(), -180)
+        trajectoryGoBackward = drive.trajectoryBuilder(trajectoryGoForward.end(), Math.toRadians(-180))
                 .back(5)
                 .build();
-        trajectoryToParkingOne = drive.trajectoryBuilder(trajectoryGoBackward.end(), -180)
+        trajectoryToParkingOne = drive.trajectoryBuilder(trajectoryGoBackward.end(), Math.toRadians(-180))
                 .splineToSplineHeading(otw1One, -10)
                 .splineToSplineHeading(otw2One, 0)
                 .splineToSplineHeading(parkingThree, 0)
                 .build();
-        trajectoryToParkingTwo = drive.trajectoryBuilder(trajectoryGoBackward.end(), -180)
+        trajectoryToParkingTwo = drive.trajectoryBuilder(trajectoryGoBackward.end(), Math.toRadians(-180))
                 .splineToSplineHeading(otwTwo, -15)
                 .splineToSplineHeading(parkingTwo, 0)
                 .build();
-        trajectoryToParkingThree = drive.trajectoryBuilder(trajectoryGoBackward.end(), -180)
+        trajectoryToParkingThree = drive.trajectoryBuilder(trajectoryGoBackward.end(), Math.toRadians(-180))
                 .splineToSplineHeading(parkingOne, -90)
                 .build();
         //we have to test if it is tangent or heading where it says startHeading, currently
@@ -139,12 +139,19 @@ public class highAllianceLeft extends LinearOpMode
 
     public void highJunction ()
     {
-        utilities.liftArm(1, 4350, telemetry);
+//        utilities.liftArm(1, 4350, telemetry);
+//        drive.followTrajectory(trajectoryGoForward);
+//        utilities.lowerArm(1, 400, telemetry);
+//        utilities.openClaw(true);
+//        drive.followTrajectory(trajectoryGoBackward);
+//        utilities.lowerArm(1, 3950, telemetry);
+        hardware.liftArm.setTargetPosition(2100);
+        hardware.liftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         drive.followTrajectory(trajectoryGoForward);
-        utilities.lowerArm(1, 400, telemetry);
+        hardware.liftArm.setTargetPosition(1900);
         utilities.openClaw(true);
+        hardware.liftArm.setTargetPosition(500);
         drive.followTrajectory(trajectoryGoBackward);
-        utilities.lowerArm(1, 3950, telemetry);
     }
 
     private void turnOnEncoders()
@@ -153,6 +160,7 @@ public class highAllianceLeft extends LinearOpMode
         hardware.leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         hardware.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         hardware.rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hardware.liftArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hardware.liftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 

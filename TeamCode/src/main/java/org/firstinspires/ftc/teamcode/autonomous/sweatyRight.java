@@ -31,6 +31,7 @@ public class sweatyRight extends LinearOpMode
     private TrajectorySequence trajectoryToParking3;
     private TrajectorySequence trajectoryToParking2;
     private TrajectorySequence trajectoryToParking1;
+    private TrajectorySequence adjustToParkingCenter;
     private TrajectorySequence goForward;
 
 
@@ -92,12 +93,13 @@ public class sweatyRight extends LinearOpMode
 
         drive.followTrajectorySequence(trajectoryTo12);
         highJunction();
+        drive.followTrajectorySequence(adjustToParkingCenter);
 
-        if(identifier == 1)
-            drive.followTrajectorySequence(trajectoryToParking1);
-        else if (identifier == 2)
+//        if(identifier == 1)
+//             // drive.followTrajectorySequence(trajectoryToParking1); ITS ALREADY IN THAT PARKING LOL
+        if (identifier == 2)
             drive.followTrajectorySequence(trajectoryToParking2);
-        else
+        else if (identifier == 3)
             drive.followTrajectorySequence(trajectoryToParking3);
 
     }
@@ -121,31 +123,32 @@ public class sweatyRight extends LinearOpMode
     {
         trajectoryTo12 = drive.trajectorySequenceBuilder(blueHome)
                 .forward(6)
+                .turn(Math.toRadians(-90))
+                .forward(24.25)
                 .turn(Math.toRadians(90))
-                .forward(21.25)
-                .strafeRight(38)
-                .forward(0.5)
+                .forward(50)
+                .turn(Math.toRadians(50))
                 .build();
 
         goForward = drive.trajectorySequenceBuilder(trajectoryTo12.end()) //trajectoryTo12.end()
-                .forward(3)
+                .forward(5)
                 .build();
 
         trajectoryToParking3 = drive.trajectorySequenceBuilder(goForward.end()) //beforeJunction goForward.end())
-                .strafeRight(12)
-                .turn(Math.toRadians(180))
+                .forward(46)
                 .build();
 
         trajectoryToParking2 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
-                .strafeRight(12)
-                .turn(Math.toRadians(180))
                 .forward(22)
                 .build();
 
         trajectoryToParking1 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
-                .strafeRight(12)
-                .turn(Math.toRadians(180))
-                .forward(44.5)
+
+                .build();
+        adjustToParkingCenter = drive.trajectorySequenceBuilder(goForward.end())
+                .back(8.5)
+                .turn(Math.toRadians(-40))
+                .forward(3)
                 .build();
 
     }

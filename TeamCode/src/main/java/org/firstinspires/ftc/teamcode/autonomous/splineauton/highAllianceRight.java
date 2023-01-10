@@ -111,7 +111,7 @@ public class highAllianceRight extends LinearOpMode
 
     private void buildTrajectories()
     {
-        trajectoryToHighAlliance = drive.trajectoryBuilder(blueHome, -90)
+        trajectoryToHighAlliance = drive.trajectoryBuilder(blueHome, Math.toRadians(-90))
                 .splineToSplineHeading(otwJunction, -60)
                 .splineToSplineHeading(inFrontOfJunction, -90)
                 .build();
@@ -139,12 +139,21 @@ public class highAllianceRight extends LinearOpMode
 
     public void highJunction ()
     {
-        utilities.liftArm(1, 4350, telemetry);
+//        utilities.liftArm(1, 4350, telemetry);
+//        drive.followTrajectory(trajectoryGoForward);
+//        utilities.lowerArm(1, 400, telemetry);
+//        utilities.openClaw(true);
+//        drive.followTrajectory(trajectoryGoBackward);
+//        utilities.lowerArm(1, 3950, telemetry);
+        hardware.liftArm.setTargetPosition(2100);
+        hardware.liftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         drive.followTrajectory(trajectoryGoForward);
-        utilities.lowerArm(1, 400, telemetry);
+        hardware.liftArm.setTargetPosition(1900);
         utilities.openClaw(true);
+        hardware.liftArm.setTargetPosition(500);
         drive.followTrajectory(trajectoryGoBackward);
-        utilities.lowerArm(1, 3950, telemetry);
+
+
     }
 
     private void turnOnEncoders()
@@ -153,6 +162,7 @@ public class highAllianceRight extends LinearOpMode
         hardware.leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         hardware.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         hardware.rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hardware.liftArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hardware.liftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 

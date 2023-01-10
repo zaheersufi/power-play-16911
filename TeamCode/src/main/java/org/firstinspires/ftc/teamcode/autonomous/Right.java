@@ -123,7 +123,8 @@ public class Right extends LinearOpMode
                 .forward(6)
                 .turn(Math.toRadians(90))
                 .forward(21.25)
-                .strafeRight(38)
+                .turn(Math.toRadians(18))
+                .strafeRight(47)
                 .forward(0.5)
                 .build();
 

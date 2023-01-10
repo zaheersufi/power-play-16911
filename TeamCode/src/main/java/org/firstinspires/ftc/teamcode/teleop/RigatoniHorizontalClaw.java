@@ -29,7 +29,7 @@ RigatoniHorizontalClaw extends OpMode
         hardware.initializePrimaryMotors(hardwareMap);
         hardware.initializeClawServos(hardwareMap);
         hardware.initializeSupplementaryMotors(hardwareMap);
-        hardware.liftArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        hardware.liftArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hardware.liftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
@@ -138,10 +138,13 @@ RigatoniHorizontalClaw extends OpMode
     {
         //triggers = linear pulley
         //if(hardware.liftArm.getCurrentPosition() > 5 && gamepad2.right_trigger < 0)
-            //if(hardware.liftArm.getCurrentPosition() < 3000 (MAX POSITION) && gamepad2.right_trigger > 0)
+//        if(!(hardware.liftArm.getCurrentPosition() < 100 && gamepad2.left_trigger > 0))
+//        {
+            //if(!(hardware.liftArm.getCurrentPosition() > 2100 (MAX POSITION) && gamepad2.right_trigger > 0))
             telemetry.addData("Position: ", hardware.liftArm.getCurrentPosition());
-            hardware.liftArm.setPower((gamepad2.right_trigger - gamepad2.left_trigger)*1);
+            hardware.liftArm.setPower((gamepad2.right_trigger - gamepad2.left_trigger) * 1);
             telemetry.update();
+//        }
     }
     public void rotateClaw()
     {

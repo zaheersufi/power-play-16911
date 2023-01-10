@@ -32,7 +32,7 @@ public class sweatyLeft extends LinearOpMode
     private TrajectorySequence trajectoryToParking2;
     private TrajectorySequence trajectoryToParking1;
     private TrajectorySequence goForward;
-
+    private TrajectorySequence adjustToParkingCenter;
 
     private final int initialWaitTime = 250;
 
@@ -92,13 +92,13 @@ public class sweatyLeft extends LinearOpMode
 
         drive.followTrajectorySequence(trajectoryTo12);
         highJunction();
+        drive.followTrajectorySequence(adjustToParkingCenter);
 
-        if(identifier == 1)
-            drive.followTrajectorySequence(trajectoryToParking1);
-        else if (identifier == 2)
+
+        if (identifier == 2)
             drive.followTrajectorySequence(trajectoryToParking2);
-        else
-            drive.followTrajectorySequence(trajectoryToParking3);
+        else if(identifier == 1)
+            drive.followTrajectorySequence(trajectoryToParking1);
 
     }
 
@@ -131,22 +131,20 @@ public class sweatyLeft extends LinearOpMode
                 .build();
 
         trajectoryToParking1 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
-                .strafeLeft(12)
-                .turn(Math.toRadians(180))
-                .forward(44.5)
+                .forward(46)
                 .build();
 
         trajectoryToParking2 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
-                .strafeLeft(12)
-                .turn(Math.toRadians(180))
                 .forward(22)
                 .build();
 
         trajectoryToParking3 = drive.trajectorySequenceBuilder(goForward.end()) //beforeJunction goForward.end())
-                .strafeLeft(12)
-                .turn(Math.toRadians(180))
                 .build();
-
+        adjustToParkingCenter = drive.trajectorySequenceBuilder(goForward.end())
+                .back(8.5)
+                .turn(Math.toRadians(-40))
+                .forward(3)
+                .build();
     }
 
 
