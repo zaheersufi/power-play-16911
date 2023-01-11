@@ -28,6 +28,7 @@ public class NewLeft extends LinearOpMode
     private TrajectorySequence trajectoryToParking3;
     private TrajectorySequence trajectoryToParking2;
     private TrajectorySequence trajectoryToParking1;
+    private TrajectorySequence junctionCorrection;
     private TrajectorySequence goForward;
 
 
@@ -48,7 +49,8 @@ public class NewLeft extends LinearOpMode
     {
         sleevePipeline = new SleevePipeline(telemetry);
         setUpCamera();
-        webcam.setPipeline(sleevePipeline);
+
+        webcam.setPipeline(new JunctionPipeline(telemetry));
 
 
         Assert.assertNotNull(hardwareMap);
@@ -63,7 +65,6 @@ public class NewLeft extends LinearOpMode
         drive.setPoseEstimate(BLUEHOME);
 
 
-        buildTrajectories();
         utilities.openClaw(false);
 
 
@@ -71,10 +72,18 @@ public class NewLeft extends LinearOpMode
         if(!opModeIsActive()) return;
         utilities.wait(WAIT_TIME, telemetry);
 
-
         int identifier = sleevePipeline.getDestination();
         telemetry.addData("Parking", identifier);
         telemetry.update();
+
+
+        trajectoryTo12 = drive.trajectorySequenceBuilder(BLUEHOME)
+                .forward(6)
+                .turn(Math.toRadians(-90))
+                .forward(21.25)
+                .strafeLeft(38)
+                .forward(0.5)
+                .build();
 
         drive.followTrajectorySequence(trajectoryTo12);
 
@@ -103,25 +112,36 @@ public class NewLeft extends LinearOpMode
      */
     public void highJunction ()
     {
-        utilities.liftArm(.8, 5300, telemetry);
-        drive.followTrajectorySequence(goForward);
+        utilities.liftArm(1, 4350, telemetry);
 
 
         utilities.wait(100, telemetry);
-        double displacement = junctionPipeline.getDisplacement(10);
+        double displacement = junctionPipeline.getDisplacement(40);
+
+        telemetry.addData("Displacement", displacement);
+        telemetry.update();
 
         if (displacement > 1) {
-            drive.followTrajectorySequence(drive.trajectorySequenceBuilder(goForward.end())
-                    .strafeRight(Math.abs(displacement)).build());
+            junctionCorrection = drive.trajectorySequenceBuilder(trajectoryTo12.end())
+                    .strafeRight(Math.abs(displacement)).build();
         } else if (displacement < -1) {
-            drive.followTrajectorySequence(drive.trajectorySequenceBuilder(goForward.end())
-                    .strafeLeft(Math.abs(displacement)).build());
+            junctionCorrection = drive.trajectorySequenceBuilder(trajectoryTo12.end())
+                    .strafeLeft(Math.abs(displacement)).build();
+        } else {
+            junctionCorrection = drive.trajectorySequenceBuilder(trajectoryTo12.end())
+                    .forward(0).build();
         }
 
+        drive.followTrajectorySequence(junctionCorrection);
+        buildTrajectories();
 
-        utilities.lowerArm(.8, 500, telemetry);
+        utilities.liftArm(1, 1450, telemetry);
+        drive.followTrajectorySequence(goForward);
+
+
+        utilities.lowerArm(1, 400, telemetry);
         utilities.openClaw(true);
-        utilities.lowerArm(.8, 4800, telemetry);
+        utilities.lowerArm(1, 3950, telemetry);
 
     }
 
@@ -132,23 +152,15 @@ public class NewLeft extends LinearOpMode
      */
     private void buildTrajectories()
     {
-        trajectoryTo12 = drive.trajectorySequenceBuilder(BLUEHOME)
-                .forward(6)
-                .turn(Math.toRadians(-90))
-                .forward(21.25)
-                .strafeLeft(38)
-                .forward(0.5)
-                .build();
 
-        goForward = drive.trajectorySequenceBuilder(trajectoryTo12.end()) //trajectoryTo12.end()
-                .forward(5)
+        goForward = drive.trajectorySequenceBuilder(junctionCorrection.end()) //trajectoryTo12.end()
+                .forward(3)
                 .build();
 
         trajectoryToParking1 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
                 .strafeLeft(12)
                 .turn(Math.toRadians(180))
-                .forward(43.5)
-                .strafeLeft(1)
+                .forward(44.5)
                 .build();
 
         trajectoryToParking2 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
@@ -194,7 +206,7 @@ public class NewLeft extends LinearOpMode
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener(){
             @Override
             public void onOpened() {
-                webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_RIGHT);
+                webcam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
             }
             @Override
             public void onError(int errorCode) {

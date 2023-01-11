@@ -16,7 +16,8 @@ public class SleevePipeline extends OpenCvPipeline
      * Define and initialize the robot's Telemetry
      */
     private final Telemetry telemetry;
-    public SleevePipeline(Telemetry telemetry) {
+    public SleevePipeline(Telemetry telemetry)
+    {
         this.telemetry = telemetry;
     }
 
@@ -53,9 +54,9 @@ public class SleevePipeline extends OpenCvPipeline
     /**
      * Core values that define the location and size of the region
      */
-    static final Point REGION_TOPLEFT_POINT = new Point(45,62);  // x,y (top left corner of the window is (0,0))
-    static final int REGION_WIDTH = 50;
-    static final int REGION_HEIGHT = 55;
+    static final Point REGION_TOPLEFT_POINT = new Point(30,180);  // x,y (top left corner of the window is (0,0))
+    static final int REGION_WIDTH = 110;
+    static final int REGION_HEIGHT = 100;
 
 
     /**
@@ -78,7 +79,8 @@ public class SleevePipeline extends OpenCvPipeline
      *
      * @param    input   the input image from the camera in RGB color scale
      */
-    public void extractRegion(Mat input) {
+    public void extractRegion(Mat input)
+    {
         Imgproc.cvtColor(input.submat(new Rect(REGION_POINT_A, REGION_POINT_B)), hsvRegion, Imgproc.COLOR_RGB2HSV);         // convert the RGB region to HSV and save it in hsvRegion
     }
 
@@ -119,6 +121,7 @@ public class SleevePipeline extends OpenCvPipeline
             Mat tmp = new Mat();
             Core.inRange(hsvRegion, new Scalar(COLOR_HUES[i]-15, BRIGHTNESS_THR*255, BRIGHTNESS_THR*255), new Scalar(COLOR_HUES[i]+15, 255, 255), tmp);
             sums[i] = Core.countNonZero(tmp);
+            tmp.release();
         }
 
         // Compare all sums to each other and determine the biggest.

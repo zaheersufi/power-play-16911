@@ -28,9 +28,9 @@ public class highAllianceLeft extends LinearOpMode
     private SleevePipeline pipeline;
 
 
-    private final Pose2d blueHome = new Pose2d(36, 66, Math.toRadians(-90));
-    private final Pose2d otwJunction = new Pose2d(15.75, 60, Math.toRadians(-90));
-    private final Pose2d inFrontOfJunction = new Pose2d(13.25, 22, Math.toRadians(-180));
+    private final Pose2d blueHome = new Pose2d(36, 64, Math.toRadians(-90)); // Lawrence edited this
+    private final Pose2d otwJunction = new Pose2d(12, 50, Math.toRadians(-90)); // Lawrence edited this
+    private final Pose2d inFrontOfJunction = new Pose2d(8, 24, Math.toRadians(-180)); // Lawrence edited this
     private final Pose2d parkingThree = new Pose2d(13.25, 12, Math.toRadians(0));
     private final Pose2d otwTwo = new Pose2d(20, 13, Math.toRadians(-100));
     private final Pose2d parkingTwo = new Pose2d(36, 12, Math.toRadians(-180));
@@ -111,30 +111,28 @@ public class highAllianceLeft extends LinearOpMode
 
     private void buildTrajectories()
     {
-        trajectoryToHighAlliance = drive.trajectoryBuilder(blueHome, Math.toRadians(-90))
-                .splineToSplineHeading(otwJunction, -120)
-                .splineToSplineHeading(inFrontOfJunction, -90)
+        trajectoryToHighAlliance = drive.trajectoryBuilder(blueHome, Math.toRadians(-180.0))
+                .splineToSplineHeading(otwJunction, Math.toRadians(-90)) // Lawrence edited this
+                .splineToSplineHeading(inFrontOfJunction, Math.toRadians(-120)) // Lawrence edited this
                 .build();
-        trajectoryGoForward = drive.trajectoryBuilder(trajectoryToHighAlliance.end(), Math.toRadians(-180))
+        trajectoryGoForward = drive.trajectoryBuilder(trajectoryToHighAlliance.end())
                 .forward(5)
                 .build();
-        trajectoryGoBackward = drive.trajectoryBuilder(trajectoryGoForward.end(), Math.toRadians(-180))
-                .back(5)
+        trajectoryGoBackward = drive.trajectoryBuilder(trajectoryGoForward.end())
+                .back(7)
                 .build();
-        trajectoryToParkingOne = drive.trajectoryBuilder(trajectoryGoBackward.end(), Math.toRadians(-180))
-                .splineToSplineHeading(otw1One, -10)
-                .splineToSplineHeading(otw2One, 0)
-                .splineToSplineHeading(parkingThree, 0)
+        trajectoryToParkingOne = drive.trajectoryBuilder(trajectoryGoBackward.end())
+                .splineToSplineHeading(otw1One, Math.toRadians(-10))
+                .splineToSplineHeading(otw2One, Math.toRadians(0))
+                .splineToSplineHeading(parkingOne, Math.toRadians(0))
                 .build();
-        trajectoryToParkingTwo = drive.trajectoryBuilder(trajectoryGoBackward.end(), Math.toRadians(-180))
-                .splineToSplineHeading(otwTwo, -15)
-                .splineToSplineHeading(parkingTwo, 0)
+        trajectoryToParkingTwo = drive.trajectoryBuilder(trajectoryGoBackward.end())
+                .splineToSplineHeading(otwTwo, Math.toRadians(-15))
+                .splineToSplineHeading(parkingTwo, Math.toRadians(0))
                 .build();
-        trajectoryToParkingThree = drive.trajectoryBuilder(trajectoryGoBackward.end(), Math.toRadians(-180))
-                .splineToSplineHeading(parkingOne, -90)
+        trajectoryToParkingThree = drive.trajectoryBuilder(trajectoryGoBackward.end())
+                .splineToSplineHeading(parkingThree, Math.toRadians(-90))
                 .build();
-        //we have to test if it is tangent or heading where it says startHeading, currently
-        //it is the heading and on the Pose2d it also has the heading with the Math.toRadians
     }
 
     public void highJunction ()

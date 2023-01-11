@@ -10,6 +10,7 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 
+
 public class JunctionPipeline extends OpenCvPipeline
 {
     /**
@@ -28,7 +29,7 @@ public class JunctionPipeline extends OpenCvPipeline
     private volatile double displacement = 0;
 
     // The possible error from the camera to the robot's claw
-    private final double CENTER_OFFSET = -0.125;
+    private final double CENTER_OFFSET = -0.4;
 
     // Scaling factor (used to perform the operations faster)
     final double SCALE = 0.5;
@@ -61,10 +62,19 @@ public class JunctionPipeline extends OpenCvPipeline
     public void maskYellow(Mat input) {
         Imgproc.cvtColor(input, mask, Imgproc.COLOR_RGB2HSV);
         Core.inRange(mask, new Scalar(YELLOW_HUE-15, BRIGHTNESS_THR*255, BRIGHTNESS_THR*255), new Scalar(YELLOW_HUE+15, 255, 255), mask);
-        Imgproc.erode(mask, mask, new Mat());
-        Imgproc.erode(mask, mask, new Mat());
-        Imgproc.dilate(mask, mask, new Mat());
-        Imgproc.dilate(mask, mask, new Mat());
+
+        Mat kernel = new Mat();
+
+        Imgproc.erode(mask, mask, kernel);
+        Imgproc.erode(mask, mask, kernel);
+        Imgproc.erode(mask, mask, kernel);
+        Imgproc.erode(mask, mask, kernel);
+
+        Imgproc.dilate(mask, mask, kernel);
+        Imgproc.dilate(mask, mask, kernel);
+        Imgproc.dilate(mask, mask, kernel);
+        Imgproc.dilate(mask, mask, kernel);
+
     }
 
 
@@ -110,7 +120,15 @@ public class JunctionPipeline extends OpenCvPipeline
                 YELLOW,
                 2);
 
-        Imgproc.line(input, new Point(center, 0), new Point(center, input.height()),BLACK, 2);
+        Imgproc.line(input, new Point(center, 0), new Point(center, input.height()),YELLOW, 2);
+        Imgproc.line(input, new Point(input.width()*(CENTER_OFFSET+0.5), 0), new Point(input.width()*(CENTER_OFFSET+0.5), input.height()),BLACK, 2);
+
+
+        /*
+         * Release matrices to clear memory
+         */
+        mask.release();
+        scaledInput.release();
 
 
         /*
