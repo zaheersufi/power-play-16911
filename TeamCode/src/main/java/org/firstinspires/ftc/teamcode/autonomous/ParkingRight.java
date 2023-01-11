@@ -40,25 +40,8 @@ public class ParkingRight extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        webcam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
-
         pipeline = new SleevePipeline(telemetry);
-        webcam.setPipeline(pipeline);
-
-        webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
-
-        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener(){
-            @Override
-            public void onOpened() {
-                webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_RIGHT);
-            }
-            @Override
-            public void onError(int errorCode) {
-                telemetry.addData("ERROR", "*Camera could not be opened* "+errorCode);
-                telemetry.update();
-            }
-        });
+        setUpCamera(pipeline);
 
 
         Assert.assertNotNull(hardwareMap);
@@ -156,7 +139,7 @@ public class ParkingRight extends LinearOpMode
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener(){
             @Override
             public void onOpened() {
-                webcam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+                webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);
             }
             @Override
             public void onError(int errorCode) {

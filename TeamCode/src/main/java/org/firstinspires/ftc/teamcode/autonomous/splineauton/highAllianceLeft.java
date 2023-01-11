@@ -29,12 +29,12 @@ public class highAllianceLeft extends LinearOpMode
 
     private final Pose2d leftHome = new Pose2d(36.0, 62.5, Math.toRadians(-90.0));
 
-    private final Pose2d otwJunction = new Pose2d(10.0, 45.0, Math.toRadians(-90.0));
-    private final Pose2d inFrontOfJunction =  new Pose2d(8.0, 24.0, Math.toRadians(-180.0));
+    private final Pose2d otwJunction = new Pose2d(10.0, 47, Math.toRadians(-90.0));
+    private final Pose2d inFrontOfJunction =  new Pose2d(12, 19, Math.toRadians(-180.0));
 
     private final Pose2d otw1One = new Pose2d(20.0, 13.0, Math.toRadians(-70.0));
     private final Pose2d otw2One = new Pose2d(36.0, 12.0, Math.toRadians(0.0));
-    private final Pose2d parkingOne = new Pose2d(58.5, 12.0, Math.toRadians(0.0));
+    private final Pose2d parkingOne = new Pose2d(58.5, 10.0, Math.toRadians(0.0));
 
     private final Pose2d otwTwo = new Pose2d(20.0, 12.0, Math.toRadians(-90.0));
     private final Pose2d parkingTwo = new Pose2d(36.0, 12.0, Math.toRadians(0.0));
@@ -63,26 +63,9 @@ public class highAllianceLeft extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        webcam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
-
         pipeline = new SleevePipeline(telemetry);
-        webcam.setPipeline(pipeline);
+        setUpCamera(pipeline);
 
-        webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
-
-        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener(){
-            @Override
-            public void onOpened() {
-                webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_RIGHT);
-            }
-            @Override
-            public void onError(int errorCode) {
-                telemetry.addData("ERROR", "*Camera could not be opened* "+errorCode);
-                telemetry.update();
-            }
-        });
-        Assert.assertNotNull(hardwareMap);
 
         hardware = new RigatoniHardware();
         hardware.initializePrimaryMotors(hardwareMap);
@@ -109,6 +92,7 @@ public class highAllianceLeft extends LinearOpMode
         telemetry.addData("Parking", identifier);
         telemetry.update();
 
+        utilities.liftArm(1, 800, telemetry);
         drive.followTrajectory(trajectoryToJunction);
         highJunction();
 
@@ -160,20 +144,20 @@ public class highAllianceLeft extends LinearOpMode
      */
     public void highJunction ()
     {
-//        utilities.liftArm(1, 4350, telemetry);
-//        drive.followTrajectory(trajectoryGoForward);
-//        utilities.lowerArm(1, 400, telemetry);
-//        utilities.openClaw(true);
-//        drive.followTrajectory(trajectoryGoBackward);
-//        utilities.lowerArm(1, 3950, telemetry);
-
-        hardware.liftArm.setTargetPosition(2100);
-        hardware.liftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        utilities.liftArm(1, 3900, telemetry);
         drive.followTrajectory(trajectoryGoForward);
-        hardware.liftArm.setTargetPosition(1900);
+        utilities.lowerArm(1, 400, telemetry);
         utilities.openClaw(true);
-        hardware.liftArm.setTargetPosition(500);
         drive.followTrajectory(trajectoryGoBackward);
+        utilities.lowerArm(1, 4200, telemetry);
+
+//        hardware.liftArm.setTargetPosition(2100);
+//        hardware.liftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        drive.followTrajectory(trajectoryGoForward);
+//        hardware.liftArm.setTargetPosition(1900);
+//        utilities.openClaw(true);
+//        hardware.liftArm.setTargetPosition(500);
+//        drive.followTrajectory(trajectoryGoBackward);
 
     }
 
@@ -205,7 +189,7 @@ public class highAllianceLeft extends LinearOpMode
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener(){
             @Override
             public void onOpened() {
-                webcam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+                webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);
             }
             @Override
             public void onError(int errorCode) {

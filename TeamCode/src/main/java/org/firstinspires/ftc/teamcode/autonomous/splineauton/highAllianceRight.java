@@ -63,25 +63,9 @@ public class highAllianceRight extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        webcam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
-
         pipeline = new SleevePipeline(telemetry);
-        webcam.setPipeline(pipeline);
+        setUpCamera(pipeline);
 
-        webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
-
-        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener(){
-            @Override
-            public void onOpened() {
-                webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_RIGHT);
-            }
-            @Override
-            public void onError(int errorCode) {
-                telemetry.addData("ERROR", "*Camera could not be opened* "+errorCode);
-                telemetry.update();
-            }
-        });
         Assert.assertNotNull(hardwareMap);
 
         hardware = new RigatoniHardware();
@@ -206,7 +190,7 @@ public class highAllianceRight extends LinearOpMode
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener(){
             @Override
             public void onOpened() {
-                webcam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+                webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);
             }
             @Override
             public void onError(int errorCode) {

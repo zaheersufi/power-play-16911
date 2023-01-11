@@ -206,7 +206,7 @@ public class NewLeft extends LinearOpMode
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener(){
             @Override
             public void onOpened() {
-                webcam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+                webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);
             }
             @Override
             public void onError(int errorCode) {
