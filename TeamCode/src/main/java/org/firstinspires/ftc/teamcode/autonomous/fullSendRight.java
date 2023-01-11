@@ -90,11 +90,11 @@ public class fullSendRight extends LinearOpMode
 
     public void highJunction()
     {
-        utilities.liftArm(1, 4350, telemetry); // .8 5300
+        utilities.liftArm(1, 4750, telemetry); // .8 5300
         drive.followTrajectorySequence(goForward);
         utilities.lowerArm(1, 400, telemetry); //.8 500
         utilities.openClaw(true);
-        utilities.lowerArm(1, 3950, telemetry); //.8 4800
+        utilities.lowerArm(1, 4250, telemetry); //.8 4800
 
     }
     public void highJunctionRunPosition()
@@ -111,18 +111,18 @@ public class fullSendRight extends LinearOpMode
     private void buildTrajectories()
     {
         trajectoryToJunction = drive.trajectorySequenceBuilder(blueHome)
-                .forward(48)
-                .turn(Math.toRadians(45))
+                .forward(50)
+                .turn(Math.toRadians(36))
                 .build();
         trajectoryRecenter = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
-                .back(6.5)
-                .turn(Math.toRadians(-135))
+                .back(1.5)
+                .turn(Math.toRadians(-127))
                 .build();
         goForward = drive.trajectorySequenceBuilder(trajectoryToJunction.end()) //trajectoryTo12.end()
-                .forward(6.5)
+                .forward(7.5)
                 .build();
         trajectoryToParking3 = drive.trajectorySequenceBuilder(trajectoryRecenter.end()) //beforeJunction goForward.end())
-                .forward(22)
+                .forward(19)
                 .build();
         trajectoryToParking1 = drive.trajectorySequenceBuilder(trajectoryRecenter.end()) //goForward.end()
                 .back(24)

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -13,7 +14,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
-
+@Disabled
 @Autonomous(name="sweatyLeft")
 public class sweatyLeft extends LinearOpMode
 {
@@ -86,7 +87,7 @@ public class sweatyLeft extends LinearOpMode
 
 
 
-    public void highJunction ()
+    public void highJunction()
     {
         utilities.liftArm(1, 4350, telemetry);
         drive.followTrajectorySequence (goForward);

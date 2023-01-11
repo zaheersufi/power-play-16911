@@ -24,7 +24,7 @@ public class fullSendLeft extends LinearOpMode
     private SleevePipeline pipeline;
 
 
-    private final Pose2d blueHome = new Pose2d(-36, 60, Math.toRadians(270));
+    private final Pose2d blueHome = new Pose2d(36, 60, Math.toRadians(270));
 
 
     private TrajectorySequence trajectoryToJunction; //check coordinate system in notebook
@@ -71,6 +71,8 @@ public class fullSendLeft extends LinearOpMode
         telemetry.addData("Parking", identifier);
         telemetry.update();
 
+        utilities.liftArm(1, 1400, telemetry);
+
         //highJunctionRunPosition();
         drive.followTrajectorySequence(trajectoryToJunction);
         highJunction();
@@ -89,11 +91,11 @@ public class fullSendLeft extends LinearOpMode
 
     public void highJunction()
     {
-        utilities.liftArm(1, 4350, telemetry); // .8 5300
+        utilities.liftArm(1, 3850, telemetry); // .8 5300 (originally 4750)
         drive.followTrajectorySequence(goForward);
         utilities.lowerArm(1, 400, telemetry); //.8 500
         utilities.openClaw(true);
-        utilities.lowerArm(1, 3950, telemetry); //.8 4800
+        utilities.lowerArm(1, 4250, telemetry); //.8 4800
 
     }
     public void highJunctionRunPosition()
@@ -110,21 +112,21 @@ public class fullSendLeft extends LinearOpMode
     private void buildTrajectories()
     {
         trajectoryToJunction = drive.trajectorySequenceBuilder(blueHome)
-                .forward(48)
-                .turn(Math.toRadians(-45))
+                .forward(50)
+                .turn(Math.toRadians(-49.5))
                 .build();
         trajectoryRecenter = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
-                .back(6.5)
-                .turn(Math.toRadians(135))
+                .back(1.5)
+                .turn(Math.toRadians(136))
                 .build();
         goForward = drive.trajectorySequenceBuilder(trajectoryToJunction.end()) //trajectoryTo12.end()
-                .forward(6.5)
+                .forward(9.5)
                 .build();
         trajectoryToParking1 = drive.trajectorySequenceBuilder(trajectoryRecenter.end()) //beforeJunction goForward.end())
-                .forward(22)
+                .forward(18)
                 .build();
         trajectoryToParking3 = drive.trajectorySequenceBuilder(trajectoryRecenter.end()) //goForward.end()
-                .back(24)
+                .back(26)
                 .build();
     }
 
