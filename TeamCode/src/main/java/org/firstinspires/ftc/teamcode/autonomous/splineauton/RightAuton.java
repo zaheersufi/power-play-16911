@@ -18,7 +18,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
-@Autonomous(name="RightAuton")
+//@Autonomous(name="RightAuton")
 @Disabled
 public class RightAuton extends LinearOpMode {
     private SampleMecanumDrive drive;
