@@ -14,7 +14,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
-@Disabled
+//@Disabled
 @Autonomous(name="sweatyRight")
 public class sweatyRight extends LinearOpMode
 {
@@ -113,11 +113,13 @@ public class sweatyRight extends LinearOpMode
     private void buildTrajectories()
     {
         trajectoryTo12 = drive.trajectorySequenceBuilder(blueHome)
-                .forward(6)
-                .turn(Math.toRadians(90))
-                .forward(24.25)
-                .turn(Math.toRadians(-90))
-                .forward(50)
+//                .forward(6)
+//                .turn(Math.toRadians(90))
+//                .forward(24.25)
+//                .turn(Math.toRadians(-90))
+//                .forward(50)
+                .strafeLeft(24.25)
+                .forward(56)
                 .turn(Math.toRadians(-65))
                 .build();
 
@@ -132,7 +134,6 @@ public class sweatyRight extends LinearOpMode
         trajectoryToParking2 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
                 .forward(22)
                 .build();
-
 
         adjustToParkingCenter = drive.trajectorySequenceBuilder(goForward.end())
                 .back(8.5)
