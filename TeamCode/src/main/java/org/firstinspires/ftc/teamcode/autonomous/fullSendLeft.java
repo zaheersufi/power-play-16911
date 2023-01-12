@@ -14,6 +14,8 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
+
+
 @Autonomous(name="fullSendLeft")
 public class fullSendLeft extends LinearOpMode
 {
@@ -21,74 +23,83 @@ public class fullSendLeft extends LinearOpMode
     private Utilities utilities;
     private RigatoniHardware hardware;
     private OpenCvInternalCamera webcam;
-    private SleevePipeline pipeline;
+    private SleevePipeline sleevePipeline;
 
 
-    private final Pose2d blueHome = new Pose2d(36, 60, Math.toRadians(270));
-
-
-    private TrajectorySequence trajectoryToJunction; //check coordinate system in notebook
-    private TrajectorySequence trajectoryRecenter;
-    private TrajectorySequence trajectoryToParking3;
-    private TrajectorySequence trajectoryToParking1;
+    private TrajectorySequence trajectoryToJunction;
     private TrajectorySequence goForward;
+    private TrajectorySequence trajectoryRecenter;
+    private TrajectorySequence trajectoryToParking1;
+    private TrajectorySequence trajectoryToParking3;
 
 
-    private final int initialWaitTime = 250;
+    private final Pose2d HOME = new Pose2d(36, 60, Math.toRadians(270));
+
+
+    private final int WAIT_TIME = 250;
 
 
 
+    /**
+     * Reads the parking position, scores a cone in the
+     * high junction, and parks in the space determined
+     * by the custom sleeve.
+     *
+     * @throws  InterruptedException    in case the thread is interrupted
+     */
     @Override
     public void runOpMode() throws InterruptedException
     {
-        pipeline = new SleevePipeline(telemetry);
-        setUpCamera(pipeline);
+        sleevePipeline = new SleevePipeline(telemetry);
+        setUpCamera(sleevePipeline);
+
 
         Assert.assertNotNull(hardwareMap);
-
         hardware = new RigatoniHardware();
         hardware.initializePrimaryMotors(hardwareMap);
         hardware.initializeClawServos(hardwareMap);
         hardware.initializeSupplementaryMotors(hardwareMap);
         utilities = new Utilities(hardware);
-
         drive = new SampleMecanumDrive(hardwareMap);
-        drive.setPoseEstimate(blueHome);
+        drive.setPoseEstimate(HOME);
+
 
         turnOnEncoders();
-
-
         buildTrajectories();
         utilities.openClaw(false);
-
         waitForStart();
         if(!opModeIsActive()) {return;}
+        utilities.wait(WAIT_TIME, telemetry);
 
-        utilities.wait(initialWaitTime, telemetry);
 
-
-        final int identifier = pipeline.getDestination();
-        telemetry.addData("Parking", identifier);
-        telemetry.update();
+        final int IDENTIFIER = sleevePipeline.getDestination();
 
         utilities.liftArm(1, 1400, telemetry);
 
-        //highJunctionRunPosition();
+        telemetry.addData("Parking", IDENTIFIER);
+        telemetry.update();
+
+
         drive.followTrajectorySequence(trajectoryToJunction);
+        //highJunctionRunPosition();
         highJunction();
         drive.followTrajectorySequence(trajectoryRecenter); //trajectoryRecenter ends in parking2
 
-        if(identifier == 1)
+
+        if(IDENTIFIER == 1)
             drive.followTrajectorySequence(trajectoryToParking1);
-//        if (identifier == 2)
-//            drive.followTrajectorySequence(trajectoryToParking2); //already here LOLZ
-        else if (identifier == 3)
+        else if (IDENTIFIER == 3)
             drive.followTrajectorySequence(trajectoryToParking3);
+
     }
 
 
-
-
+    /**
+     * When the robot is in front of the High Junction, it
+     * lifts the arm, approaches it, goes a bit down,
+     * lets the cone go (opens claw), and lowers the lift back down.
+     * Based on TIME
+     */
     public void highJunction()
     {
         utilities.liftArm(1, 3850, telemetry); // .8 5300 (originally 4750)
@@ -98,6 +109,14 @@ public class fullSendLeft extends LinearOpMode
         utilities.lowerArm(1, 4250, telemetry); //.8 4800
 
     }
+
+
+    /**
+     * When the robot is in front of the High Junction, it
+     * lifts the arm, approaches it, goes a bit down,
+     * lets the cone go (opens claw), and lowers the lift back down.
+     * Based on POSITION
+     */
     public void highJunctionRunPosition()
     {
         hardware.liftArm.setTargetPosition(2100);
@@ -109,29 +128,35 @@ public class fullSendLeft extends LinearOpMode
     }
 
 
+    /**
+     * Defines and builds the different trajectories used.
+     */
     private void buildTrajectories()
     {
-        trajectoryToJunction = drive.trajectorySequenceBuilder(blueHome)
+        trajectoryToJunction = drive.trajectorySequenceBuilder(HOME)
                 .forward(50)
                 .turn(Math.toRadians(-49.5))
+                .build();
+        goForward = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
+                .forward(9.5)
                 .build();
         trajectoryRecenter = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
                 .back(1.5)
                 .turn(Math.toRadians(136))
                 .build();
-        goForward = drive.trajectorySequenceBuilder(trajectoryToJunction.end()) //trajectoryTo12.end()
-                .forward(9.5)
-                .build();
-        trajectoryToParking1 = drive.trajectorySequenceBuilder(trajectoryRecenter.end()) //beforeJunction goForward.end())
+        trajectoryToParking1 = drive.trajectorySequenceBuilder(trajectoryRecenter.end())
                 .forward(18)
                 .build();
-        trajectoryToParking3 = drive.trajectorySequenceBuilder(trajectoryRecenter.end()) //goForward.end()
+        trajectoryToParking3 = drive.trajectorySequenceBuilder(trajectoryRecenter.end())
                 .back(26)
                 .build();
+
     }
 
 
-
+    /**
+     * Turns on the encoders of all drive motors and the lift motor.
+     */
     private void turnOnEncoders()
     {
         hardware.leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -143,7 +168,9 @@ public class fullSendLeft extends LinearOpMode
     }
 
 
-
+    /**
+     * Set up the webcam in an inverted horizontal position
+     */
     public void setUpCamera(SleevePipeline pipeline)
     {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -164,4 +191,7 @@ public class fullSendLeft extends LinearOpMode
         });
 
     }
+
+
+
 }

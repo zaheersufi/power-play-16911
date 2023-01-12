@@ -14,9 +14,12 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
-@Disabled
-@Autonomous(name="NewLeft")
-public class NewLeft extends LinearOpMode
+
+
+
+//@Disabled
+@Autonomous(name="LeftTest")
+public class LeftTest extends LinearOpMode
 {
     private SampleMecanumDrive drive;
     private Utilities utilities;
@@ -25,16 +28,18 @@ public class NewLeft extends LinearOpMode
     private SleevePipeline sleevePipeline;
     private JunctionPipeline junctionPipeline;
 
-    private TrajectorySequence trajectoryTo12; //check coordinate system in notebook
-    private TrajectorySequence trajectoryToParking3;
-    private TrajectorySequence trajectoryToParking2;
-    private TrajectorySequence trajectoryToParking1;
-    private TrajectorySequence junctionCorrection;
+    private TrajectorySequence trajectoryToJunction;
     private TrajectorySequence goForward;
+    private TrajectorySequence junctionCorrection;
+    private TrajectorySequence trajectoryRecenter;
+    private TrajectorySequence trajectoryToParking1;
+    private TrajectorySequence trajectoryToParking3;
+
+
+    private final Pose2d HOME = new Pose2d(36, 60, Math.toRadians(270));
 
 
     private final int WAIT_TIME = 250;
-    private final Pose2d BLUEHOME = new Pose2d(-36, -60, Math.toRadians(90));
 
 
 
@@ -50,7 +55,6 @@ public class NewLeft extends LinearOpMode
     {
         sleevePipeline = new SleevePipeline(telemetry);
         setUpCamera();
-
         webcam.setPipeline(new JunctionPipeline(telemetry));
 
 
@@ -59,50 +63,45 @@ public class NewLeft extends LinearOpMode
         hardware.initializePrimaryMotors(hardwareMap);
         hardware.initializeClawServos(hardwareMap);
         hardware.initializeSupplementaryMotors(hardwareMap);
-        turnOnEncoders();
-
         utilities = new Utilities(hardware);
         drive = new SampleMecanumDrive(hardwareMap);
-        drive.setPoseEstimate(BLUEHOME);
+        drive.setPoseEstimate(HOME);
 
 
+        turnOnEncoders();
         utilities.openClaw(false);
-
-
         waitForStart();
         if(!opModeIsActive()) return;
         utilities.wait(WAIT_TIME, telemetry);
 
-        int identifier = sleevePipeline.getDestination();
-        telemetry.addData("Parking", identifier);
+
+        final int IDENTIFIER = sleevePipeline.getDestination();
+
+        utilities.liftArm(1, 1400, telemetry);
+
+        telemetry.addData("Parking", IDENTIFIER);
         telemetry.update();
 
 
-        trajectoryTo12 = drive.trajectorySequenceBuilder(BLUEHOME)
-                .forward(6)
-                .turn(Math.toRadians(-90))
-                .forward(21.25)
-                .strafeLeft(38)
-                .forward(0.5)
+        trajectoryToJunction = drive.trajectorySequenceBuilder(HOME)
+                .forward(50)
+                .turn(Math.toRadians(-49.5))
                 .build();
-
-        drive.followTrajectorySequence(trajectoryTo12);
+        drive.followTrajectorySequence(trajectoryToJunction);
 
 
         junctionPipeline = new JunctionPipeline(telemetry);
         webcam.setPipeline(junctionPipeline);
         highJunction();
+        drive.followTrajectorySequence(trajectoryRecenter); //trajectoryRecenter ends in parking2
 
 
-        if(identifier == 1)
+        if(IDENTIFIER == 1)
             drive.followTrajectorySequence(trajectoryToParking1);
-        else if (identifier == 2)
-            drive.followTrajectorySequence(trajectoryToParking2);
-        else
+        else if (IDENTIFIER == 3)
             drive.followTrajectorySequence(trajectoryToParking3);
 
     }
-
 
 
     /**
@@ -113,39 +112,38 @@ public class NewLeft extends LinearOpMode
      */
     public void highJunction ()
     {
-        utilities.liftArm(1, 4350, telemetry);
+        utilities.liftArm(1, 2000, telemetry);
 
 
         utilities.wait(100, telemetry);
         double displacement = junctionPipeline.getDisplacement(40);
-
         telemetry.addData("Displacement", displacement);
         telemetry.update();
 
+
         if (displacement > 1) {
-            junctionCorrection = drive.trajectorySequenceBuilder(trajectoryTo12.end())
+            junctionCorrection = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
                     .strafeRight(Math.abs(displacement)).build();
         } else if (displacement < -1) {
-            junctionCorrection = drive.trajectorySequenceBuilder(trajectoryTo12.end())
+            junctionCorrection = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
                     .strafeLeft(Math.abs(displacement)).build();
         } else {
-            junctionCorrection = drive.trajectorySequenceBuilder(trajectoryTo12.end())
+            junctionCorrection = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
                     .forward(0).build();
         }
 
         drive.followTrajectorySequence(junctionCorrection);
         buildTrajectories();
 
-        utilities.liftArm(1, 1450, telemetry);
-        drive.followTrajectorySequence(goForward);
 
+        utilities.liftArm(1, 1850, telemetry);
+        drive.followTrajectorySequence(goForward);
 
         utilities.lowerArm(1, 400, telemetry);
         utilities.openClaw(true);
-        utilities.lowerArm(1, 3950, telemetry);
+        utilities.lowerArm(1, 4250, telemetry);
 
     }
-
 
 
     /**
@@ -153,30 +151,21 @@ public class NewLeft extends LinearOpMode
      */
     private void buildTrajectories()
     {
-
-        goForward = drive.trajectorySequenceBuilder(junctionCorrection.end()) //trajectoryTo12.end()
-                .forward(3)
+        goForward = drive.trajectorySequenceBuilder(junctionCorrection.end())
+                .forward(9.5)
                 .build();
-
-        trajectoryToParking1 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
-                .strafeLeft(12)
-                .turn(Math.toRadians(180))
-                .forward(44.5)
+        trajectoryRecenter = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
+                .back(1.5)
+                .turn(Math.toRadians(136))
                 .build();
-
-        trajectoryToParking2 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
-                .strafeLeft(12)
-                .turn(Math.toRadians(180))
-                .forward(22)
+        trajectoryToParking1 = drive.trajectorySequenceBuilder(trajectoryRecenter.end())
+                .forward(18)
                 .build();
-
-        trajectoryToParking3 = drive.trajectorySequenceBuilder(goForward.end()) //beforeJunction goForward.end())
-                .strafeLeft(12)
-                .turn(Math.toRadians(180))
+        trajectoryToParking3 = drive.trajectorySequenceBuilder(trajectoryRecenter.end())
+                .back(26)
                 .build();
 
     }
-
 
 
     /**
@@ -188,11 +177,9 @@ public class NewLeft extends LinearOpMode
         hardware.leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         hardware.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         hardware.rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
         hardware.liftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
-
 
 
     /**
@@ -217,4 +204,7 @@ public class NewLeft extends LinearOpMode
         });
 
     }
+
+
+
 }
