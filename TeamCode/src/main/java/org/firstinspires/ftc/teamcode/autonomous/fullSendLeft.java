@@ -140,7 +140,7 @@ public class fullSendLeft extends LinearOpMode
                 .turn(Math.toRadians(-48))
                 .build();
         goForward = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
-                .forward(9)
+                .forward(6.75)
                 .build();
         trajectoryRecenter = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
                 .back(1.5)

@@ -73,6 +73,9 @@ public class fullSendRight extends LinearOpMode
 
 
         final int IDENTIFIER = sleevePipeline.getDestination();
+
+        utilities.liftArm(1, 1400, telemetry);
+
         telemetry.addData("Parking", IDENTIFIER);
         telemetry.update();
 
@@ -99,7 +102,7 @@ public class fullSendRight extends LinearOpMode
      */
     public void highJunction()
     {
-        utilities.liftArm(1, 4750, telemetry); // .8 5300
+        utilities.liftArm(1, 3850, telemetry); // .8 5300
         drive.followTrajectorySequence(goForward);
         utilities.lowerArm(1, 400, telemetry); //.8 500
         utilities.openClaw(true);
@@ -132,13 +135,15 @@ public class fullSendRight extends LinearOpMode
     {
         trajectoryToJunction = drive.trajectorySequenceBuilder(HOME)
                 .forward(50)
-                .turn(Math.toRadians(36))
+                .forward(3)
+                .back(3)
+                .turn(Math.toRadians(37))
                 .build();
         goForward = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
-                .forward(7.5)
+                .forward(6.75)
                 .build();
         trajectoryRecenter = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
-                .back(1.5)
+                //.back(0)
                 .turn(Math.toRadians(-127))
                 .build();
         trajectoryToParking1 = drive.trajectorySequenceBuilder(trajectoryRecenter.end())
