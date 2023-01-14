@@ -143,7 +143,7 @@ public class fullSendRight extends LinearOpMode
                 .forward(6.75)
                 .build();
         trajectoryRecenter = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
-                //.back(0)
+                //.back(0) //THIS NEEDS TO BE TESTED ON BATTERY WITH MIN VOLTAGE OF 13.4
                 .turn(Math.toRadians(-127))
                 .build();
         trajectoryToParking1 = drive.trajectorySequenceBuilder(trajectoryRecenter.end())

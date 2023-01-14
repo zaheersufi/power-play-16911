@@ -17,7 +17,7 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 
 
 
-//@Disabled
+@Disabled
 @Autonomous(name="LeftTest")
 public class LeftTest extends LinearOpMode
 {
