@@ -138,6 +138,7 @@ public class fullSendLeft extends LinearOpMode
                 .forward(3)
                 .back(3)
                 .turn(Math.toRadians(-45))
+                //deez
                 .build();
         goForward = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
                 .forward(7.25)
