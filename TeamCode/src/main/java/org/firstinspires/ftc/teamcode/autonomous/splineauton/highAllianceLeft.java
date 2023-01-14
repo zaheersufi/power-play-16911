@@ -16,7 +16,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
 
-
+@Disabled
 @Autonomous(name="highAllianceLeft ")
 public class highAllianceLeft extends LinearOpMode
 {
