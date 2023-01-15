@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.internal.system.Assert;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -24,6 +25,8 @@ public class fullSendLeft extends LinearOpMode
     private RigatoniHardware hardware;
     private OpenCvInternalCamera webcam;
     private SleevePipeline sleevePipeline;
+
+    private ElapsedTime timer;
 
 
     private TrajectorySequence trajectoryToJunction;
@@ -63,6 +66,8 @@ public class fullSendLeft extends LinearOpMode
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(HOME);
 
+        timer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+
 
         turnOnEncoders();
         buildTrajectories();
@@ -79,10 +84,13 @@ public class fullSendLeft extends LinearOpMode
         telemetry.addData("Parking", IDENTIFIER);
         telemetry.update();
 
+        timer.reset();
+        hardware.liftArm.setPower(0.7);
 
         drive.followTrajectorySequence(trajectoryToJunction);
-        //highJunctionRunPosition();
-        highJunction();
+
+        int liftTime = (int)(3900 - timer.time());
+        highJunction(liftTime);
         drive.followTrajectorySequence(trajectoryRecenter); //trajectoryRecenter ends in parking2
 
 
@@ -100,13 +108,15 @@ public class fullSendLeft extends LinearOpMode
      * lets the cone go (opens claw), and lowers the lift back down.
      * Based on TIME
      */
-    public void highJunction()
+    public void highJunction(int time)
     {
-        utilities.liftArm(1, 3850, telemetry); // .8 5300 (originally 4750)
+        if (time<0) utilities.liftArm(-1, -time, telemetry);
+        else utilities.liftArm(1, time, telemetry); // .8 5300 (originally 4750)
+
         drive.followTrajectorySequence(goForward);
-        utilities.lowerArm(1, 400, telemetry); //.8 500
+        utilities.lowerArm(1, 500, telemetry); //.8 500
         utilities.openClaw(true);
-        utilities.lowerArm(1, 4250, telemetry); //.8 4800
+        utilities.lowerArm(1, 3000, telemetry); //.8 4800
 
     }
 
@@ -138,7 +148,6 @@ public class fullSendLeft extends LinearOpMode
                 .forward(3)
                 .back(3)
                 .turn(Math.toRadians(-45))
-                //deez
                 .build();
         goForward = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
                 .forward(7.25)
