@@ -9,7 +9,7 @@ import com.acmerobotics.roadrunner.trajectory.constraints.MecanumConstraints
 
 object TrajectoryTwoCones {
     // Remember to set these constraints to the same values as your DriveConstants.java file in the quickstart
-    private val driveConstraints = DriveConstraints(45.0, 30.0, 0.0, Math.toRadians(399.0969417327928),  Math.toRadians(60.0), 0.0)
+    private val driveConstraints = DriveConstraints(50.0, 30.0, 0.0, Math.toRadians(399.0969417327928),  Math.toRadians(60.0), 0.0)
 
     // Remember to set your track width to an estimate of your actual bot to get accurate trajectory profile duration!
     const val ROBOT_WIDTH = 16.5
@@ -21,8 +21,8 @@ object TrajectoryTwoCones {
 
 
     fun createTrajectory(): ArrayList<Trajectory> {
-        Left(2)
-//        Right(3)
+//        Left(1)
+        Right(3)
 
 
         return list
