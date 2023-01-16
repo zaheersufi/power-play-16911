@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.path.Path
 import javafx.scene.canvas.GraphicsContext
 
 import javafx.scene.paint.Color
+import javafx.scene.shape.Line
 import javafx.scene.shape.Rectangle
 
 
@@ -14,7 +15,7 @@ object GraphicsUtil {
 
     val FIELD_WIDTH = 144.0 // 12'
 
-    val ROBOT_WIDTH = TrajectoryTwoCones.ROBOT_WIDTH
+    val ROBOT_WIDTH = TrajectoryTemplate.robotWidth
 
     val LINE_THICKNESS = 3.0
 
@@ -49,31 +50,19 @@ object GraphicsUtil {
 
     }
 
-    fun strokeLine(p1: Vector2d, p2: Vector2d) {
-        val pix1 = p1.toPixel
-        val pix2 = p2.toPixel
-        gc.strokeLine(pix1.x, pix1.y, pix2.x, pix2.y)
-    }
-
-    fun drawRobotVector(pose2d: Pose2d) {
-        gc.globalAlpha = 0.75
-
+    fun updateRobotVector(vector: Line, pose2d: Pose2d) {
         val point1 = pose2d.vec()
         val v = pose2d.headingVec() * ROBOT_WIDTH / 2.0
         val point2 = point1 + v
 
-        setColor(ROBOT_VECTOR_COLOR)
-        strokeLine(point1, point2)
-
-        gc.globalAlpha = 0.75
-    }
-
-    fun fillRect(center: Vector2d, w: Double, h: Double) {
-        val center_pix = center.toPixel
-        val pix_w = w * pixelsPerInch
-        val pix_h = h * pixelsPerInch
-
-        gc.fillRect(center_pix.x - pix_w / 2.0, center_pix.y - pix_h / 2.0, pix_w, pix_h)
+        vector.startX = point1.toPixel.x
+        vector.startY = point1.toPixel.y
+        vector.endX = point2.toPixel.x
+        vector.endY = point2.toPixel.y
+        vector.fill = ROBOT_COLOR
+        vector.strokeWidth = LINE_THICKNESS
+        vector.stroke = ROBOT_VECTOR_COLOR
+        vector.opacity = 0.6
     }
 
     fun updateRobotRect(rectangle: Rectangle, pose2d: Pose2d, color: Color, opacity: Double) {
@@ -97,8 +86,6 @@ object GraphicsUtil {
 
 val Vector2d.toPixel
     get() = Vector2d(
-//        x * GraphicsUtil.pixelsPerInch + GraphicsUtil.halfFieldPixels,
-//        -y * GraphicsUtil.pixelsPerInch + GraphicsUtil.halfFieldPixels
         -y * GraphicsUtil.pixelsPerInch + GraphicsUtil.halfFieldPixels,
         -x * GraphicsUtil.pixelsPerInch + GraphicsUtil.halfFieldPixels
     )
