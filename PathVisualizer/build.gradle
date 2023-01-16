@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.8'
+}
+
+group 'PathVisualizer'
+
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    implementation 'com.acmerobotics.roadrunner:core:0.5.1'
+}
+
+javafx {
+    version = "14"
+    modules = [ 'javafx.graphics', 'javafx.controls' ]
+}
+
+mainClassName = 'App'
