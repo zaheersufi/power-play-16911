@@ -11,29 +11,31 @@ import javafx.scene.shape.Rectangle
 
 
 object GraphicsUtil {
-    val DEFUALT_RESOLUTION = 2.0 // inches
+    private const val DEFAULT_RESOLUTION = 2.0 // inches
 
-    val FIELD_WIDTH = 144.0 // 12'
+    const val FIELD_WIDTH = 144.0 // 12'
 
-    val ROBOT_WIDTH = TrajectoryTemplate.robotWidth
+    private const val robotWidth = TrajectoryTemplate.robotWidth
+    private const val robotLength = TrajectoryTemplate.robotLength
 
-    val LINE_THICKNESS = 3.0
 
-    val PATH_COLOR = Color.BLACK
+    const val LINE_THICKNESS = 3.0
+
+    private val PATH_COLOR = Color.BLACK
     val ROBOT_COLOR = Color.MAROON
-    val ROBOT_VECTOR_COLOR = Color.BLUE
-    val END_BOX_COLOR = Color.GREEN
+    private val ROBOT_VECTOR_COLOR: Color = Color.BLUE
+    val END_BOX_COLOR: Color = Color.GREEN
 
     lateinit var gc: GraphicsContext
 
-    fun setColor(color: Color) {
+    private fun setColor(color: Color) {
         gc.stroke = color
         gc.fill = color
     }
 
     fun drawSampledPath(path: Path) {
         setColor(PATH_COLOR)
-        val samples = Math.ceil(path.length() / DEFUALT_RESOLUTION).toInt()
+        val samples = Math.ceil(path.length() / DEFAULT_RESOLUTION).toInt()
         val points = Array(samples) { Vector2d() }
         val dx = path.length() / (samples - 1).toDouble()
         for (i in 0 until samples) {
@@ -52,7 +54,7 @@ object GraphicsUtil {
 
     fun updateRobotVector(vector: Line, pose2d: Pose2d) {
         val point1 = pose2d.vec()
-        val v = pose2d.headingVec() * ROBOT_WIDTH / 2.0
+        val v = pose2d.headingVec() * robotLength / 2.0
         val point2 = point1 + v
 
         vector.startX = point1.toPixel.x
@@ -66,14 +68,15 @@ object GraphicsUtil {
     }
 
     fun updateRobotRect(rectangle: Rectangle, pose2d: Pose2d, color: Color, opacity: Double) {
-        val pix_w = ROBOT_WIDTH * pixelsPerInch
+        val pix_w = robotWidth * pixelsPerInch
+        val pix_h = robotLength * pixelsPerInch
 
         rectangle.width = pix_w
-        rectangle.height = pix_w
+        rectangle.height = pix_h
 
         val center_pix = pose2d.vec().toPixel
         rectangle.x = center_pix.x - pix_w / 2.0
-        rectangle.y = center_pix.y - pix_w / 2.0
+        rectangle.y = center_pix.y - pix_h / 2.0
         rectangle.fill = color
         rectangle.opacity = opacity
         rectangle.rotate = Math.toDegrees(-pose2d.heading)
