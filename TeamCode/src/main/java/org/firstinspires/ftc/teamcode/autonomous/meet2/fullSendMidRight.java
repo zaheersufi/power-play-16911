@@ -18,7 +18,6 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
 
-@Disabled
 @Autonomous(name="fullSendMidRight")
 public class fullSendMidRight extends LinearOpMode
 {
@@ -102,11 +101,11 @@ public class fullSendMidRight extends LinearOpMode
      */
     public void midJunction()
     {
-        utilities.liftArm(1, 3166, telemetry); // .8 5300
+        utilities.liftArm(1, 3266, telemetry); // .8 5300
         drive.followTrajectorySequence(goForward);
         utilities.lowerArm(1, 400, telemetry); //.8 500
         utilities.openClaw(true);
-        utilities.lowerArm(1, 2666, telemetry); //.8 4800
+        utilities.lowerArm(1, 2766, telemetry); //.8 4800
         
     }
 
@@ -155,7 +154,7 @@ public class fullSendMidRight extends LinearOpMode
                 .forward(7.5)
                 .build();
         trajectoryRecenter = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
-                .back(1.5)
+                //.back(.125)
                 .turn(Math.toRadians(-127))
                 .build();
         trajectoryToParking1 = drive.trajectorySequenceBuilder(trajectoryRecenter.end())

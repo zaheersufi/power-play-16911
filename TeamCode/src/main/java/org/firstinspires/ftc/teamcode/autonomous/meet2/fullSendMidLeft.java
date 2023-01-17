@@ -18,7 +18,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
 
-@Disabled
+
 @Autonomous(name="fullSendMidLeft")
 public class fullSendMidLeft extends LinearOpMode
 {

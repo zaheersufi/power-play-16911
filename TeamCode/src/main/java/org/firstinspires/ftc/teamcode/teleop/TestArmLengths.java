@@ -140,10 +140,10 @@ public class TestArmLengths extends OpMode
     public void moveArm()
     {
         telemetry.addData("Position: ", hardware.liftArm.getCurrentPosition());
-        hardware.liftArm.setPower((gamepad2.right_trigger - gamepad2.left_trigger) * 1);
-        if(gamepad2.square)
-            utilities.liftArmPosition(0);
-        if(gamepad2.circle)
+        //hardware.liftArm.setPower((gamepad2.right_trigger - gamepad2.left_trigger) * 1);
+        if(gamepad2.triangle)
+            utilities.liftArmPosition(-2000);
+        if(gamepad2.cross)
             utilities.liftArmPosition(2000);
     }
     public void rotateClaw()
