@@ -147,6 +147,8 @@ public class fullSendMidRight extends LinearOpMode
     {
         trajectoryToJunction = drive.trajectorySequenceBuilder(HOME)
                 .forward(26)
+                .forward(3)
+                .back(3)
                 .turn(Math.toRadians(36))
                 .build();
         goForward = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
