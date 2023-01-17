@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autonomous.splineauton;
+package org.firstinspires.ftc.teamcode.autonomous.spline;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.internal.system.Assert;
-import org.firstinspires.ftc.teamcode.autonomous.SleevePipeline;
+import org.firstinspires.ftc.teamcode.autonomous.pipelines.SleevePipeline;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.RigatoniHardware;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -18,8 +18,8 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 
 
 @Disabled
-@Autonomous(name="highAllianceLeft ")
-public class highAllianceLeft extends LinearOpMode
+@Autonomous(name="midAllianceLeft ")
+public class midAllianceLeft extends LinearOpMode
 {
     private SampleMecanumDrive drive;
     private UtilitiesUpdated utilities;
@@ -30,14 +30,14 @@ public class highAllianceLeft extends LinearOpMode
 
     private final Pose2d leftHome = new Pose2d(36.0, 62.5, Math.toRadians(-90.0));
 
-    private final Pose2d otwJunction = new Pose2d(10.0, 47, Math.toRadians(-90.0));
-    private final Pose2d inFrontOfJunction =  new Pose2d(12, 19, Math.toRadians(-180.0));
+    private final Pose2d otwJunction = new Pose2d(12.0, 48.0, Math.toRadians(-90.0));
+    private final Pose2d inFrontOfJunction = new Pose2d(16.0, 24.0, Math.toRadians(0.0));
 
-    private final Pose2d otw1One = new Pose2d(20.0, 13.0, Math.toRadians(-70.0));
+    private final Pose2d otw1One = new Pose2d(20.0, 13.0, Math.toRadians(0.0));
     private final Pose2d otw2One = new Pose2d(36.0, 12.0, Math.toRadians(0.0));
-    private final Pose2d parkingOne = new Pose2d(58.5, 10.0, Math.toRadians(0.0));
+    private final Pose2d parkingOne = new Pose2d(58.5, 12.0, Math.toRadians(0.0));
 
-    private final Pose2d otwTwo = new Pose2d(20.0, 12.0, Math.toRadians(-90.0));
+    private final Pose2d otwTwo = new Pose2d(20.0, 12.0, Math.toRadians(0.0));
     private final Pose2d parkingTwo = new Pose2d(36.0, 12.0, Math.toRadians(0.0));
 
     private final Pose2d parkingThree = new Pose2d(13.25, 12.0, Math.toRadians(0.0));
@@ -56,7 +56,7 @@ public class highAllianceLeft extends LinearOpMode
 
     /**
      * Reads the parking position, scores a cone in the
-     * high junction, and parks in the space determined
+     * medium junction, and parks in the space determined
      * by the custom sleeve.
      *
      * @throws  InterruptedException    in case the thread is interrupted
@@ -67,6 +67,7 @@ public class highAllianceLeft extends LinearOpMode
         pipeline = new SleevePipeline(telemetry);
         setUpCamera(pipeline);
 
+        Assert.assertNotNull(hardwareMap);
 
         hardware = new RigatoniHardware();
         hardware.initializePrimaryMotors(hardwareMap);
@@ -93,9 +94,8 @@ public class highAllianceLeft extends LinearOpMode
         telemetry.addData("Parking", identifier);
         telemetry.update();
 
-        utilities.liftArm(1, 800, telemetry);
         drive.followTrajectory(trajectoryToJunction);
-        highJunction();
+        midJunction();
 
         if(identifier == 1)
             drive.followTrajectory(trajectoryToParkingOne);
@@ -113,8 +113,8 @@ public class highAllianceLeft extends LinearOpMode
     private void buildTrajectories()
     {
         trajectoryToJunction = drive.trajectoryBuilder(leftHome, Math.toRadians(-180.0))
-                .splineToSplineHeading(otwJunction, Math.toRadians(-90.0))
-                .splineToSplineHeading(inFrontOfJunction, Math.toRadians(-120.0))
+                .splineToSplineHeading(otwJunction, Math.toRadians(-80.0))
+                .splineToSplineHeading(inFrontOfJunction, Math.toRadians(-60.0))
                 .build();
         trajectoryGoForward = drive.trajectoryBuilder(trajectoryToJunction.end(), trajectoryToJunction.end().getHeading())
                 .forward(4.0)
@@ -134,32 +134,32 @@ public class highAllianceLeft extends LinearOpMode
         trajectoryToParkingThree = drive.trajectoryBuilder(trajectoryGoBackward.end(), Math.toRadians(-90.0))
                 .splineToSplineHeading(parkingThree, Math.toRadians(-90.0))
                 .build();
+
     }
 
 
     /**
-     * When the robot is in front of the High Junction, it
+     * When the robot is in front of the medium Junction, it
      * lifts the arm, approaches it, reads the position of the
      * junction, corrects its position to align with the pole,
      * lets the cone go (opens claw), and lowers the lift back down.
      */
-    public void highJunction ()
+    public void midJunction()
     {
-        utilities.liftArm(1, 3900, telemetry);
-        drive.followTrajectory(trajectoryGoForward);
-        utilities.lowerArm(1, 400, telemetry);
-        utilities.openClaw(true);
-        drive.followTrajectory(trajectoryGoBackward);
-        utilities.lowerArm(1, 4200, telemetry);
-
-//        hardware.liftArm.setTargetPosition(2100);
-//        hardware.liftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        utilities.liftArm(1, 2400, telemetry);
 //        drive.followTrajectory(trajectoryGoForward);
-//        hardware.liftArm.setTargetPosition(1900);
+//        utilities.lowerArm(1, 400, telemetry);
 //        utilities.openClaw(true);
-//        hardware.liftArm.setTargetPosition(500);
 //        drive.followTrajectory(trajectoryGoBackward);
+//        utilities.lowerArm(1, 2000, telemetry);
 
+        hardware.liftArm.setTargetPosition(1300);
+        hardware.liftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        drive.followTrajectory(trajectoryGoForward);
+        hardware.liftArm.setTargetPosition(1100);
+        utilities.openClaw(true);
+        hardware.liftArm.setTargetPosition(500);
+        drive.followTrajectory(trajectoryGoBackward);
     }
 
 
@@ -172,7 +172,6 @@ public class highAllianceLeft extends LinearOpMode
         hardware.leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         hardware.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         hardware.rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        hardware.liftArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hardware.liftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 

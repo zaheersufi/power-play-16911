@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode.autonomous.test;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.internal.system.Assert;
+import org.firstinspires.ftc.teamcode.autonomous.Utilities;
+import org.firstinspires.ftc.teamcode.autonomous.pipelines.SleevePipeline;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.RigatoniHardware;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
@@ -15,8 +17,8 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 @Disabled
-@Autonomous(name="sweatyRight")
-public class sweatyRight extends LinearOpMode
+@Autonomous(name="sweatyLeft")
+public class sweatyLeft extends LinearOpMode
 {
     private SampleMecanumDrive drive;
     private Utilities utilities;
@@ -25,15 +27,14 @@ public class sweatyRight extends LinearOpMode
     private SleevePipeline pipeline;
 
 
-    private final Pose2d blueHome = new Pose2d(-36, 60, Math.toRadians(270));
+    private final Pose2d blueHome = new Pose2d(-36, -60, Math.toRadians(90));
 
 
     private TrajectorySequence trajectoryTo12; //check coordinate system in notebook
-    private TrajectorySequence trajectoryToParking3;
     private TrajectorySequence trajectoryToParking2;
-    private TrajectorySequence adjustToParkingCenter;
+    private TrajectorySequence trajectoryToParking1;
     private TrajectorySequence goForward;
-
+    private TrajectorySequence adjustToParkingCenter;
 
     private final int initialWaitTime = 250;
 
@@ -73,61 +74,49 @@ public class sweatyRight extends LinearOpMode
         telemetry.addData("Parking", identifier);
         telemetry.update();
 
-        //highJunctionRunPosition();
+
         drive.followTrajectorySequence(trajectoryTo12);
         highJunction();
         drive.followTrajectorySequence(adjustToParkingCenter);
 
-//        if(identifier == 1)
-//             // drive.followTrajectorySequence(trajectoryToParking1); ITS ALREADY IN THAT PARKING LOL
+
         if (identifier == 2)
             drive.followTrajectorySequence(trajectoryToParking2);
-        else if (identifier == 3)
-            drive.followTrajectorySequence(trajectoryToParking3);
+        else if(identifier == 1)
+            drive.followTrajectorySequence(trajectoryToParking1);
 
     }
-
 
 
 
     public void highJunction()
     {
-        utilities.liftArm(1, 4350, telemetry); // .8 5300
-        drive.followTrajectorySequence(goForward);
-        utilities.lowerArm(1, 400, telemetry); //.8 500
+        utilities.liftArm(1, 4350, telemetry);
+        drive.followTrajectorySequence (goForward);
+        utilities.lowerArm(1, 400, telemetry);
         utilities.openClaw(true);
-        utilities.lowerArm(1, 3950, telemetry); //.8 4800
+        utilities.lowerArm(1, 3950, telemetry);
 
     }
-    public void highJunctionRunPosition()
-    {
-        hardware.liftArm.setTargetPosition(2100);
-        hardware.liftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        drive.followTrajectorySequence(goForward);
-        hardware.liftArm.setTargetPosition(1900);
-        utilities.openClaw(true);
-        hardware.liftArm.setTargetPosition(500);
-    }
+
 
 
     private void buildTrajectories()
     {
         trajectoryTo12 = drive.trajectorySequenceBuilder(blueHome)
-//                .forward(6)
-//                .turn(Math.toRadians(90))
-//                .forward(24.25)
-//                .turn(Math.toRadians(-90))
-//                .forward(50)
-                .strafeLeft(24.25)
+                .forward(6)
+                .turn(Math.toRadians(-90))
+                .forward(24.25)
+                .turn(Math.toRadians(90))
                 .forward(56)
-                .turn(Math.toRadians(-65))
+                .turn(Math.toRadians(50))
                 .build();
 
         goForward = drive.trajectorySequenceBuilder(trajectoryTo12.end()) //trajectoryTo12.end()
                 .forward(5)
                 .build();
 
-        trajectoryToParking3 = drive.trajectorySequenceBuilder(goForward.end()) //beforeJunction goForward.end())
+        trajectoryToParking1 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
                 .forward(46)
                 .build();
 
@@ -135,12 +124,12 @@ public class sweatyRight extends LinearOpMode
                 .forward(22)
                 .build();
 
+
         adjustToParkingCenter = drive.trajectorySequenceBuilder(goForward.end())
                 .back(8.5)
                 .turn(Math.toRadians(-25))
                 .forward(3)
                 .build();
-
     }
 
 

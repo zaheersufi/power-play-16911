@@ -1,12 +1,15 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode.autonomous.test;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.internal.system.Assert;
+import org.firstinspires.ftc.teamcode.autonomous.Utilities;
+import org.firstinspires.ftc.teamcode.autonomous.pipelines.JunctionPipeline;
+import org.firstinspires.ftc.teamcode.autonomous.pipelines.SleevePipeline;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.RigatoniHardware;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
@@ -16,27 +19,26 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
 
-
-@Autonomous(name="fullSendLeft")
-public class fullSendLeft extends LinearOpMode
+@Disabled
+@Autonomous(name="RightTest")
+public class RightTest extends LinearOpMode
 {
     private SampleMecanumDrive drive;
     private Utilities utilities;
     private RigatoniHardware hardware;
     private OpenCvInternalCamera webcam;
     private SleevePipeline sleevePipeline;
-
-    private ElapsedTime timer;
-
+    private JunctionPipeline junctionPipeline;
 
     private TrajectorySequence trajectoryToJunction;
     private TrajectorySequence goForward;
+    private TrajectorySequence junctionCorrection;
     private TrajectorySequence trajectoryRecenter;
     private TrajectorySequence trajectoryToParking1;
     private TrajectorySequence trajectoryToParking3;
 
 
-    private final Pose2d HOME = new Pose2d(36, 60, Math.toRadians(270));
+    private final Pose2d HOME = new Pose2d(-36, 60, Math.toRadians(270));
 
 
     private final int WAIT_TIME = 250;
@@ -54,7 +56,8 @@ public class fullSendLeft extends LinearOpMode
     public void runOpMode() throws InterruptedException
     {
         sleevePipeline = new SleevePipeline(telemetry);
-        setUpCamera(sleevePipeline);
+        setUpCamera();
+        webcam.setPipeline(new JunctionPipeline(telemetry));
 
 
         Assert.assertNotNull(hardwareMap);
@@ -66,31 +69,29 @@ public class fullSendLeft extends LinearOpMode
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(HOME);
 
-        timer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
-
 
         turnOnEncoders();
-        buildTrajectories();
         utilities.openClaw(false);
         waitForStart();
-        if(!opModeIsActive()) {return;}
+        if(!opModeIsActive()) return;
         utilities.wait(WAIT_TIME, telemetry);
 
 
         final int IDENTIFIER = sleevePipeline.getDestination();
-
-        utilities.liftArm(1, 1400, telemetry);
-
         telemetry.addData("Parking", IDENTIFIER);
         telemetry.update();
 
-        timer.reset();
-        hardware.liftArm.setPower(0.7);
 
+        trajectoryToJunction = drive.trajectorySequenceBuilder(HOME)
+                .forward(50)
+                .turn(Math.toRadians(36))
+                .build();
         drive.followTrajectorySequence(trajectoryToJunction);
 
-        int liftTime = (int)(3900 - timer.time());
-        highJunction(liftTime);
+
+        junctionPipeline = new JunctionPipeline(telemetry);
+        webcam.setPipeline(junctionPipeline);
+        highJunction();
         drive.followTrajectorySequence(trajectoryRecenter); //trajectoryRecenter ends in parking2
 
 
@@ -104,37 +105,43 @@ public class fullSendLeft extends LinearOpMode
 
     /**
      * When the robot is in front of the High Junction, it
-     * lifts the arm, approaches it, goes a bit down,
+     * lifts the arm, approaches it, reads the position of the
+     * junction, corrects its position to align with the pole,
      * lets the cone go (opens claw), and lowers the lift back down.
-     * Based on TIME
      */
-    public void highJunction(int time)
+    public void highJunction ()
     {
-        if (time<0) utilities.liftArm(-1, -time, telemetry);
-        else utilities.liftArm(1, time, telemetry); // .8 5300 (originally 4750)
+        utilities.liftArm(1, 2900, telemetry);
 
+
+        utilities.wait(100, telemetry);
+        double displacement = junctionPipeline.getDisplacement(40);
+        telemetry.addData("Displacement", displacement);
+        telemetry.update();
+
+
+        if (displacement > 1) {
+            junctionCorrection = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
+                    .strafeRight(Math.abs(displacement)).build();
+        } else if (displacement < -1) {
+            junctionCorrection = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
+                    .strafeLeft(Math.abs(displacement)).build();
+        } else {
+            junctionCorrection = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
+                    .forward(0).build();
+        }
+
+        drive.followTrajectorySequence(junctionCorrection);
+        buildTrajectories();
+
+
+        utilities.liftArm(1, 1850, telemetry);
         drive.followTrajectorySequence(goForward);
-        utilities.lowerArm(1, 500, telemetry); //.8 500
+
+        utilities.lowerArm(1, 400, telemetry);
         utilities.openClaw(true);
-        utilities.lowerArm(1, 3000, telemetry); //.8 4800
+        utilities.lowerArm(1, 4250, telemetry);
 
-    }
-
-
-    /**
-     * When the robot is in front of the High Junction, it
-     * lifts the arm, approaches it, goes a bit down,
-     * lets the cone go (opens claw), and lowers the lift back down.
-     * Based on POSITION
-     */
-    public void highJunctionRunPosition()
-    {
-        hardware.liftArm.setTargetPosition(2100);
-        hardware.liftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        drive.followTrajectorySequence(goForward);
-        hardware.liftArm.setTargetPosition(1900);
-        utilities.openClaw(true);
-        hardware.liftArm.setTargetPosition(500);
     }
 
 
@@ -143,24 +150,18 @@ public class fullSendLeft extends LinearOpMode
      */
     private void buildTrajectories()
     {
-        trajectoryToJunction = drive.trajectorySequenceBuilder(HOME)
-                .forward(50)
-                .forward(3)
-                .back(3)
-                .turn(Math.toRadians(-45))
-                .build();
-        goForward = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
-                .forward(7.25)
+        goForward = drive.trajectorySequenceBuilder(junctionCorrection.end())
+                .forward(7.5)
                 .build();
         trajectoryRecenter = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
                 .back(1.5)
-                .turn(Math.toRadians(136))
+                .turn(Math.toRadians(-127))
                 .build();
         trajectoryToParking1 = drive.trajectorySequenceBuilder(trajectoryRecenter.end())
-                .forward(18)
+                .forward(24)
                 .build();
         trajectoryToParking3 = drive.trajectorySequenceBuilder(trajectoryRecenter.end())
-                .back(26)
+                .back(19)
                 .build();
 
     }
@@ -183,11 +184,10 @@ public class fullSendLeft extends LinearOpMode
     /**
      * Set up the webcam in an inverted horizontal position
      */
-    public void setUpCamera(SleevePipeline pipeline)
+    public void setUpCamera()
     {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
-        webcam.setPipeline(pipeline);
         webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
 
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener(){

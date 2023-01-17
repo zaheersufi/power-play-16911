@@ -1,12 +1,10 @@
-package org.firstinspires.ftc.teamcode.autonomous.splineauton;
+package org.firstinspires.ftc.teamcode.autonomous.spline;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.RigatoniHardware;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 //Horizontal Claw Utilities
 public class UtilitiesUpdated

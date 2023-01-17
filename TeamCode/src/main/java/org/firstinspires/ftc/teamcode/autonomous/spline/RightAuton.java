@@ -1,12 +1,13 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode.autonomous.spline;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.internal.system.Assert;
+import org.firstinspires.ftc.teamcode.autonomous.pipelines.SleevePipeline;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.RigatoniHardware;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
@@ -14,25 +15,30 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
+
+//@Autonomous(name="RightAuton")
 @Disabled
-@Autonomous(name="sweatyLeft")
-public class sweatyLeft extends LinearOpMode
-{
+public class RightAuton extends LinearOpMode {
     private SampleMecanumDrive drive;
-    private Utilities utilities;
+    private UtilitiesUpdated utilities;
     private RigatoniHardware hardware;
     private OpenCvInternalCamera webcam;
     private SleevePipeline pipeline;
 
 
-    private final Pose2d blueHome = new Pose2d(-36, -60, Math.toRadians(90));
+    private final Pose2d blueHome = new Pose2d(-36, 60, Math.toRadians(270));
+    private final Pose2d forwardTurn = new Pose2d(-15.75, 60, Math.toRadians(-90));
+    private final Pose2d infrontOfJunction = new Pose2d(-14.25, 22, Math.toRadians(0));
+    private final Pose2d moveForward = new Pose2d(-11.25, 22, Math.toRadians(0));
+    //doesn't go to moveForward *****
 
 
-    private TrajectorySequence trajectoryTo12; //check coordinate system in notebook
+    private Trajectory trajectoryTo12; //check coordinate system in notebook
+    private TrajectorySequence trajectoryToParking3;
     private TrajectorySequence trajectoryToParking2;
     private TrajectorySequence trajectoryToParking1;
     private TrajectorySequence goForward;
-    private TrajectorySequence adjustToParkingCenter;
+
 
     private final int initialWaitTime = 250;
 
@@ -41,8 +47,25 @@ public class sweatyLeft extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        webcam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
+
         pipeline = new SleevePipeline(telemetry);
-        setUpCamera(pipeline);
+        webcam.setPipeline(pipeline);
+
+        webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
+
+        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener(){
+            @Override
+            public void onOpened() {
+                webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_RIGHT);
+            }
+            @Override
+            public void onError(int errorCode) {
+                telemetry.addData("ERROR", "*Camera could not be opened* "+errorCode);
+                telemetry.update();
+            }
+        });
 
 
         Assert.assertNotNull(hardwareMap);
@@ -51,7 +74,7 @@ public class sweatyLeft extends LinearOpMode
         hardware.initializePrimaryMotors(hardwareMap);
         hardware.initializeClawServos(hardwareMap);
         hardware.initializeSupplementaryMotors(hardwareMap);
-        utilities = new Utilities(hardware);
+        utilities = new UtilitiesUpdated(hardware);
 
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(blueHome);
@@ -72,28 +95,37 @@ public class sweatyLeft extends LinearOpMode
         telemetry.addData("Parking", identifier);
         telemetry.update();
 
-
-        drive.followTrajectorySequence(trajectoryTo12);
-        highJunction();
-        drive.followTrajectorySequence(adjustToParkingCenter);
+        //highJunction(); commented out to test path before testing the rest
+        drive.followTrajectory(trajectoryTo12);
 
 
-        if (identifier == 2)
-            drive.followTrajectorySequence(trajectoryToParking2);
-        else if(identifier == 1)
+        if(identifier == 1)
             drive.followTrajectorySequence(trajectoryToParking1);
+        else if (identifier == 2)
+            drive.followTrajectorySequence(trajectoryToParking2);
+        else
+            drive.followTrajectorySequence(trajectoryToParking3);
 
     }
 
 
 
-    public void highJunction()
+
+    public void highJunction ()
     {
-        utilities.liftArm(1, 4350, telemetry);
-        drive.followTrajectorySequence (goForward);
-        utilities.lowerArm(1, 400, telemetry);
+//        utilities.liftArm(1, 4350, telemetry); // .8 5300
+//        //drive.followTrajectorySequence(goForward);
+//        utilities.lowerArm(1, 400, telemetry); //.8 500
+//        utilities.openClaw(true);
+//        utilities.lowerArm(1, 3950, telemetry); //.8 4800
+        hardware.liftArm.setTargetPosition(4200);
         utilities.openClaw(true);
-        utilities.lowerArm(1, 3950, telemetry);
+        hardware.liftArm.setTargetPosition(0);
+        hardware.liftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //hardware.liftArm.setPower(1)
+
+
+
 
     }
 
@@ -101,33 +133,30 @@ public class sweatyLeft extends LinearOpMode
 
     private void buildTrajectories()
     {
-        trajectoryTo12 = drive.trajectorySequenceBuilder(blueHome)
-                .forward(6)
-                .turn(Math.toRadians(-90))
-                .forward(24.25)
-                .turn(Math.toRadians(90))
-                .forward(56)
-                .turn(Math.toRadians(50))
+        trajectoryTo12 = drive.trajectoryBuilder(blueHome, -10)
+                .splineToSplineHeading(forwardTurn, Math.toRadians(-60))
+                .splineToSplineHeading(infrontOfJunction, Math.toRadians(-90))
+                //,splineToSplineHeading(moveForward,
                 .build();
 
-        goForward = drive.trajectorySequenceBuilder(trajectoryTo12.end()) //trajectoryTo12.end()
-                .forward(5)
-                .build();
 
-        trajectoryToParking1 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
-                .forward(46)
+        trajectoryToParking3 = drive.trajectorySequenceBuilder(goForward.end()) //beforeJunction goForward.end())
+                .strafeRight(12)
+                .turn(Math.toRadians(180))
                 .build();
 
         trajectoryToParking2 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
+                .strafeRight(12)
+                .turn(Math.toRadians(180))
                 .forward(22)
                 .build();
 
-
-        adjustToParkingCenter = drive.trajectorySequenceBuilder(goForward.end())
-                .back(8.5)
-                .turn(Math.toRadians(-25))
-                .forward(3)
+        trajectoryToParking1 = drive.trajectorySequenceBuilder(goForward.end()) //goForward.end()
+                .strafeRight(12)
+                .turn(Math.toRadians(180))
+                .forward(44.5)
                 .build();
+
     }
 
 
@@ -154,7 +183,7 @@ public class sweatyLeft extends LinearOpMode
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener(){
             @Override
             public void onOpened() {
-                webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);
+                webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_RIGHT);
             }
             @Override
             public void onError(int errorCode) {

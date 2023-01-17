@@ -14,7 +14,7 @@ public class Utilities
 
     private RigatoniHardware hardware;
     SampleMecanumDrive drive;
-    Utilities(RigatoniHardware hardware)
+    public Utilities(RigatoniHardware hardware)
     {
         this.hardware = hardware;
     }

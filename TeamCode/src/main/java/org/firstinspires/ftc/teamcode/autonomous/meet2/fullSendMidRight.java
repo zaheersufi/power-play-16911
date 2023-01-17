@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode.autonomous.meet2;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.internal.system.Assert;
+import org.firstinspires.ftc.teamcode.autonomous.pipelines.SleevePipeline;
+import org.firstinspires.ftc.teamcode.autonomous.Utilities;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.RigatoniHardware;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
@@ -17,8 +19,8 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 
 
 @Disabled
-@Autonomous(name="fullSendMidLeft")
-public class fullSendMidLeft extends LinearOpMode
+@Autonomous(name="fullSendMidRight")
+public class fullSendMidRight extends LinearOpMode
 {
     private SampleMecanumDrive drive;
     private Utilities utilities;
@@ -34,7 +36,7 @@ public class fullSendMidLeft extends LinearOpMode
     private TrajectorySequence trajectoryToParking3;
 
 
-    private final Pose2d HOME = new Pose2d(36, 60, Math.toRadians(270));
+    private final Pose2d HOME = new Pose2d(-36, 60, Math.toRadians(270));
 
 
     private final int WAIT_TIME = 250;
@@ -74,9 +76,6 @@ public class fullSendMidLeft extends LinearOpMode
 
 
         final int IDENTIFIER = sleevePipeline.getDestination();
-
-        utilities.liftArm(1, 1400, telemetry);
-
         telemetry.addData("Parking", IDENTIFIER);
         telemetry.update();
 
@@ -103,11 +102,11 @@ public class fullSendMidLeft extends LinearOpMode
      */
     public void highJunction()
     {
-        utilities.liftArm(1, 3850, telemetry); // .8 5300 (originally 4750)
+        utilities.liftArm(1, 3166, telemetry); // .8 5300
         drive.followTrajectorySequence(goForward);
         utilities.lowerArm(1, 400, telemetry); //.8 500
         utilities.openClaw(true);
-        utilities.lowerArm(1, 4250, telemetry); //.8 4800
+        utilities.lowerArm(1, 2666, telemetry); //.8 4800
 
     }
 
@@ -120,12 +119,24 @@ public class fullSendMidLeft extends LinearOpMode
      */
     public void highJunctionRunPosition()
     {
+        hardware.liftArm.setTargetPositionTolerance(10);
+
         hardware.liftArm.setTargetPosition(2100);
+        hardware.liftArm.setPower(1);
         hardware.liftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         drive.followTrajectorySequence(goForward);
+
         hardware.liftArm.setTargetPosition(1900);
+        hardware.liftArm.setPower(-1);
+        hardware.liftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         utilities.openClaw(true);
+
         hardware.liftArm.setTargetPosition(500);
+        hardware.liftArm.setPower(-1);
+        hardware.liftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
     }
 
 
@@ -135,21 +146,21 @@ public class fullSendMidLeft extends LinearOpMode
     private void buildTrajectories()
     {
         trajectoryToJunction = drive.trajectorySequenceBuilder(HOME)
-                .forward(50)
-                .turn(Math.toRadians(-49.5))
+                .forward(26)
+                .turn(Math.toRadians(36))
                 .build();
         goForward = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
-                .forward(9.5)
+                .forward(7.5)
                 .build();
         trajectoryRecenter = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
                 .back(1.5)
-                .turn(Math.toRadians(136))
+                .turn(Math.toRadians(-127))
                 .build();
         trajectoryToParking1 = drive.trajectorySequenceBuilder(trajectoryRecenter.end())
-                .forward(18)
+                .back(24)
                 .build();
         trajectoryToParking3 = drive.trajectorySequenceBuilder(trajectoryRecenter.end())
-                .back(26)
+                .forward(19)
                 .build();
 
     }
