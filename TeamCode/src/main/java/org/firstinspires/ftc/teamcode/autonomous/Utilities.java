@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -43,6 +44,11 @@ public class Utilities
         wait(time, telemetry);
         hardware.liftArm.setPower(0);
         wait(1000, telemetry);
+    }
+    public void liftArmPosition(int pos)
+    {
+        hardware.liftArm.setTargetPosition(pos);
+        hardware.liftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
     public void lowerArm(double power, int time, Telemetry telemetry)
     {
