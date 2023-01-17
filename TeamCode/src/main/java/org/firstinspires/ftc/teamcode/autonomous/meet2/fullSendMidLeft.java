@@ -85,7 +85,7 @@ public class fullSendMidLeft extends LinearOpMode
 
         drive.followTrajectorySequence(trajectoryToJunction);
         //highJunctionRunPosition();
-        highJunction();
+        midJunction();
         drive.followTrajectorySequence(trajectoryRecenter); //trajectoryRecenter ends in parking2
 
 
@@ -103,13 +103,13 @@ public class fullSendMidLeft extends LinearOpMode
      * lets the cone go (opens claw), and lowers the lift back down.
      * Based on TIME
      */
-    public void highJunction()
+    public void midJunction()
     {
-        utilities.liftArm(1, 3850, telemetry); // .8 5300 (originally 4750)
+        utilities.liftArm(1, 3166, telemetry); // .8 5300 (originally 4750)
         drive.followTrajectorySequence(goForward);
         utilities.lowerArm(1, 400, telemetry); //.8 500
         utilities.openClaw(true);
-        utilities.lowerArm(1, 4250, telemetry); //.8 4800
+        utilities.lowerArm(1, 2666, telemetry); //.8 4800
 
     }
 
