@@ -1,6 +1,5 @@
 package com.example.pathvisualizer
 
-import com.acmerobotics.roadrunner.trajectory.Trajectory
 import javafx.animation.KeyFrame
 import javafx.animation.Timeline
 import javafx.application.Application
@@ -10,12 +9,9 @@ import javafx.scene.canvas.Canvas
 import javafx.scene.canvas.GraphicsContext
 import javafx.scene.image.Image
 import javafx.scene.layout.StackPane
-import javafx.scene.paint.Color
-import javafx.scene.shape.Line
-import javafx.scene.shape.Rectangle
-
 import javafx.stage.Stage
 import javafx.util.Duration
+
 
 class App : Application() {
 
@@ -23,9 +19,12 @@ class App : Application() {
     private lateinit var stage: Stage
     private lateinit var gc:  GraphicsContext
 
-    private var BOTS = listOf<Bot>(Bot(TrajectoryOneConeMid().left(2)),
-        Bot(TrajectoryTwoCones().left(2)),
-        Bot(TrajectoryTwoCones().right(2)))
+    private var bots = listOf(
+        Bot(TrajectoryTwoCones().left(2), false),
+        Bot(TrajectoryTwoCones().right(2), true),
+        Bot(TrajectoryTwoCones().left(2), true),
+        Bot(TrajectoryTwoCones().right(2), false),
+    )
 
     companion object {
         var WIDTH = 0.0
@@ -33,7 +32,7 @@ class App : Application() {
     }
 
     override fun start(stage: Stage?) {
-        for (bot in BOTS) {
+        for (bot in bots) {
             if (bot.startTime.isNaN()) bot.resetTimer()
         }
 
@@ -47,50 +46,41 @@ class App : Application() {
         GraphicsUtil.pixelsPerInch = WIDTH / GraphicsUtil.FIELD_WIDTH
         GraphicsUtil.halfFieldPixels = WIDTH / 2.0
 
-        val canvas = Canvas(WIDTH, HEIGHT)
-        gc = canvas.graphicsContext2D
-        GraphicsUtil.gc = gc
-        gc.drawImage(fieldImage, 0.0, 0.0)
-        gc.lineWidth = GraphicsUtil.LINE_THICKNESS
+        val field = Canvas(WIDTH, HEIGHT)
+        field.graphicsContext2D.drawImage(fieldImage, 0.0, 0.0)
+        stage.scene = Scene(StackPane(root))
+        root.children.add(field)
 
-        val t1 = Timeline(KeyFrame(Duration.millis(10.0), { run(gc) }))
-        t1.cycleCount = Timeline.INDEFINITE
-
-        stage.scene = Scene(
-            StackPane(
-                root
-            )
-        )
-
-        root.children.add(canvas)
-
-        for (bot in BOTS) {
+        for (bot in bots) {
             bot.setGraphics(root)
         }
 
         stage.title = "PathVisualizer"
         stage.isResizable = false
+        stage.show()
 
         var i = 1
-        for (bot in BOTS) {
+        for (bot in bots) {
             println("Bot $i duration: ${"%.2f".format(bot.totalDuration)}")
+            print(bot)
             i++
         }
 
-        stage.show()
+        val t1 = Timeline(KeyFrame(Duration.millis(10.0), { run() }))
+        t1.cycleCount = Timeline.INDEFINITE
         t1.play()
     }
 
-    fun run(gc: GraphicsContext) {
-        for (bot in BOTS) {
+    fun run() {
+        for (bot in bots) {
             bot.drawTrajectory()
 
             var finished = true
-            for (b in BOTS) {
+            for (b in bots) {
                 finished = finished && b.isFinished
             }
             if (finished) {
-                for (b in BOTS) {
+                for (b in bots) {
                     b.reset()
                 }
                 return
@@ -98,12 +88,12 @@ class App : Application() {
         }
 
         var maxTimeIndex = 0
-        for (i in 0 until BOTS.size) {
-            if (BOTS[i].totalDuration > BOTS[maxTimeIndex].totalDuration)
+        for (i in 0 until bots.size) {
+            if (bots[i].totalDuration > bots[maxTimeIndex].totalDuration)
                 maxTimeIndex = i
         }
 
-        stage.title = "Total Time: ${"%.1f".format(BOTS[maxTimeIndex].totalDuration)} - Time : ${"%.1f".format(BOTS[maxTimeIndex].time - BOTS[maxTimeIndex].startTime)}"
+        stage.title = "Total Time: ${"%.1f".format(bots[maxTimeIndex].totalDuration)} - Time : ${"%.1f".format(bots[maxTimeIndex].time - bots[maxTimeIndex].startTime)}"
     }
 
 }

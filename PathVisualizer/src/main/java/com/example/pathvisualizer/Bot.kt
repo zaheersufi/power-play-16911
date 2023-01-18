@@ -2,11 +2,16 @@ package com.example.pathvisualizer
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.acmerobotics.roadrunner.trajectory.Trajectory
+import com.example.pathvisualizer.App.Companion.HEIGHT
+import com.example.pathvisualizer.App.Companion.WIDTH
 import javafx.scene.Group
+import javafx.scene.canvas.Canvas
+import javafx.scene.canvas.GraphicsContext
+import javafx.scene.paint.Color
 import javafx.scene.shape.Line
 import javafx.scene.shape.Rectangle
 
-class Bot (traj: ArrayList<Trajectory>) {
+class Bot (traj: ArrayList<Trajectory>, rot: Boolean) {
     private val robotRect = Rectangle(100.0, 100.0, 10.0, 10.0)
     private val startRect = Rectangle(100.0, 100.0, 10.0, 10.0)
     private val endRect = Rectangle(100.0, 100.0, 10.0, 10.0)
@@ -19,14 +24,27 @@ class Bot (traj: ArrayList<Trajectory>) {
     private val numberOfTrajectories = trajectories.size
     val totalDuration = trajectoryDurations.sum()
 
-
     var startTime = Double.NaN
     var time = Double.NaN
     var isFinished = false
 
+    private val fieldElements = Group()
+    private lateinit var canvas: Canvas
+    private lateinit var gc: GraphicsContext
+    private val rotate = rot
+
 
     fun setGraphics (root: Group) {
-        root.children.addAll(startRect, endRect, robotRect, vector)
+        canvas =  Canvas(WIDTH, HEIGHT)
+        gc = canvas.graphicsContext2D
+
+        gc.fill = Color.BLACK
+        gc.lineWidth = GraphicsUtil.LINE_THICKNESS
+
+        fieldElements.children.addAll(canvas, startRect, endRect, robotRect, vector)
+        root.children.add(fieldElements)
+
+        if(rotate) fieldElements.rotate = 180.0
     }
 
     fun reset() {
@@ -64,7 +82,7 @@ class Bot (traj: ArrayList<Trajectory>) {
             }
         }
 
-        trajectories.forEach{ GraphicsUtil.drawSampledPath(it.path) }
+        trajectories.forEach{ GraphicsUtil.drawSampledPath(gc, it.path) }
 
         updatePath(trajectory[profileTime])
     }
@@ -75,5 +93,14 @@ class Bot (traj: ArrayList<Trajectory>) {
 
         GraphicsUtil.updateRobotRect(robotRect, current, GraphicsUtil.ROBOT_COLOR, 0.75)
         GraphicsUtil.updateRobotVector(vector, current)
+    }
+
+    override fun toString(): String {
+        var s = ""
+
+        for (i in 1 until trajectoryDurations.size+1) {
+            s = "$s \t $i \t ${"%.1f".format(trajectoryDurations[i-1])} seconds\n"
+        }
+        return s
     }
 }

@@ -8,6 +8,7 @@ import javafx.scene.canvas.GraphicsContext
 import javafx.scene.paint.Color
 import javafx.scene.shape.Line
 import javafx.scene.shape.Rectangle
+import kotlin.math.ceil
 
 
 object GraphicsUtil {
@@ -26,16 +27,15 @@ object GraphicsUtil {
     private val ROBOT_VECTOR_COLOR: Color = Color.BLUE
     val END_BOX_COLOR: Color = Color.GREEN
 
-    lateinit var gc: GraphicsContext
 
-    private fun setColor(color: Color) {
+    private fun setColor(gc: GraphicsContext, color: Color) {
         gc.stroke = color
         gc.fill = color
     }
 
-    fun drawSampledPath(path: Path) {
-        setColor(PATH_COLOR)
-        val samples = Math.ceil(path.length() / DEFAULT_RESOLUTION).toInt()
+    fun drawSampledPath(gc: GraphicsContext, path: Path) {
+        setColor(gc, PATH_COLOR)
+        val samples = ceil(path.length() / DEFAULT_RESOLUTION).toInt()
         val points = Array(samples) { Vector2d() }
         val dx = path.length() / (samples - 1).toDouble()
         for (i in 0 until samples) {
@@ -43,13 +43,12 @@ object GraphicsUtil {
             val pose = path[displacement]
             points[i] = pose.vec()
         }
-        strokePolyline(points)
+        strokePolyline(gc, points)
     }
 
-    fun strokePolyline(points: Array<Vector2d>) {
+    fun strokePolyline(gc: GraphicsContext, points: Array<Vector2d>) {
         val pixels = points.map { it.toPixel }
         gc.strokePolyline(pixels.map { it.x }.toDoubleArray(), pixels.map { it.y }.toDoubleArray(), points.size)
-
     }
 
     fun updateRobotVector(vector: Line, pose2d: Pose2d) {

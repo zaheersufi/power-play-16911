@@ -36,7 +36,7 @@ public class fullSendMidLeft extends LinearOpMode
     private TrajectorySequence trajectoryToParking3;
 
 
-    private final Pose2d HOME = new Pose2d(36, 60, Math.toRadians(270));
+    private final Pose2d HOME = new Pose2d(36, 60, Math.toRadians(-90));
 
 
     private final int WAIT_TIME = 250;
@@ -136,10 +136,11 @@ public class fullSendMidLeft extends LinearOpMode
         hardware.liftArm.setTargetPosition(1900);
         hardware.liftArm.setPower(-1);
         hardware.liftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        utilities.wait(750, telemetry);
 
         utilities.openClaw(true);
 
-        hardware.liftArm.setTargetPosition(500);
+        hardware.liftArm.setTargetPosition(600);
         hardware.liftArm.setPower(-1);
         hardware.liftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -155,17 +156,17 @@ public class fullSendMidLeft extends LinearOpMode
                 .forward(26)
                 .forward(3)
                 .back(3)
-                .turn(Math.toRadians(-44))
+                .turn(Math.toRadians(-40))
                 .build();
         goForward = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
                 .forward(9)
                 .build();
         trajectoryRecenter = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
-                .back(1.5)
+                .back(1.25)
                 .turn(Math.toRadians(130))
                 .build();
         trajectoryToParking1 = drive.trajectorySequenceBuilder(trajectoryRecenter.end())
-                .forward(20)
+                .forward(21)
                 .build();
         trajectoryToParking3 = drive.trajectorySequenceBuilder(trajectoryRecenter.end())
                 .back(26)
