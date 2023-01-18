@@ -50,6 +50,7 @@ public class Utilities
     {
         hardware.liftArm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         hardware.liftArm.setTargetPosition(hardware.liftArm.getCurrentPosition() + pos);
+        hardware.liftArm.setTargetPositionTolerance(10);
         hardware.liftArm.setPower(1);
         hardware.liftArm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     }

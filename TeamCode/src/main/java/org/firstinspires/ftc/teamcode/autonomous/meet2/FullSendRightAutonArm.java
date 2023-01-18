@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.autonomous.meet2;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -19,8 +18,8 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 
 
 
-@Autonomous(name="fullSendMidLeft")
-public class fullSendMidLeft extends LinearOpMode
+@Autonomous(name="FullSendRight using Autonomous Lifting")
+public class FullSendRightAutonArm extends LinearOpMode
 {
     private SampleMecanumDrive drive;
     private Utilities utilities;
@@ -36,7 +35,7 @@ public class fullSendMidLeft extends LinearOpMode
     private TrajectorySequence trajectoryToParking3;
 
 
-    private final Pose2d HOME = new Pose2d(36, 60, Math.toRadians(270));
+    private final Pose2d HOME = new Pose2d(-36, 60, Math.toRadians(270));
 
 
     private final int WAIT_TIME = 250;
@@ -77,7 +76,8 @@ public class fullSendMidLeft extends LinearOpMode
 
         final int IDENTIFIER = sleevePipeline.getDestination();
 
-        utilities.liftArmPosition(1480);
+        //utilities.liftArm(1, 1400, telemetry);
+        utilities.liftArmPosition(2200);
 
         telemetry.addData("Parking", IDENTIFIER);
         telemetry.update();
@@ -88,7 +88,7 @@ public class fullSendMidLeft extends LinearOpMode
         utilities.liftArmPosition(-500);
         utilities.wait(500, telemetry);
         utilities.openClaw(true);
-        utilities.liftArmPosition(-1500);
+        utilities.liftArmPosition(-1700);
         drive.followTrajectorySequence(trajectoryRecenter); //trajectoryRecenter ends in parking2
 
 
@@ -106,13 +106,13 @@ public class fullSendMidLeft extends LinearOpMode
      * lets the cone go (opens claw), and lowers the lift back down.
      * Based on TIME
      */
-    public void midJunction()
+    public void highJunction()
     {
-        utilities.liftArm(1, 3166, telemetry); // .8 5300 (originally 4750)
+        utilities.liftArm(1, 3850, telemetry); // .8 5300
         drive.followTrajectorySequence(goForward);
         utilities.lowerArm(1, 400, telemetry); //.8 500
         utilities.openClaw(true);
-        utilities.lowerArm(1, 2666, telemetry); //.8 4800
+        utilities.lowerArm(1, 4250, telemetry); //.8 4800
 
     }
 
@@ -152,23 +152,24 @@ public class fullSendMidLeft extends LinearOpMode
     private void buildTrajectories()
     {
         trajectoryToJunction = drive.trajectorySequenceBuilder(HOME)
-                .forward(26)
+                .forward(50)
                 .forward(3)
                 .back(3)
-                .turn(Math.toRadians(-44))
+                .turn(Math.toRadians(37))
                 .build();
         goForward = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
-                .forward(9)
+                .forward(8)
                 .build();
         trajectoryRecenter = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
-                .back(1.5)
-                .turn(Math.toRadians(130))
+                //.back(0) //THIS NEEDS TO BE TESTED ON BATTERY WITH MIN VOLTAGE OF 13.4
+                .back(1)
+                .turn(Math.toRadians(-127))
                 .build();
         trajectoryToParking1 = drive.trajectorySequenceBuilder(trajectoryRecenter.end())
-                .forward(20)
+                .back(24)
                 .build();
         trajectoryToParking3 = drive.trajectorySequenceBuilder(trajectoryRecenter.end())
-                .back(26)
+                .forward(19)
                 .build();
 
     }

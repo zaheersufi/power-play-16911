@@ -78,10 +78,15 @@ public class fullSendMidRight extends LinearOpMode
         telemetry.addData("Parking", IDENTIFIER);
         telemetry.update();
 
+        utilities.liftArmPosition(1380);
+
 
         drive.followTrajectorySequence(trajectoryToJunction);
-        //highJunctionRunPosition();
-        midJunction();
+        drive.followTrajectorySequence(goForward);
+        utilities.liftArmPosition(-500);
+        utilities.wait(500, telemetry);
+        utilities.openClaw(true);
+        utilities.liftArmPosition(-880);
         drive.followTrajectorySequence(trajectoryRecenter); //trajectoryRecenter ends in parking2
 
 
