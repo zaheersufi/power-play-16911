@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.internal.system.Assert;
 import org.firstinspires.ftc.teamcode.autonomous.pipelines.SleevePipeline;
@@ -18,14 +19,16 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 
 
 
-@Autonomous(name="fullSendRight")
-public class fullSendRight extends LinearOpMode
+@Autonomous(name="fullSendHighLeft")
+public class fullSendHighLeft extends LinearOpMode
 {
     private SampleMecanumDrive drive;
     private Utilities utilities;
     private RigatoniHardware hardware;
     private OpenCvInternalCamera webcam;
     private SleevePipeline sleevePipeline;
+
+    private ElapsedTime timer;
 
 
     private TrajectorySequence trajectoryToJunction;
@@ -35,10 +38,7 @@ public class fullSendRight extends LinearOpMode
     private TrajectorySequence trajectoryToParking3;
 
 
-    private final Pose2d HOME = new Pose2d(-36, 60, Math.toRadians(270));
-
-
-    private final int WAIT_TIME = 250;
+    private final Pose2d HOME = new Pose2d(36, 60, Math.toRadians(270));
 
 
 
@@ -71,73 +71,32 @@ public class fullSendRight extends LinearOpMode
         utilities.openClaw(false);
         waitForStart();
         if(!opModeIsActive()) {return;}
-        utilities.wait(WAIT_TIME, telemetry);
+        utilities.wait(200, telemetry);
 
 
         final int IDENTIFIER = sleevePipeline.getDestination();
-
-        utilities.liftArm(1, 1400, telemetry);
-
         telemetry.addData("Parking", IDENTIFIER);
         telemetry.update();
 
 
+        utilities.liftArmPosition(2200);
+
         drive.followTrajectorySequence(trajectoryToJunction);
-        //highJunctionRunPosition();
-        highJunction();
-        drive.followTrajectorySequence(trajectoryRecenter); //trajectoryRecenter ends in parking2
+        drive.followTrajectorySequence(goForward);
+
+        utilities.liftArmPosition(-500);
+        utilities.wait(500, telemetry);
+        utilities.openClaw(true);
+        utilities.liftArmPosition(-1900);
+
+        //trajectoryRecenter ends in parking2
+        drive.followTrajectorySequence(trajectoryRecenter);
 
 
         if(IDENTIFIER == 1)
-             drive.followTrajectorySequence(trajectoryToParking1);
+            drive.followTrajectorySequence(trajectoryToParking1);
         else if (IDENTIFIER == 3)
             drive.followTrajectorySequence(trajectoryToParking3);
-
-    }
-
-
-    /**
-     * When the robot is in front of the High Junction, it
-     * lifts the arm, approaches it, goes a bit down,
-     * lets the cone go (opens claw), and lowers the lift back down.
-     * Based on TIME
-     */
-    public void highJunction()
-    {
-        utilities.liftArm(1, 3850, telemetry); // .8 5300
-        drive.followTrajectorySequence(goForward);
-        utilities.lowerArm(1, 400, telemetry); //.8 500
-        utilities.openClaw(true);
-        utilities.lowerArm(1, 4250, telemetry); //.8 4800
-
-    }
-
-
-    /**
-     * When the robot is in front of the High Junction, it
-     * lifts the arm, approaches it, goes a bit down,
-     * lets the cone go (opens claw), and lowers the lift back down.
-     * Based on POSITION
-     */
-    public void highJunctionRunPosition()
-    {
-        hardware.liftArm.setTargetPositionTolerance(10);
-
-        hardware.liftArm.setTargetPosition(2100);
-        hardware.liftArm.setPower(1);
-        hardware.liftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        drive.followTrajectorySequence(goForward);
-
-        hardware.liftArm.setTargetPosition(1900);
-        hardware.liftArm.setPower(-1);
-        hardware.liftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        utilities.openClaw(true);
-
-        hardware.liftArm.setTargetPosition(500);
-        hardware.liftArm.setPower(-1);
-        hardware.liftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
     }
 
@@ -149,22 +108,23 @@ public class fullSendRight extends LinearOpMode
     {
         trajectoryToJunction = drive.trajectorySequenceBuilder(HOME)
                 .forward(50)
-                .forward(3)
+                .forward(4.5)
                 .back(3)
-                .turn(Math.toRadians(37))
+                .turn(Math.toRadians(-50))
                 .build();
         goForward = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
-                .forward(6.75)
+                .forward(7.25)
                 .build();
         trajectoryRecenter = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
-                //.back(0) //THIS NEEDS TO BE TESTED ON BATTERY WITH MIN VOLTAGE OF 13.4
-                .turn(Math.toRadians(-127))
+                .back(1.5)
+                .turn(Math.toRadians(140))
+                .back(1)
                 .build();
         trajectoryToParking1 = drive.trajectorySequenceBuilder(trajectoryRecenter.end())
-                .back(24)
+                .forward(19)
                 .build();
         trajectoryToParking3 = drive.trajectorySequenceBuilder(trajectoryRecenter.end())
-                .forward(19)
+                .back(25)
                 .build();
 
     }

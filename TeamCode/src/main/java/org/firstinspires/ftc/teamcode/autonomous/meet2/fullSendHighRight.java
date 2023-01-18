@@ -18,8 +18,8 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 
 
 
-@Autonomous(name="FullSendRight using Autonomous Lifting")
-public class FullSendRightAutonArm extends LinearOpMode
+@Autonomous(name="fullSendHighRight")
+public class fullSendHighRight extends LinearOpMode
 {
     private SampleMecanumDrive drive;
     private Utilities utilities;
@@ -36,9 +36,6 @@ public class FullSendRightAutonArm extends LinearOpMode
 
 
     private final Pose2d HOME = new Pose2d(-36, 60, Math.toRadians(270));
-
-
-    private final int WAIT_TIME = 250;
 
 
 
@@ -71,25 +68,26 @@ public class FullSendRightAutonArm extends LinearOpMode
         utilities.openClaw(false);
         waitForStart();
         if(!opModeIsActive()) {return;}
-        utilities.wait(WAIT_TIME, telemetry);
+        utilities.wait(200, telemetry);
 
 
         final int IDENTIFIER = sleevePipeline.getDestination();
-
-        //utilities.liftArm(1, 1400, telemetry);
-        utilities.liftArmPosition(2200);
-
         telemetry.addData("Parking", IDENTIFIER);
         telemetry.update();
 
 
+        utilities.liftArmPosition(2200);
+
         drive.followTrajectorySequence(trajectoryToJunction);
         drive.followTrajectorySequence(goForward);
+
         utilities.liftArmPosition(-500);
         utilities.wait(500, telemetry);
         utilities.openClaw(true);
-        utilities.liftArmPosition(-1700);
-        drive.followTrajectorySequence(trajectoryRecenter); //trajectoryRecenter ends in parking2
+        utilities.liftArmPosition(-1900);
+
+        //trajectoryRecenter ends in parking2
+        drive.followTrajectorySequence(trajectoryRecenter);
 
 
         if(IDENTIFIER == 1)
@@ -101,59 +99,13 @@ public class FullSendRightAutonArm extends LinearOpMode
 
 
     /**
-     * When the robot is in front of the High Junction, it
-     * lifts the arm, approaches it, goes a bit down,
-     * lets the cone go (opens claw), and lowers the lift back down.
-     * Based on TIME
-     */
-    public void highJunction()
-    {
-        utilities.liftArm(1, 3850, telemetry); // .8 5300
-        drive.followTrajectorySequence(goForward);
-        utilities.lowerArm(1, 400, telemetry); //.8 500
-        utilities.openClaw(true);
-        utilities.lowerArm(1, 4250, telemetry); //.8 4800
-
-    }
-
-
-    /**
-     * When the robot is in front of the High Junction, it
-     * lifts the arm, approaches it, goes a bit down,
-     * lets the cone go (opens claw), and lowers the lift back down.
-     * Based on POSITION
-     */
-    public void highJunctionRunPosition()
-    {
-        hardware.liftArm.setTargetPositionTolerance(10);
-
-        hardware.liftArm.setTargetPosition(2100);
-        hardware.liftArm.setPower(1);
-        hardware.liftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        drive.followTrajectorySequence(goForward);
-
-        hardware.liftArm.setTargetPosition(1900);
-        hardware.liftArm.setPower(-1);
-        hardware.liftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        utilities.openClaw(true);
-
-        hardware.liftArm.setTargetPosition(500);
-        hardware.liftArm.setPower(-1);
-        hardware.liftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-    }
-
-
-    /**
      * Defines and builds the different trajectories used.
      */
     private void buildTrajectories()
     {
         trajectoryToJunction = drive.trajectorySequenceBuilder(HOME)
                 .forward(50)
-                .forward(3)
+                .forward(2.6)
                 .back(3)
                 .turn(Math.toRadians(37))
                 .build();
@@ -161,7 +113,6 @@ public class FullSendRightAutonArm extends LinearOpMode
                 .forward(8)
                 .build();
         trajectoryRecenter = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
-                //.back(0) //THIS NEEDS TO BE TESTED ON BATTERY WITH MIN VOLTAGE OF 13.4
                 .back(1)
                 .turn(Math.toRadians(-127))
                 .build();

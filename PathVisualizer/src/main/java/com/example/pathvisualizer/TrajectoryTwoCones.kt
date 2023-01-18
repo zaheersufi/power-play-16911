@@ -35,7 +35,7 @@ class TrajectoryTwoCones : TrajectoryTemplate() {
          */
 
 
-        val trajectoryToMid= TrajectoryBuilder(home, Math.toRadians(80.0), combinedConstraints)
+        val trajectoryToMid = TrajectoryBuilder(home, Math.toRadians(80.0), combinedConstraints)
             .splineToSplineHeading(midJunction, Math.toRadians(75.0))
             .build();
 

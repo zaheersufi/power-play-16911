@@ -39,9 +39,6 @@ public class fullSendMidLeft extends LinearOpMode
     private final Pose2d HOME = new Pose2d(36, 60, Math.toRadians(-90));
 
 
-    private final int WAIT_TIME = 250;
-
-
 
     /**
      * Reads the parking position, scores a cone in the
@@ -72,77 +69,32 @@ public class fullSendMidLeft extends LinearOpMode
         utilities.openClaw(false);
         waitForStart();
         if(!opModeIsActive()) {return;}
-        utilities.wait(WAIT_TIME, telemetry);
+        utilities.wait(250, telemetry);
 
 
         final int IDENTIFIER = sleevePipeline.getDestination();
-
-        utilities.liftArmPosition(1480);
-
         telemetry.addData("Parking", IDENTIFIER);
         telemetry.update();
 
 
+        utilities.liftArmPosition(1520);
+
         drive.followTrajectorySequence(trajectoryToJunction);
         drive.followTrajectorySequence(goForward);
-        utilities.liftArmPosition(-500);
+
+        utilities.liftArmPosition(-550);
         utilities.wait(500, telemetry);
         utilities.openClaw(true);
         utilities.liftArmPosition(-1500);
-        drive.followTrajectorySequence(trajectoryRecenter); //trajectoryRecenter ends in parking2
+
+        //trajectoryRecenter ends in parking2
+        drive.followTrajectorySequence(trajectoryRecenter);
 
 
         if(IDENTIFIER == 1)
             drive.followTrajectorySequence(trajectoryToParking1);
         else if (IDENTIFIER == 3)
             drive.followTrajectorySequence(trajectoryToParking3);
-
-    }
-
-
-    /**
-     * When the robot is in front of the High Junction, it
-     * lifts the arm, approaches it, goes a bit down,
-     * lets the cone go (opens claw), and lowers the lift back down.
-     * Based on TIME
-     */
-    public void midJunction()
-    {
-        utilities.liftArm(1, 3166, telemetry); // .8 5300 (originally 4750)
-        drive.followTrajectorySequence(goForward);
-        utilities.lowerArm(1, 400, telemetry); //.8 500
-        utilities.openClaw(true);
-        utilities.lowerArm(1, 2666, telemetry); //.8 4800
-
-    }
-
-
-    /**
-     * When the robot is in front of the High Junction, it
-     * lifts the arm, approaches it, goes a bit down,
-     * lets the cone go (opens claw), and lowers the lift back down.
-     * Based on POSITION
-     */
-    public void highJunctionRunPosition()
-    {
-        hardware.liftArm.setTargetPositionTolerance(10);
-
-        hardware.liftArm.setTargetPosition(2100);
-        hardware.liftArm.setPower(1);
-        hardware.liftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        drive.followTrajectorySequence(goForward);
-
-        hardware.liftArm.setTargetPosition(1900);
-        hardware.liftArm.setPower(-1);
-        hardware.liftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        utilities.wait(750, telemetry);
-
-        utilities.openClaw(true);
-
-        hardware.liftArm.setTargetPosition(600);
-        hardware.liftArm.setPower(-1);
-        hardware.liftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
     }
 
@@ -156,14 +108,14 @@ public class fullSendMidLeft extends LinearOpMode
                 .forward(26)
                 .forward(3)
                 .back(3)
-                .turn(Math.toRadians(-40))
+                .turn(Math.toRadians(-43))
                 .build();
         goForward = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
                 .forward(9)
                 .build();
         trajectoryRecenter = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
                 .back(1.25)
-                .turn(Math.toRadians(130))
+                .turn(Math.toRadians(133))
                 .build();
         trajectoryToParking1 = drive.trajectorySequenceBuilder(trajectoryRecenter.end())
                 .forward(21)

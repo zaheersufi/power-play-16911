@@ -19,39 +19,38 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 
 
 @Disabled
-@Autonomous(name="highAllianceRight")
-public class highAllianceRight extends LinearOpMode
+@Autonomous(name="leftTwoCones")
+public class leftTwoCones extends LinearOpMode
 {
     private SampleMecanumDrive drive;
     private Utilities utilities;
     private RigatoniHardware hardware;
     private OpenCvInternalCamera webcam;
-    private SleevePipeline pipeline;
+    private SleevePipeline sleevePipeline;
 
 
-    private final Pose2d rightHome = new Pose2d(36.0, -62.5, Math.toRadians(90.0));
+    private final Pose2d home = new Pose2d(-36.0, -63.0, Math.toRadians(90.0));
 
-    private final Pose2d otwJunction = new Pose2d(10.0, -45.0, Math.toRadians(90.0));
-    private final Pose2d inFrontOfJunction = new Pose2d(8.0, -24.0, Math.toRadians(180.0));
+    private final Pose2d midJunction = new Pose2d(-33.0, -24.0, Math.toRadians(-.0));
 
-    private final Pose2d parkingOne = new Pose2d(13.25, -12.0, Math.toRadians(0.0));
+    private final Pose2d stack = new Pose2d(-62.0, -12.0, Math.toRadians(180.0));
 
-    private final Pose2d otwTwo = new Pose2d(20.0, -12.0, Math.toRadians(90.0));
-    private final Pose2d parkingTwo = new Pose2d(36.0, -12.0, Math.toRadians(0.0));
+    private final Pose2d highJunction = new Pose2d(-31.5, -7.5, Math.toRadians(45.0));
 
-    private final Pose2d otw1Three = new Pose2d(20.0, -13.0, Math.toRadians(70.0));
-    private final Pose2d otw2Three = new Pose2d(36.0, -12.0, Math.toRadians(0.0));
-    private final Pose2d parkingThree = new Pose2d(58.5, -12.0, Math.toRadians(0.0));
+    private final Pose2d parkingOne = new Pose2d(-59.0, -13.0, Math.toRadians(180.0));
+    private final Pose2d parkingTwo =  new Pose2d(-36.0, -12.0, Math.toRadians(180.0));
+    private final Pose2d parkingThree = new Pose2d(-13.25, -12.0, Math.toRadians(180.0));
 
-
-    private Trajectory trajectoryToJunction;
-    private Trajectory trajectoryGoForward;
-    private Trajectory trajectoryGoBackward;
+    private Trajectory trajectoryToMid;
+    private Trajectory trajectoryMidForward;
+    private Trajectory trajectoryMidBackward;
+    private Trajectory trajectoryToStack;
+    private Trajectory trajectoryToHigh;
+    private Trajectory trajectoryHighForward;
+    private Trajectory trajectoryHighBackward;
     private Trajectory trajectoryToParkingOne;
     private Trajectory trajectoryToParkingTwo;
     private Trajectory trajectoryToParkingThree;
-
-    private final int initialWaitTime = 250;
 
 
 
@@ -65,44 +64,61 @@ public class highAllianceRight extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
-        pipeline = new SleevePipeline(telemetry);
-        setUpCamera(pipeline);
+        sleevePipeline = new SleevePipeline(telemetry);
+        setUpCamera(sleevePipeline);
+
 
         Assert.assertNotNull(hardwareMap);
-
         hardware = new RigatoniHardware();
         hardware.initializePrimaryMotors(hardwareMap);
         hardware.initializeClawServos(hardwareMap);
         hardware.initializeSupplementaryMotors(hardwareMap);
         utilities = new Utilities(hardware);
-
         drive = new SampleMecanumDrive(hardwareMap);
-        drive.setPoseEstimate(rightHome);
+        drive.setPoseEstimate(home);
+
 
         turnOnEncoders();
-
-
         buildTrajectories();
         utilities.openClaw(false);
-
         waitForStart();
         if(!opModeIsActive()) {return;}
+        utilities.wait(250, telemetry);
 
-        utilities.wait(initialWaitTime, telemetry);
 
-
-        final int identifier = pipeline.getDestination();
-        telemetry.addData("Parking", identifier);
+        final int IDENTIFIER = sleevePipeline.getDestination();
+        telemetry.addData("Parking", IDENTIFIER);
         telemetry.update();
 
-        drive.followTrajectory(trajectoryToJunction);
-        highJunction();
 
-        if(identifier == 1)
+        utilities.liftArmPosition(1480);
+        drive.followTrajectory(trajectoryToMid);
+        drive.followTrajectory(trajectoryMidForward);
+        utilities.liftArmPosition(-500);
+        utilities.wait(500, telemetry);
+        utilities.openClaw(true);
+        drive.followTrajectory(trajectoryMidBackward);
+
+        drive.followTrajectory(trajectoryToStack);
+        utilities.openClaw(false);
+        drive.followTrajectory(trajectoryToStack);
+
+        utilities.liftArmPosition(1600);
+        drive.followTrajectory(trajectoryToHigh);
+        drive.followTrajectory(trajectoryMidForward);
+        utilities.liftArmPosition(-500);
+        utilities.wait(500, telemetry);
+        utilities.openClaw(true);
+        utilities.liftArmPosition(-1600);
+        utilities.wait(500, telemetry);
+        drive.followTrajectory(trajectoryHighBackward);
+
+
+        if(IDENTIFIER == 1)
             drive.followTrajectory(trajectoryToParkingOne);
-        else if (identifier == 2)
+        else if (IDENTIFIER == 2)
             drive.followTrajectory(trajectoryToParkingTwo);
-        else
+        else if (IDENTIFIER == 3)
             drive.followTrajectory(trajectoryToParkingThree);
 
     }
@@ -113,55 +129,45 @@ public class highAllianceRight extends LinearOpMode
      */
     private void buildTrajectories()
     {
-        trajectoryToJunction = drive.trajectoryBuilder(rightHome, Math.toRadians(180.0))
-                .splineToSplineHeading(otwJunction, Math.toRadians(90.0))
-                .splineToSplineHeading(inFrontOfJunction, Math.toRadians(120.0))
+        trajectoryToMid = drive.trajectoryBuilder(home, Math.toRadians(80.0))
+                .splineToSplineHeading(midJunction, Math.toRadians(75.0))
                 .build();
-        trajectoryGoForward = drive.trajectoryBuilder(trajectoryToJunction.end(), trajectoryToJunction.end().getHeading())
+
+        trajectoryMidForward = drive.trajectoryBuilder(trajectoryToMid.end(), trajectoryToMid.end().getHeading())
                 .forward(4.0)
                 .build();
-        trajectoryGoBackward = drive.trajectoryBuilder(trajectoryGoForward.end(), trajectoryGoForward.end().getHeading())
+
+        trajectoryMidBackward = drive.trajectoryBuilder(trajectoryMidForward.end(), trajectoryMidForward.end().getHeading())
                 .back(6.0)
                 .build();
-        trajectoryToParkingOne = drive.trajectoryBuilder(trajectoryGoBackward.end(), Math.toRadians(90.0))
-                .splineToSplineHeading(parkingOne, Math.toRadians(90.0))
+
+        trajectoryToStack = drive.trajectoryBuilder(trajectoryMidBackward.end(), Math.toRadians(80.0))
+                .splineToSplineHeading(stack, Math.toRadians(173.0))
                 .build();
-        trajectoryToParkingTwo = drive.trajectoryBuilder(trajectoryGoBackward.end(), Math.toRadians(90.0))
-                .splineToSplineHeading(otwTwo, Math.toRadians(10.0))
-                .splineToSplineHeading(parkingTwo, Math.toRadians(0.0))
+
+        trajectoryToHigh = drive.trajectoryBuilder(trajectoryToStack.end(), Math.toRadians(0.0))
+                .splineToSplineHeading(highJunction, Math.toRadians(60.0))
                 .build();
-        trajectoryToParkingThree = drive.trajectoryBuilder(trajectoryGoBackward.end(), Math.toRadians(90.0))
-                .splineToSplineHeading(otw1Three, Math.toRadians(10.0))
-                .splineToSplineHeading(otw2Three, Math.toRadians(0.0))
+
+        trajectoryHighForward = drive.trajectoryBuilder(trajectoryToHigh.end(), trajectoryToHigh.end().getHeading())
+                .forward(4.0)
+                .build();
+
+        trajectoryHighBackward = drive.trajectoryBuilder(trajectoryHighForward.end(), trajectoryHighForward.end().getHeading())
+                .back(4.0)
+                .build();
+
+        trajectoryToParkingOne = drive.trajectoryBuilder(trajectoryHighBackward.end(), Math.toRadians(-120.0))
+                .splineToSplineHeading(parkingOne, Math.toRadians(175.0))
+                .build();
+
+        trajectoryToParkingTwo = drive.trajectoryBuilder(trajectoryHighBackward.end(), Math.toRadians(-120.0))
+                .splineToSplineHeading(parkingTwo, Math.toRadians(135.0))
+                .build();
+
+        trajectoryToParkingThree = drive.trajectoryBuilder(trajectoryHighBackward.end(), Math.toRadians(-90.0))
                 .splineToSplineHeading(parkingThree, Math.toRadians(0.0))
                 .build();
-
-    }
-
-
-    /**
-     * When the robot is in front of the High Junction, it
-     * lifts the arm, approaches it, reads the position of the
-     * junction, corrects its position to align with the pole,
-     * lets the cone go (opens claw), and lowers the lift back down.
-     */
-    public void highJunction ()
-    {
-//        utilities.liftArm(1, 4350, telemetry);
-//        drive.followTrajectory(trajectoryGoForward);
-//        utilities.lowerArm(1, 400, telemetry);
-//        utilities.openClaw(true);
-//        drive.followTrajectory(trajectoryGoBackward);
-//        utilities.lowerArm(1, 3950, telemetry);
-
-        hardware.liftArm.setTargetPosition(2100);
-        hardware.liftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        drive.followTrajectory(trajectoryGoForward);
-        hardware.liftArm.setTargetPosition(1900);
-        utilities.openClaw(true);
-        hardware.liftArm.setTargetPosition(500);
-        drive.followTrajectory(trajectoryGoBackward);
-
     }
 
 
