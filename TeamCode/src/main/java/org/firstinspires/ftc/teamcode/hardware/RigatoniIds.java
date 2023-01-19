@@ -10,6 +10,9 @@ public class RigatoniIds
 
     // Supplementary Motors
     public static final String LIFT_ARM_MOTOR = "liftArm";
+    public static final String LIFT_ARM1 = "liftArm1";
+    public static final String LIFT_ARM2 = "liftArm2";
+
 
     // Claw Servos
     public static final String GRAB_SERVO = "grabServo";

@@ -1,17 +1,19 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 import org.firstinspires.ftc.robotcore.internal.system.Assert;
-import org.firstinspires.ftc.teamcode.hardware.RigatoniHardware;
+import org.firstinspires.ftc.teamcode.hardware.OldRigatoniHardware;
 
+@Disabled
 @TeleOp(name="RigatoniVerticalClaw")
 public class RigatoniVerticalClaw extends OpMode
 {
-    RigatoniHardware hardware;
+    OldRigatoniHardware hardware;
     final double FAST_SPEED = .8;
     final double SLOW_SPEED = .5;
     final double SUPER_SLOW_SPEED = .3;
@@ -21,13 +23,13 @@ public class RigatoniVerticalClaw extends OpMode
     @Override
     public void init()
     {
-        hardware = new RigatoniHardware();
+        hardware = new OldRigatoniHardware();
         buttonTime = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         Assert.assertNotNull(hardwareMap);
         hardware.initializePrimaryMotors(hardwareMap);
         hardware.initializeClawServos(hardwareMap);
         hardware.initializeSupplementaryMotors(hardwareMap);
-        hardware.initializeVerticalClaw(hardwareMap);
+        hardware.grabServo.setPosition(0.1);
     }
 
     @Override

@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.internal.system.Assert;
 import org.firstinspires.ftc.teamcode.autonomous.pipelines.SleevePipeline;
 import org.firstinspires.ftc.teamcode.autonomous.Utilities;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.hardware.RigatoniHardware;
+import org.firstinspires.ftc.teamcode.hardware.OldRigatoniHardware;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -24,7 +24,7 @@ public class fullSendHighLeft extends LinearOpMode
 {
     private SampleMecanumDrive drive;
     private Utilities utilities;
-    private RigatoniHardware hardware;
+    private OldRigatoniHardware hardware;
     private OpenCvInternalCamera webcam;
     private SleevePipeline sleevePipeline;
 
@@ -57,7 +57,7 @@ public class fullSendHighLeft extends LinearOpMode
 
 
         Assert.assertNotNull(hardwareMap);
-        hardware = new RigatoniHardware();
+        hardware = new OldRigatoniHardware();
         hardware.initializePrimaryMotors(hardwareMap);
         hardware.initializeClawServos(hardwareMap);
         hardware.initializeSupplementaryMotors(hardwareMap);

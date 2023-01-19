@@ -1,18 +1,14 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import org.firstinspires.ftc.robotcore.internal.system.Assert;
-import org.firstinspires.ftc.teamcode.hardware.RigatoniIds;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 
-//HARDWARE FOR HORIZONTAL CLAW
-public class RigatoniHardware
+
+public class OldRigatoniHardware
 {
     // Primary Motors
     public DcMotorEx leftFront = null;
@@ -22,26 +18,22 @@ public class RigatoniHardware
 
     public DcMotorEx[] motors;
 
-    // Supplementary Motors
+    // Supplementary Motor
     public DcMotorEx liftArm = null;
 
-    // CLaw Servos
+    // CLaw Servo
     public Servo grabServo = null;
-//    public Servo rotServo = null;
 
 
-    //    public void init(HardwareMap hardwareMap)
-//    {
-//        Assert.assertNotNull(hardwareMap);
-//        initializePrimaryMotors(hardwareMap);
-//        initializeClawServos(hardwareMap);
-//        initializeSupplementaryMotors(hardwareMap);
-//    }
+
+    /**
+     * Initializes the drive motors of the robot and
+     * sets them to run without encoder.
+     *
+     * @param hardwareMap   robot's components map
+     */
     public void initializePrimaryMotors(HardwareMap hardwareMap)
     {
-        motors = new DcMotorEx[]{leftFront, leftRear, rightFront, rightRear};
-
-
         // Primary Motors
         leftFront = hardwareMap.get(DcMotorEx.class, RigatoniIds.LEFT_FRONT_MOTOR);
         leftRear = hardwareMap.get(DcMotorEx.class, RigatoniIds.LEFT_REAR_MOTOR);
@@ -55,7 +47,6 @@ public class RigatoniHardware
 
 
         // Set Zero Power Behavior and Initialize Motors
-
         leftRear.setPower(0);
         leftRear.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -73,6 +64,15 @@ public class RigatoniHardware
         rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
+
+
+
+    /**
+     * Initializes the claw servo, sets the position to closed,
+     * and sets the default movement direction.
+     *
+     * @param hardwareMap   robot's components map
+     */
     public void initializeClawServos(HardwareMap hardwareMap)
     {
         // Claw Servos
@@ -81,13 +81,14 @@ public class RigatoniHardware
         grabServo.setDirection(Servo.Direction.FORWARD);
         grabServo.setPosition(1);
     }
-    public void initializeVerticalClaw(HardwareMap hardwareMap)
-    {
-        grabServo = hardwareMap.get(Servo.class, RigatoniIds.GRAB_SERVO);
 
-        grabServo.setDirection(Servo.Direction.FORWARD);
-        grabServo.setPosition(.1);
-    }
+
+
+    /**
+     * Initializes the lift motors.
+     *
+     * @param hardwareMap   robot's components map
+     */
     public void initializeSupplementaryMotors(HardwareMap hardwareMap)
     {
         liftArm = hardwareMap.get(DcMotorEx.class, RigatoniIds.LIFT_ARM_MOTOR);

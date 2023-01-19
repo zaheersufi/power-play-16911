@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.autonomous.Utilities;
 import org.firstinspires.ftc.teamcode.autonomous.pipelines.SleevePipeline;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.hardware.RigatoniHardware;
+import org.firstinspires.ftc.teamcode.hardware.OldRigatoniHardware;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -23,7 +23,7 @@ public class highAllianceLeft extends LinearOpMode
 {
     private SampleMecanumDrive drive;
     private Utilities utilities;
-    private RigatoniHardware hardware;
+    private OldRigatoniHardware hardware;
     private OpenCvInternalCamera webcam;
     private SleevePipeline pipeline;
 
@@ -68,7 +68,7 @@ public class highAllianceLeft extends LinearOpMode
         setUpCamera(pipeline);
 
 
-        hardware = new RigatoniHardware();
+        hardware = new OldRigatoniHardware();
         hardware.initializePrimaryMotors(hardwareMap);
         hardware.initializeClawServos(hardwareMap);
         hardware.initializeSupplementaryMotors(hardwareMap);

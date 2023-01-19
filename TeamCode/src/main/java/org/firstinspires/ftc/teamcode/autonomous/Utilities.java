@@ -1,22 +1,19 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.hardware.RigatoniHardware;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.hardware.OldRigatoniHardware;
 
 //Horizontal Claw Utilities
 public class Utilities
 {
 
-    private RigatoniHardware hardware;
+    private OldRigatoniHardware hardware;
     SampleMecanumDrive drive;
-    public Utilities(RigatoniHardware hardware)
+    public Utilities(OldRigatoniHardware hardware)
     {
         this.hardware = hardware;
     }
