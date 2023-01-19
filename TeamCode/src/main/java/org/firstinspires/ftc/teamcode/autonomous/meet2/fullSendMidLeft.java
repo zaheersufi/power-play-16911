@@ -84,7 +84,7 @@ public class fullSendMidLeft extends LinearOpMode
         utilities.liftArmPosition(-550);
         utilities.wait(500, telemetry);
         utilities.openClaw(true);
-        utilities.liftArmPosition(-1500);
+        utilities.liftArmPosition(-15-00);
 
         //trajectoryRecenter ends in parking2
         drive.followTrajectorySequence(trajectoryRecenter);

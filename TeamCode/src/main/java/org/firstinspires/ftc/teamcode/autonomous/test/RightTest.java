@@ -19,7 +19,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
 
-@Disabled
+//@Disabled
 @Autonomous(name="RightTest")
 public class RightTest extends LinearOpMode
 {
@@ -115,7 +115,7 @@ public class RightTest extends LinearOpMode
 
 
         utilities.wait(100, telemetry);
-        double displacement = junctionPipeline.getDisplacement(40);
+        double displacement = junctionPipeline.getDisplacement(100);
         telemetry.addData("Displacement", displacement);
         telemetry.update();
 
@@ -131,11 +131,11 @@ public class RightTest extends LinearOpMode
                     .forward(0).build();
         }
 
-        drive.followTrajectorySequence(junctionCorrection);
+        drive.followTrajectorySequenceAsync(junctionCorrection);
         buildTrajectories();
 
 
-        utilities.liftArm(1, 1850, telemetry);
+        utilities.liftArm(1, 2200, telemetry);
         drive.followTrajectorySequence(goForward);
 
         utilities.lowerArm(1, 400, telemetry);
