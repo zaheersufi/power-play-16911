@@ -80,7 +80,7 @@ public class NewRigatoniHardware
         grabServo = hardwareMap.get(Servo.class, RigatoniIds.GRAB_SERVO);
 
         grabServo.setDirection(Servo.Direction.FORWARD);
-        grabServo.setPosition(1);
+        grabServo.setPosition(.6);
     }
 
 
@@ -105,7 +105,7 @@ public class NewRigatoniHardware
         // LiftArm2
         liftArm2 = hardwareMap.get(DcMotorEx.class, RigatoniIds.LIFT_ARM2);
 
-        liftArm2.setDirection(DcMotorSimple.Direction.FORWARD);
+        liftArm2.setDirection(DcMotorSimple.Direction.REVERSE);
 
         liftArm2.setPower(0);
         liftArm2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

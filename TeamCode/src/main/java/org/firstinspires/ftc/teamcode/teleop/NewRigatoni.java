@@ -173,9 +173,9 @@ public class NewRigatoni extends OpMode
     public void rotateClaw()
     {
         if(gamepad2.square)
-            hardware.grabServo.setPosition(1);
+            hardware.grabServo.setPosition(.6);
         if(gamepad2.circle)
-            hardware.grabServo.setPosition(0);
+            hardware.grabServo.setPosition(0.3);
 
     }
 
