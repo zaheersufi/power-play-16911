@@ -1,10 +1,9 @@
-package org.firstinspires.ftc.teamcode.autonomous.meet2;
+package org.firstinspires.ftc.teamcode.autonomous.current;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.internal.system.Assert;
 import org.firstinspires.ftc.teamcode.autonomous.pipelines.SleevePipeline;
@@ -19,16 +18,14 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 
 
 
-@Autonomous(name="fullSendHighLeft")
-public class fullSendHighLeft extends LinearOpMode
+@Autonomous(name="fullSendMidLeft")
+public class fullSendMidLeft extends LinearOpMode
 {
     private SampleMecanumDrive drive;
     private Utilities utilities;
     private OldRigatoniHardware hardware;
     private OpenCvInternalCamera webcam;
     private SleevePipeline sleevePipeline;
-
-    private ElapsedTime timer;
 
 
     private TrajectorySequence trajectoryToJunction;
@@ -38,7 +35,7 @@ public class fullSendHighLeft extends LinearOpMode
     private TrajectorySequence trajectoryToParking3;
 
 
-    private final Pose2d HOME = new Pose2d(36, 60, Math.toRadians(270));
+    private final Pose2d HOME = new Pose2d(36, 60, Math.toRadians(-90));
 
 
 
@@ -71,7 +68,7 @@ public class fullSendHighLeft extends LinearOpMode
         utilities.openClaw(false);
         waitForStart();
         if(!opModeIsActive()) {return;}
-        utilities.wait(200, telemetry);
+        utilities.wait(250, telemetry);
 
 
         final int IDENTIFIER = sleevePipeline.getDestination();
@@ -79,15 +76,15 @@ public class fullSendHighLeft extends LinearOpMode
         telemetry.update();
 
 
-        utilities.liftArmPosition(2200);
+        utilities.liftArmPosition(1520);
 
         drive.followTrajectorySequence(trajectoryToJunction);
         drive.followTrajectorySequence(goForward);
 
-        utilities.liftArmPosition(-500);
+        utilities.liftArmPosition(-550);
         utilities.wait(500, telemetry);
         utilities.openClaw(true);
-        utilities.liftArmPosition(-1900);
+        utilities.liftArmPosition(-1500);
 
         //trajectoryRecenter ends in parking2
         drive.followTrajectorySequence(trajectoryRecenter);
@@ -107,24 +104,23 @@ public class fullSendHighLeft extends LinearOpMode
     private void buildTrajectories()
     {
         trajectoryToJunction = drive.trajectorySequenceBuilder(HOME)
-                .forward(50)
-                .forward(4.5)
+                .forward(26)
+                .forward(3)
                 .back(3)
-                .turn(Math.toRadians(-50))
+                .turn(Math.toRadians(-43))
                 .build();
         goForward = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
-                .forward(7.25)
+                .forward(9)
                 .build();
         trajectoryRecenter = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
-                .back(1.5)
-                .turn(Math.toRadians(140))
-                .back(1)
+                .back(1.25)
+                .turn(Math.toRadians(133))
                 .build();
         trajectoryToParking1 = drive.trajectorySequenceBuilder(trajectoryRecenter.end())
-                .forward(19)
+                .forward(21)
                 .build();
         trajectoryToParking3 = drive.trajectorySequenceBuilder(trajectoryRecenter.end())
-                .back(25)
+                .back(26)
                 .build();
 
     }

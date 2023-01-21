@@ -19,7 +19,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
 
-//@Disabled
+@Disabled
 @Autonomous(name="RightTest")
 public class RightTest extends LinearOpMode
 {

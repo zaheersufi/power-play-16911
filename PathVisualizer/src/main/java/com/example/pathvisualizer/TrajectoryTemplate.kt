@@ -10,7 +10,7 @@ abstract class TrajectoryTemplate {
         const val robotLength = 16.5
     }
 
-    private val driveConstraints = DriveConstraints(57.0, 30.0, 0.0, Math.toRadians(399.0969417327928),  Math.toRadians(60.0), 0.0)
+    private val driveConstraints = DriveConstraints(57.0, 45.0, 0.0, Math.toRadians(399.0969417327928),  Math.toRadians(60.0), 0.0)
     val combinedConstraints = MecanumConstraints(driveConstraints, (robotWidth+ robotLength)/2)
 
 

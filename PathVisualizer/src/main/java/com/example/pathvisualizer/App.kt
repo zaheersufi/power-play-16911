@@ -20,10 +20,12 @@ class App : Application() {
     private lateinit var gc:  GraphicsContext
 
     private var bots = listOf(
-        Bot(TrajectoryTwoCones().left(2), false),
-        Bot(TrajectoryTwoCones().right(2), true),
-        Bot(TrajectoryTwoCones().left(2), true),
-        Bot(TrajectoryTwoCones().right(2), false),
+//        Bot(TrajectoryTwoCones().left(2), false),
+//        Bot(TrajectoryTwoCones().right(2), true),
+//        Bot(TrajectoryTwoCones().left(2), true),
+//        Bot(TrajectoryTwoCones().right(2), false),
+          Bot(TrajectoryMultiple().left(3), false),
+          Bot(TrajectoryMultiple().left(1), true)
     )
 
     companion object {

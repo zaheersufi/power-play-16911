@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autonomous.meet2;
+package org.firstinspires.ftc.teamcode.autonomous.current;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -17,9 +17,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
 
-
-@Autonomous(name="fullSendMidLeft")
-public class fullSendMidLeft extends LinearOpMode
+@Autonomous(name="fullSendMidRight")
+public class fullSendMidRight extends LinearOpMode
 {
     private SampleMecanumDrive drive;
     private Utilities utilities;
@@ -35,7 +34,7 @@ public class fullSendMidLeft extends LinearOpMode
     private TrajectorySequence trajectoryToParking3;
 
 
-    private final Pose2d HOME = new Pose2d(36, 60, Math.toRadians(-90));
+    private final Pose2d HOME = new Pose2d(-36, 60, Math.toRadians(270));
 
 
 
@@ -76,13 +75,13 @@ public class fullSendMidLeft extends LinearOpMode
         telemetry.update();
 
 
-        utilities.liftArmPosition(1520);
+        utilities.liftArmPosition(1500);
 
         drive.followTrajectorySequence(trajectoryToJunction);
         drive.followTrajectorySequence(goForward);
 
-        utilities.liftArmPosition(-550);
-        utilities.wait(500, telemetry);
+        utilities.liftArmPosition(-580);
+        utilities.wait(750, telemetry);
         utilities.openClaw(true);
         utilities.liftArmPosition(-1500);
 
@@ -106,21 +105,21 @@ public class fullSendMidLeft extends LinearOpMode
         trajectoryToJunction = drive.trajectorySequenceBuilder(HOME)
                 .forward(26)
                 .forward(3)
-                .back(3)
-                .turn(Math.toRadians(-43))
+                .back(3.5)
+                .turn(Math.toRadians(36))
                 .build();
         goForward = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
-                .forward(9)
+                .forward(7.5)
                 .build();
         trajectoryRecenter = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
-                .back(1.25)
-                .turn(Math.toRadians(133))
+                .back(0.0625)
+                .turn(Math.toRadians(-127))
                 .build();
         trajectoryToParking1 = drive.trajectorySequenceBuilder(trajectoryRecenter.end())
-                .forward(21)
+                .back(24)
                 .build();
         trajectoryToParking3 = drive.trajectorySequenceBuilder(trajectoryRecenter.end())
-                .back(26)
+                .forward(23)
                 .build();
 
     }
