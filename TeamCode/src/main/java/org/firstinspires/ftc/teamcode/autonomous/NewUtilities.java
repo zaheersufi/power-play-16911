@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.NewRigatoniHardware;
 
 
@@ -13,7 +12,9 @@ public class NewUtilities
 {
 
     private NewRigatoniHardware hardware;
-    SampleMecanumDrive drive;
+
+    private double RAISE_POWER = 0.95;
+    private double LOWER_POWER = 0.3;
 
 
 
@@ -66,16 +67,19 @@ public class NewUtilities
 
     public void liftArmPosition(int pos)
     {
+        double power = RAISE_POWER;
+        if (pos < 0) power = LOWER_POWER;
+
         hardware.liftArm1.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         hardware.liftArm1.setTargetPosition(hardware.liftArm1.getCurrentPosition() + pos);
         hardware.liftArm1.setTargetPositionTolerance(10);
-        hardware.liftArm1.setPower(0.95);
+        hardware.liftArm1.setPower(power);
         hardware.liftArm1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
         hardware.liftArm2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        hardware.liftArm2.setTargetPosition(hardware.liftArm2.getCurrentPosition() + pos);
+        hardware.liftArm2.setTargetPosition(hardware.liftArm2.getCurrentPosition() - pos);
         hardware.liftArm2.setTargetPositionTolerance(10);
-        hardware.liftArm2.setPower(0.95);
+        hardware.liftArm2.setPower(power);
         hardware.liftArm2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     }
 
@@ -83,8 +87,8 @@ public class NewUtilities
 
     public void lowerArm(double power, int time, Telemetry telemetry)
     {
-        hardware.liftArm1.setPower(-power*0.95);
-        hardware.liftArm2.setPower(-power*0.95);
+        hardware.liftArm1.setPower(-power* RAISE_POWER);
+        hardware.liftArm2.setPower(-power* RAISE_POWER);
 
         wait(time, telemetry);
 

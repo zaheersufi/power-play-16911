@@ -14,6 +14,10 @@ import org.firstinspires.ftc.teamcode.hardware.NewRigatoniHardware;
 public class NewRigatoni extends OpMode
 {
     private NewRigatoniHardware hardware;
+
+    final double RAISE_POWER = 0.95;
+    final double LOWER_POWER = 0.4;
+
     final double FAST_SPEED = .8;
     final double SLOW_SPEED = .5;
     final double SUPER_SLOW_SPEED = .3;
@@ -160,8 +164,17 @@ public class NewRigatoni extends OpMode
 
     public void moveArm()
     {
-        hardware.liftArm1.setPower((gamepad2.right_trigger - gamepad2.left_trigger) * 1);
-        hardware.liftArm2.setPower((gamepad2.right_trigger - gamepad2.left_trigger) * 1);
+        // Raising the lift
+        if ( (gamepad2.right_trigger > 0) && (gamepad2.right_trigger > gamepad2.left_trigger) ) {
+            hardware.liftArm1.setPower(gamepad2.right_trigger * RAISE_POWER);
+            hardware.liftArm2.setPower(gamepad2.right_trigger * RAISE_POWER);
+        }
+
+        // Lowering the lift
+        else if ( (gamepad2.left_trigger > 0) && (gamepad2.left_trigger > gamepad2.right_trigger) ) {
+            hardware.liftArm1.setPower(-gamepad2.left_trigger * LOWER_POWER);
+            hardware.liftArm2.setPower(-gamepad2.left_trigger * LOWER_POWER);
+        }
 
         telemetry.addData("Position: ", hardware.liftArm1.getCurrentPosition());
         telemetry.update();
