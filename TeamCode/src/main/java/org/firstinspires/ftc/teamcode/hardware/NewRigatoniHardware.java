@@ -69,6 +69,20 @@ public class NewRigatoniHardware
 
 
     /**
+     * Sets drive motors to run with encoder.
+     */
+    public void turnOnDriveEncoders()
+    {
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+    }
+
+
+
+    /**
      * Initializes the claw servo, sets the position to closed,
      * and sets the default movement direction.
      *
@@ -99,7 +113,9 @@ public class NewRigatoniHardware
 
         liftArm1.setPower(0);
         liftArm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        liftArm1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        liftArm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftArm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
 
 
         // LiftArm2
@@ -109,7 +125,7 @@ public class NewRigatoniHardware
 
         liftArm2.setPower(0);
         liftArm2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        liftArm2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+        liftArm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftArm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 }

@@ -27,6 +27,9 @@ public class NewRigatoni extends OpMode
 
 
 
+    /**
+     * Initializes hardware and motors
+     */
     @Override
     public void init()
     {
@@ -38,15 +41,13 @@ public class NewRigatoni extends OpMode
         hardware.initializeClawServos(hardwareMap);
         hardware.initializeSupplementaryMotors(hardwareMap);
 
-        hardware.liftArm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hardware.liftArm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        hardware.liftArm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hardware.liftArm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
     }
 
 
 
+    /**
+     * Loop/actions for DC
+     */
     @Override
     public void loop()
     {
@@ -58,6 +59,9 @@ public class NewRigatoni extends OpMode
 
 
 
+    /**
+     * Set the driver motors' power
+     */
     public void drive()
     {
         // Mecanum drivecode
@@ -131,6 +135,12 @@ public class NewRigatoni extends OpMode
 
 
 
+    /**
+     * Change the motors' speed mode:
+     * - Fast Speed
+     * - Slow Speed
+     * - SuperSlow Speed
+     */
     public void changeSpeed()
     {
         // Slow Speed
@@ -162,6 +172,11 @@ public class NewRigatoni extends OpMode
 
 
 
+    /**
+     * Move the lift up or down
+     * - Move up at RAISE_POWER
+     * - Move down at LOWER_POWER
+     */
     public void moveArm()
     {
         // Raising the lift
@@ -183,6 +198,9 @@ public class NewRigatoni extends OpMode
 
 
 
+    /**
+     * Open and Close the grabber/claw
+     */
     public void rotateClaw()
     {
         if(gamepad2.square)

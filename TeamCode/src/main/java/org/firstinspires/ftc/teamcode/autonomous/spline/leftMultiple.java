@@ -88,12 +88,12 @@ public class leftMultiple extends LinearOpMode
         hardware.initializePrimaryMotors(hardwareMap);
         hardware.initializeClawServos(hardwareMap);
         hardware.initializeSupplementaryMotors(hardwareMap);
+        hardware.turnOnDriveEncoders();
         utilities = new NewUtilities(hardware);
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(home);
 
 
-        turnOnEncoders();
         buildTrajectories();
         utilities.openClaw(false);
         waitForStart();
@@ -252,21 +252,6 @@ public class leftMultiple extends LinearOpMode
                 .build();
     }
 
-
-    /**
-     * Turns on the encoders of all drive motors and the lift motor.
-     */
-    private void turnOnEncoders()
-    {
-        hardware.leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        hardware.leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        hardware.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        hardware.rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        hardware.liftArm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hardware.liftArm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        hardware.liftArm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hardware.liftArm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
 
 
     /**
