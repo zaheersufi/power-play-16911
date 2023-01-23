@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.Gamepad.RumbleEffect;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.internal.system.Assert;
+import org.firstinspires.ftc.teamcode.autonomous.NewUtilities;
 import org.firstinspires.ftc.teamcode.hardware.NewRigatoniHardware;
 
 
@@ -14,6 +15,7 @@ import org.firstinspires.ftc.teamcode.hardware.NewRigatoniHardware;
 public class NewRigatoni extends LinearOpMode
 {
     private NewRigatoniHardware hardware;
+    private NewUtilities utilities;
 
     final double RAISE_POWER = 0.95;
     final double LOWER_POWER = 0.4;
@@ -56,6 +58,8 @@ public class NewRigatoni extends LinearOpMode
         hardware.initializeClawServos(hardwareMap);
         hardware.initializeSupplementaryMotors(hardwareMap);
 
+        utilities = new NewUtilities(hardware);
+        utilities.turnOnEncoders();
 
         waitForStart();
         timer = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
@@ -189,6 +193,25 @@ public class NewRigatoni extends LinearOpMode
             rightFrontPower = -1;
             leftRearPower = -1;
         }
+
+        //D-Pad Junction heights
+        if (gamepad2.dpad_up) //Ground Junction
+        {
+            utilities.liftArmPosition(100);
+        }
+        else if (gamepad2.dpad_left)
+        {
+            utilities.liftArmPosition(600);
+        }
+        else if (gamepad2.dpad_down)
+        {
+            utilities.liftArmPosition(1400);
+        }
+        else if (gamepad2.dpad_right)
+        {
+            utilities.liftArmPosition(2200);
+        }
+
 
 
         changeSpeed();

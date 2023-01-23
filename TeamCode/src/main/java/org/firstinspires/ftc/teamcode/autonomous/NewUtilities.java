@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -79,7 +80,7 @@ public class NewUtilities
         hardware.liftArm2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         hardware.liftArm2.setTargetPosition(hardware.liftArm2.getCurrentPosition() - pos);
         hardware.liftArm2.setTargetPositionTolerance(10);
-        hardware.liftArm2.setPower(power);
+        hardware.liftArm2.setPower(-power);
         hardware.liftArm2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     }
 
@@ -95,5 +96,16 @@ public class NewUtilities
         hardware.liftArm1.setPower(0);
         hardware.liftArm2.setPower(0);
 
+    }
+    public void turnOnEncoders()
+    {
+        hardware.leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hardware.leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hardware.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hardware.rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hardware.liftArm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hardware.liftArm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hardware.liftArm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hardware.liftArm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 }
