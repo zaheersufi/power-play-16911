@@ -17,7 +17,8 @@ public class NewRigatoni extends LinearOpMode
     private NewRigatoniHardware hardware;
     private NewUtilities utilities;
 
-    final double RAISE_POWER = 1;
+    // With two motors it's best not to run at full capacity
+    final double RAISE_POWER = 0.95;
     final double LOWER_POWER = 0.4;
 
     final double FAST_SPEED = .8;
