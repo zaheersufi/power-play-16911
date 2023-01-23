@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.autonomous.current;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -18,7 +19,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
 
-
+@Disabled
 @Autonomous(name="fullSendHighLeft")
 public class fullSendHighLeft extends LinearOpMode
 {
@@ -42,7 +43,16 @@ public class fullSendHighLeft extends LinearOpMode
 
 
 
+
     /**
+     * This method sets everything up for autonomous : it initializes components
+     * and variables and calls the build trajectory method. After initialization,
+     * the robot asynchronously lifts the arm up as it drives forward into the
+     * junction through the use of  trajectoryToJunction. Then following trajectory
+     * goForward, the cone is dropped onto the pylon. Then with the use of trajectory
+     * reCenter, the robot parks based on the zone read from the signal sleeve during
+     * the start time.
+     *
      * Reads the parking position, scores a cone in the
      * high junction, and parks in the space determined
      * by the custom sleeve.
@@ -102,6 +112,10 @@ public class fullSendHighLeft extends LinearOpMode
 
 
     /**
+     * This method is to be called in the runOpMode, and it sets up all trajectories
+     * that will be used by the robot. It sets up trajectoryToJunction, goForward,
+     * and trajectoryRecenter and sets up three other trajectories which are parking locations.
+     *
      * Defines and builds the different trajectories used.
      */
     private void buildTrajectories()
@@ -145,7 +159,8 @@ public class fullSendHighLeft extends LinearOpMode
 
 
     /**
-     * Set up the webcam in an inverted horizontal position
+     * Sets up the camera/webcam and reading box which scans in the parking zone
+     * through the use of color on our custom sleeve’s symbols.
      */
     public void setUpCamera(SleevePipeline pipeline)
     {

@@ -3,34 +3,14 @@ package org.firstinspires.ftc.teamcode.autonomous.spline;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import org.firstinspires.ftc.teamcode.autonomous.current.genericAuton;
 
-import org.firstinspires.ftc.robotcore.internal.system.Assert;
-import org.firstinspires.ftc.teamcode.autonomous.NewUtilities;
-import org.firstinspires.ftc.teamcode.autonomous.Utilities;
-import org.firstinspires.ftc.teamcode.autonomous.pipelines.SleevePipeline;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.hardware.NewRigatoniHardware;
-import org.firstinspires.ftc.teamcode.hardware.OldRigatoniHardware;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvInternalCamera;
 
 
 //@Disabled
 @Autonomous(name="leftMultiple")
-public class leftMultiple extends LinearOpMode
+public class leftMultiple extends genericAuton
 {
-    private SampleMecanumDrive drive;
-    private NewUtilities utilities;
-    private NewRigatoniHardware hardware;
-    private OpenCvInternalCamera webcam;
-    private SleevePipeline sleevePipeline;
-
-
     private final Pose2d home = new Pose2d(-36.0, -63.0, Math.toRadians(90.0));
 
     private final Pose2d midJunction = new Pose2d(-34.0, -24.0, Math.toRadians(0.0));
@@ -73,38 +53,10 @@ public class leftMultiple extends LinearOpMode
      * Reads the parking position, scores a cone in the
      * high junction, and parks in the space determined
      * by the custom sleeve.
-     *
-     * @throws  InterruptedException    in case the thread is interrupted
      */
-    @Override
-    public void runOpMode() throws InterruptedException
+    public void run()
     {
-        sleevePipeline = new SleevePipeline(telemetry);
-        setUpCamera(sleevePipeline);
-
-
-        Assert.assertNotNull(hardwareMap);
-        hardware = new NewRigatoniHardware();
-        hardware.initializePrimaryMotors(hardwareMap);
-        hardware.initializeClawServos(hardwareMap);
-        hardware.initializeSupplementaryMotors(hardwareMap);
-        hardware.turnOnDriveEncoders();
-        utilities = new NewUtilities(hardware);
-        drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(home);
-
-
-        buildTrajectories();
-        utilities.openClaw(false);
-        waitForStart();
-        if(!opModeIsActive()) {return;}
-        utilities.wait(250, telemetry);
-
-
-        final int IDENTIFIER = sleevePipeline.getDestination();
-        telemetry.addData("Parking", IDENTIFIER);
-        telemetry.update();
-
 
         utilities.liftArmPosition(1480);
         drive.followTrajectory(trajectoryToMid);
@@ -164,20 +116,24 @@ public class leftMultiple extends LinearOpMode
         utilities.liftArmPosition(-1600);
 
 
-        if(IDENTIFIER == 1)
+        if(identifier == 1)
             drive.followTrajectory(trajectoryToParkingOne);
-        else if (IDENTIFIER == 2)
+        else if (identifier == 2)
             drive.followTrajectory(trajectoryToParkingTwo);
-        else if (IDENTIFIER == 3)
+        else if (identifier == 3)
             drive.followTrajectory(trajectoryToParkingThree);
 
     }
 
 
+
     /**
+     * This method is to be called in the runOpMode, and it sets up all trajectories
+     * that will be used by the robot.
+     *
      * Defines and builds the different trajectories used.
      */
-    private void buildTrajectories()
+    public void buildTrajectories()
     {
 
         trajectoryToMid = drive.trajectoryBuilder(home, Math.toRadians(80.0))
@@ -253,28 +209,4 @@ public class leftMultiple extends LinearOpMode
     }
 
 
-
-    /**
-     * Set up the webcam in an inverted horizontal position
-     */
-    public void setUpCamera(SleevePipeline pipeline)
-    {
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        webcam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
-        webcam.setPipeline(pipeline);
-        webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
-
-        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener(){
-            @Override
-            public void onOpened() {
-                webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);
-            }
-            @Override
-            public void onError(int errorCode) {
-                telemetry.addData("ERROR", "*Camera could not be opened* "+errorCode);
-                telemetry.update();
-            }
-        });
-
-    }
 }

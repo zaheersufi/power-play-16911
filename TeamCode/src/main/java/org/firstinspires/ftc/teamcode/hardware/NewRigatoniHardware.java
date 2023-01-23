@@ -128,4 +128,30 @@ public class NewRigatoniHardware
         liftArm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftArm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
+
+
+
+    /**
+     * Turns off all motors.
+     */
+    public void robotStopAllMotion() {
+        leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        liftArm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftArm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+    }
+
+
+
+    /**
+     * An exception to throw to indicate that "Stop" was pressed (or fired
+     * automatically due to timer expiration). The robot should stop
+     * immediately to avoid penalty points or crashing.
+     */
+    public static class StopImmediatelyException extends RuntimeException {
+        public StopImmediatelyException() { super(); }
+    }
 }
