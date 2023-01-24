@@ -33,7 +33,7 @@ public class DriveConstants
      * from DriveVelocityPIDTuner.
      */
     public static final boolean RUN_USING_ENCODER = false;  // Using Feedforward Tuner for velocity instead of PID
-    public static PIDFCoefficients MOTOR_VELO_PID = null; //new PIDFCoefficients(6, 0, 10, 12);
+    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(6, 0, 10, 12);
 
 
     /*
@@ -57,7 +57,7 @@ public class DriveConstants
      */
     public static double kV = 1.0 / rpmToVelocity(MAX_RPM);
     public static double kA = 0.002;
-    public static double kStatic = 0;
+    public static double kStatic = 0.0000000001;
 
 
     /*
@@ -79,24 +79,24 @@ public class DriveConstants
      */
     public static double MAX_VEL = 42;
     public static double MAX_ACCEL = 50;
-    public static double MAX_ANG_VEL = Math.toRadians((MAX_VEL / TRACK_WIDTH) * (180 / Math.PI));
-    public static double MAX_ANG_ACCEL = Math.toRadians((MAX_ACCEL / TRACK_WIDTH) * (180 / Math.PI));
+    public static double MAX_ANG_VEL = Math.toRadians((MAX_VEL*1.0 / TRACK_WIDTH) * (180.0 / Math.PI));
+    public static double MAX_ANG_ACCEL = Math.toRadians((MAX_ACCEL*1.0 / TRACK_WIDTH) * (180.0 / Math.PI));
 
 
 
     public static double encoderTicksToInches(double ticks) {
-        return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;
+        return WHEEL_RADIUS * 2.0 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;
     }
 
 
     public static double rpmToVelocity(double rpm) {
-        return rpm * GEAR_RATIO * 2 * Math.PI * WHEEL_RADIUS / 60.0;
+        return rpm * GEAR_RATIO * 2.0 * Math.PI * WHEEL_RADIUS / 60.0;
     }
 
 
     public static double getMotorVelocityF(double ticksPerSecond) {
         // see https://docs.google.com/document/d/1tyWrXDfMidwYyP_5H4mZyVgaEswhOC35gvdmP-V-5hA/edit#heading=h.61g9ixenznbx
-        return 32767 / ticksPerSecond;
+        return 32767.0 / ticksPerSecond;
     }
 
 }
