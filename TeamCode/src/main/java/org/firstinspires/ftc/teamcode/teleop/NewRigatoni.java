@@ -38,7 +38,7 @@ public class NewRigatoni extends LinearOpMode
         .addStep(0.0, 1.0, 250)
         .addStep(1.0, 0.0, 250)
         .addStep(0.0, 0.0, 100)
-        .addStep(1.0, 1.0, 250)
+        .addStep(1.0, 1.0, 500)
         .build();
 
 
@@ -289,7 +289,14 @@ public class NewRigatoni extends LinearOpMode
             hardware.liftArm2.setPower(-gamepad2.left_trigger * LOWER_POWER);
         }
 
-        telemetry.addData("Position: ", hardware.liftArm1.getCurrentPosition());
+        // Nothing happens
+        else {
+            hardware.liftArm1.setPower(0);
+            hardware.liftArm2.setPower(0);
+        }
+
+        telemetry.addData("Position1: ", hardware.liftArm1.getCurrentPosition());
+        telemetry.addData("Position2: ", hardware.liftArm2.getCurrentPosition());
         telemetry.update();
 
     }
