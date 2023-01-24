@@ -33,7 +33,7 @@ public class DriveConstants
      * from DriveVelocityPIDTuner.
      */
     public static final boolean RUN_USING_ENCODER = false;  // Using Feedforward Tuner for velocity instead of PID
-    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(6, 0, 10, 12);
+    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0, getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV));
 
 
     /*
@@ -46,7 +46,7 @@ public class DriveConstants
      */
     public static double WHEEL_RADIUS = 1.47638;    // in
     public static double GEAR_RATIO = 1;            // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 12.5;        // in (distance between two parallel wheels)
+    public static double TRACK_WIDTH = 9.5;        // in (distance between two parallel wheels)
 
 
     /*
