@@ -199,19 +199,19 @@ public class NewRigatoni extends LinearOpMode
         //D-Pad Junction heights
         if (gamepad2.dpad_up) //Ground Junction
         {
-            utilities.liftArmPosition(100);
+            utilities.liftArmAbsolutePosition(100);
         }
         else if (gamepad2.dpad_left)
         {
-            utilities.liftArmPosition(600);
+            utilities.liftArmAbsolutePosition(600);
         }
         else if (gamepad2.dpad_down)
         {
-            utilities.liftArmPosition(1400);
+            utilities.liftArmAbsolutePosition(1400);
         }
         else if (gamepad2.dpad_right)
         {
-            utilities.liftArmPosition(2200);
+            utilities.liftArmAbsolutePosition(2200);
         }
 
 
