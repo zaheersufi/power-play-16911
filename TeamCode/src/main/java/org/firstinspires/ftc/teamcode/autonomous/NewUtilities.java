@@ -44,9 +44,9 @@ public class NewUtilities
     public void openClaw(boolean shouldOpen)
     {
         if(!shouldOpen)
-            hardware.grabServo.setPosition(1.0);
+            hardware.grabServo.setPosition(0.6);
         else
-            hardware.grabServo.setPosition(0.0);
+            hardware.grabServo.setPosition(0.3);
     }
 
 

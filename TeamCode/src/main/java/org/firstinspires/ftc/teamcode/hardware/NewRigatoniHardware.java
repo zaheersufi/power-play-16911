@@ -106,6 +106,16 @@ public class NewRigatoniHardware
      */
     public void initializeSupplementaryMotors(HardwareMap hardwareMap)
     {
+        // LiftArm2
+        liftArm2 = hardwareMap.get(DcMotorEx.class, RigatoniIds.LIFT_ARM2);
+
+        liftArm2.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        liftArm2.setPower(0);
+        liftArm2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        liftArm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftArm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         // LiftArm1
         liftArm1 = hardwareMap.get(DcMotorEx.class, RigatoniIds.LIFT_ARM1);
 
@@ -118,15 +128,7 @@ public class NewRigatoniHardware
 
 
 
-        // LiftArm2
-        liftArm2 = hardwareMap.get(DcMotorEx.class, RigatoniIds.LIFT_ARM2);
 
-        liftArm2.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        liftArm2.setPower(0);
-        liftArm2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        liftArm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        liftArm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
 

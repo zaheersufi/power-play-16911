@@ -45,8 +45,8 @@ public class DriveConstants
      * convenience. Make sure to exclude any gear ratio included in MOTOR_CONFIG from GEAR_RATIO.
      */
     public static double WHEEL_RADIUS = 1.47638;    // in
-    public static double GEAR_RATIO = 1;            // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 9.5;        // in (distance between two parallel wheels)
+    public static double GEAR_RATIO = 1.036482096738954;            // output (wheel) speed / input (motor) speed
+    public static double TRACK_WIDTH = 10.66;        // in (distance between two parallel wheels)
 
 
     /*
@@ -55,9 +55,9 @@ public class DriveConstants
      * motor encoders or have elected not to use them for velocity control, these values should be
      * empirically tuned.
      */
-    public static double kV = 1.0 / rpmToVelocity(MAX_RPM);
-    public static double kA = 0.002;
-    public static double kStatic = 0.0000000001;
+    public static double kV = 0.02059;//1.0 / rpmToVelocity(MAX_RPM);
+    public static double kA = 0.003;
+    public static double kStatic = 0.01714;
 
 
     /*
@@ -77,9 +77,9 @@ public class DriveConstants
      * Maximum Angular Velocity is calculated as: maximum velocity / trackWidth * (180 / Math.PI) but capped at 360°/s.
      * You are free to raise this on your own if you would like. It is best determined through experimentation.
      */
-    public static double MAX_VEL = 42;
+    public static double MAX_VEL = 48.1428729124262; //53.49208101380694
     public static double MAX_ACCEL = 50;
-    public static double MAX_ANG_VEL = Math.toRadians((MAX_VEL*1.0 / TRACK_WIDTH) * (180.0 / Math.PI));
+    public static double MAX_ANG_VEL = 9.612958502037687;//Math.toRadians((MAX_VEL*1.0 / TRACK_WIDTH) * (180.0 / Math.PI));
     public static double MAX_ANG_ACCEL = Math.toRadians((MAX_ACCEL*1.0 / TRACK_WIDTH) * (180.0 / Math.PI));
 
 
