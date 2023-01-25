@@ -19,7 +19,8 @@ public class NewRigatoni extends LinearOpMode
 
     // With two motors it's best not to run at full capacity
     final double RAISE_POWER = 0.95;
-    final double LOWER_POWER = 0.4;
+    final double LOWER_POWER = 0.95;
+    final double LOWER_POWER_SLOW = .4;
 
     final double FAST_SPEED = .8;
     final double SLOW_SPEED = .5;
@@ -287,6 +288,12 @@ public class NewRigatoni extends LinearOpMode
         else if ( (gamepad2.left_trigger > 0) && (gamepad2.left_trigger > gamepad2.right_trigger) ) {
             hardware.liftArm1.setPower(-gamepad2.left_trigger * LOWER_POWER);
             hardware.liftArm2.setPower(-gamepad2.left_trigger * LOWER_POWER);
+        }
+
+        //Lowering the lift low speed
+        else if(gamepad2.left_bumper) {
+            hardware.liftArm1.setPower(-LOWER_POWER_SLOW);
+            hardware.liftArm2.setPower(-LOWER_POWER_SLOW);
         }
 
         // Nothing happens
