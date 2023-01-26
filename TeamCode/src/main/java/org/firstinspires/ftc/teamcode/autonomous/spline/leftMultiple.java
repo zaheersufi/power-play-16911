@@ -68,21 +68,21 @@ public class leftMultiple extends genericAuton
 
         drive.followTrajectory(trajectoryMidToStack);
         drive.followTrajectory(trajectoryPickUpCone);
-        utilities.liftArmAbsolutePosition(100);
+        utilities.liftArmAbsolutePosition(50);
         utilities.wait(1000, telemetry);
         utilities.openClaw(false);
         utilities.liftArmAbsolutePosition(250);
-        utilities.wait(1000, telemetry); /// delete
-//        drive.followTrajectory(trajectoryAfterPickUp);
-//
-//
-//       // utilities.liftArmDisplacementPosition(800);
-//        drive.followTrajectory(trajectoryToLow);
-//        drive.followTrajectory(trajectoryLowForward);
-//      //  utilities.liftArmDisplacementPosition(-500);
-//        utilities.wait(500, telemetry);
-//        utilities.openClaw(true);
-//        drive.followTrajectory(trajectoryLowBackward);
+        //utilities.wait(1000, telemetry); /// delete
+        drive.followTrajectory(trajectoryAfterPickUp);
+
+
+        utilities.liftArmDisplacementPosition(500);
+        drive.followTrajectory(trajectoryToLow);
+        drive.followTrajectory(trajectoryLowForward);
+        utilities.liftArmDisplacementPosition(-200);
+        utilities.wait(500, telemetry);
+        utilities.openClaw(true);
+        drive.followTrajectory(trajectoryLowBackward);
 //
 //        drive.followTrajectory(trajectoryLowToStack);
 //        drive.followTrajectory(trajectoryPickUpCone);
