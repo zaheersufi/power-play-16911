@@ -57,9 +57,14 @@ public abstract class genericAuton extends LinearOpMode
 
         buildTrajectories();
         utilities.openClaw(false);
+
+        telemetry.addData("Init Parking", sleevePipeline.getDestination());
+        telemetry.update();
+
         waitForStart();
         if(!opModeIsActive()) {return;}
         utilities.wait(250, telemetry);
+
 
         identifier = sleevePipeline.getDestination();
         telemetry.addData("Parking", identifier);
@@ -124,7 +129,7 @@ public abstract class genericAuton extends LinearOpMode
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener(){
             @Override
             public void onOpened() {
-                webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);
+                webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_RIGHT);
             }
             @Override
             public void onError(int errorCode) {

@@ -13,9 +13,9 @@ public class leftMultiple extends genericAuton
 {
     private final Pose2d home = new Pose2d(-36.0, -63.0, Math.toRadians(90.0));
 
-    private final Pose2d midJunction = new Pose2d(-34.0, -24.0, Math.toRadians(0.0));
+    private final Pose2d midJunction = new Pose2d(-34.0, -24.5, Math.toRadians(0.0));
 
-    private final Pose2d stack = new Pose2d(-59.0, -12.0, Math.toRadians(180.0));
+    private final Pose2d stack = new Pose2d(-58.25, -10.75, Math.toRadians(180.0));
 
     private final Pose2d lowJunction = new  Pose2d(-55.0, -16.0, Math.toRadians(-50.0));
     private final Pose2d groundJunction = new Pose2d(-55.5, -8.5, Math.toRadians(50.0));
@@ -58,70 +58,72 @@ public class leftMultiple extends genericAuton
     {
         drive.setPoseEstimate(home);
 
-//        utilities.liftArmAbsolutePosition(355);
+        utilities.liftArmAbsolutePosition(260);
         drive.followTrajectory(trajectoryToMid);
         drive.followTrajectory(trajectoryMidForward);
-        //utilities.liftArmDisplacementPosition(-500);
+        utilities.liftArmDisplacementPosition(-30);
         utilities.wait(500, telemetry);
         utilities.openClaw(true);
         drive.followTrajectory(trajectoryMidBackward);
 
         drive.followTrajectory(trajectoryMidToStack);
         drive.followTrajectory(trajectoryPickUpCone);
-        //utilities.liftArmDisplacementPosition(-200);
-        utilities.wait(500, telemetry);
+        utilities.liftArmAbsolutePosition(100);
+        utilities.wait(1000, telemetry);
         utilities.openClaw(false);
-        drive.followTrajectory(trajectoryAfterPickUp);
-
-
-       // utilities.liftArmDisplacementPosition(800);
-        drive.followTrajectory(trajectoryToLow);
-        drive.followTrajectory(trajectoryLowForward);
-      //  utilities.liftArmDisplacementPosition(-500);
-        utilities.wait(500, telemetry);
-        utilities.openClaw(true);
-        drive.followTrajectory(trajectoryLowBackward);
-
-        drive.followTrajectory(trajectoryLowToStack);
-        drive.followTrajectory(trajectoryPickUpCone);
-       // utilities.liftArmDisplacementPosition(-200);
-        utilities.wait(500, telemetry);
-        utilities.openClaw(false);
-        drive.followTrajectory(trajectoryAfterPickUp);
-
-
-//        utilities.liftArmAbsolutePosition(-200);
-        drive.followTrajectory(trajectoryToGround);
-        drive.followTrajectory(trajectoryGroundForward);
-//        utilities.liftArmDisplacementPosition(-20);
-        utilities.wait(500, telemetry);
-        utilities.openClaw(true);
-        drive.followTrajectory(trajectoryGroundBackward);
-
-        drive.followTrajectory(trajectoryGroundToStack);
-        drive.followTrajectory(trajectoryPickUpCone);
-//        utilities.liftArmDisplacementPosition(-20);
-        utilities.wait(500, telemetry);
-        utilities.openClaw(false);
-        drive.followTrajectory(trajectoryAfterPickUp);
-
-
-//        utilities.liftArmAbsolutePosition(355);
-        drive.followTrajectory(trajectoryToHigh);
-        drive.followTrajectory(trajectoryHighForward);
-//        utilities.liftArmDisplacementPosition(-20);
-        utilities.wait(500, telemetry);
-        utilities.openClaw(true);
-        drive.followTrajectory(trajectoryHighBackward);
-//        utilities.liftArmAbsolutePosition(10);
-
-
-        if(identifier == 1)
-            drive.followTrajectory(trajectoryToParkingOne);
-        else if (identifier == 2)
-            drive.followTrajectory(trajectoryToParkingTwo);
-        else if (identifier == 3)
-            drive.followTrajectory(trajectoryToParkingThree);
+        utilities.liftArmAbsolutePosition(250);
+        utilities.wait(1000, telemetry); /// delete
+//        drive.followTrajectory(trajectoryAfterPickUp);
+//
+//
+//       // utilities.liftArmDisplacementPosition(800);
+//        drive.followTrajectory(trajectoryToLow);
+//        drive.followTrajectory(trajectoryLowForward);
+//      //  utilities.liftArmDisplacementPosition(-500);
+//        utilities.wait(500, telemetry);
+//        utilities.openClaw(true);
+//        drive.followTrajectory(trajectoryLowBackward);
+//
+//        drive.followTrajectory(trajectoryLowToStack);
+//        drive.followTrajectory(trajectoryPickUpCone);
+//       // utilities.liftArmDisplacementPosition(-200);
+//        utilities.wait(500, telemetry);
+//        utilities.openClaw(false);
+//        drive.followTrajectory(trajectoryAfterPickUp);
+//
+//
+////        utilities.liftArmAbsolutePosition(-200);
+//        drive.followTrajectory(trajectoryToGround);
+//        drive.followTrajectory(trajectoryGroundForward);
+////        utilities.liftArmDisplacementPosition(-20);
+//        utilities.wait(500, telemetry);
+//        utilities.openClaw(true);
+//        drive.followTrajectory(trajectoryGroundBackward);
+//
+//        drive.followTrajectory(trajectoryGroundToStack);
+//        drive.followTrajectory(trajectoryPickUpCone);
+////        utilities.liftArmDisplacementPosition(-20);
+//        utilities.wait(500, telemetry);
+//        utilities.openClaw(false);
+//        drive.followTrajectory(trajectoryAfterPickUp);
+//
+//
+////        utilities.liftArmAbsolutePosition(355);
+//        drive.followTrajectory(trajectoryToHigh);
+//        drive.followTrajectory(trajectoryHighForward);
+////        utilities.liftArmDisplacementPosition(-20);
+//        utilities.wait(500, telemetry);
+//        utilities.openClaw(true);
+//        drive.followTrajectory(trajectoryHighBackward);
+////        utilities.liftArmAbsolutePosition(10);
+//
+//
+//        if(identifier == 1)
+//            drive.followTrajectory(trajectoryToParkingOne);
+//        else if (identifier == 2)
+//            drive.followTrajectory(trajectoryToParkingTwo);
+//        else if (identifier == 3)
+//            drive.followTrajectory(trajectoryToParkingThree);
 
     }
 
@@ -136,14 +138,14 @@ public class leftMultiple extends genericAuton
     public void buildTrajectories()
     {
 
-        trajectoryToMid = drive.trajectoryBuilder(home, Math.toRadians(80.0))
+        trajectoryToMid = drive.trajectoryBuilder(home, Math.toRadians(70.0))
                 .splineToSplineHeading(midJunction, Math.toRadians(75.0))
                 .build();
         trajectoryMidForward = drive.trajectoryBuilder(trajectoryToMid.end(), trajectoryToMid.end().getHeading())
-                .forward(2.5)
+                .forward(2.2)
                 .build();
         trajectoryMidBackward = drive.trajectoryBuilder(trajectoryMidForward.end(), trajectoryMidForward.end().getHeading())
-                .back(3.0)
+                .back(4.0)
                 .build();
         trajectoryMidToStack = drive.trajectoryBuilder(trajectoryMidBackward.end(), Math.toRadians(80.0))
                 .splineToSplineHeading(stack, Math.toRadians(173.0))
