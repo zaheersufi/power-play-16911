@@ -87,7 +87,7 @@ public class NewUtilities
     public void liftArmAbsolutePosition (int pos)
     {
         double power = RAISE_POWER;
-        if (pos < 0) power = LOWER_POWER;
+        if (pos < hardware.liftArm1.getCurrentPosition()) power = LOWER_POWER;
 
         hardware.liftArm1.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         hardware.liftArm1.setTargetPosition(pos);

@@ -15,9 +15,9 @@ public class leftMultiple extends genericAuton
 
     private final Pose2d midJunction = new Pose2d(-34.0, -24.5, Math.toRadians(0.0));
 
-    private final Pose2d stack = new Pose2d(-58.25, -10.75, Math.toRadians(180.0));
+    private final Pose2d stack = new Pose2d(-64.25, -10.25, Math.toRadians(180.0));
 
-    private final Pose2d lowJunction = new  Pose2d(-55.0, -16.0, Math.toRadians(-50.0));
+    private final Pose2d lowJunction = new  Pose2d(-55.0, -16, Math.toRadians(-50.0));
     private final Pose2d groundJunction = new Pose2d(-55.5, -8.5, Math.toRadians(50.0));
     private final Pose2d highJunction = new Pose2d(-31.5, -7.5, Math.toRadians(45.0));
 
@@ -68,18 +68,16 @@ public class leftMultiple extends genericAuton
 
         drive.followTrajectory(trajectoryMidToStack);
         drive.followTrajectory(trajectoryPickUpCone);
-        utilities.liftArmAbsolutePosition(50);
+        utilities.liftArmAbsolutePosition(140);
         utilities.wait(1000, telemetry);
         utilities.openClaw(false);
-        utilities.liftArmAbsolutePosition(250);
-        //utilities.wait(1000, telemetry); /// delete
-        drive.followTrajectory(trajectoryAfterPickUp);
+        utilities.liftArmAbsolutePosition(160);
 
 
-        utilities.liftArmDisplacementPosition(500);
+        utilities.liftArmDisplacementPosition(50);
         drive.followTrajectory(trajectoryToLow);
         drive.followTrajectory(trajectoryLowForward);
-        utilities.liftArmDisplacementPosition(-200);
+        utilities.liftArmDisplacementPosition(-10);
         utilities.wait(500, telemetry);
         utilities.openClaw(true);
         drive.followTrajectory(trajectoryLowBackward);
