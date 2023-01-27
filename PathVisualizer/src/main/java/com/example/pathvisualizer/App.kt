@@ -24,8 +24,8 @@ class App : Application() {
 //        Bot(TrajectoryTwoCones().right(2), true),
 //        Bot(TrajectoryTwoCones().left(2), true),
 //        Bot(TrajectoryTwoCones().right(2), false),
-          Bot(TrajectoryMultiple().left(3), false),
-          Bot(TrajectoryMultiple().left(1), true)
+          Bot(TrajectoryMultipleAlt().left(3), false),
+          Bot(TrajectoryMultipleAlt().left(1), true)
     )
 
     companion object {
