@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.autonomous.current;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
@@ -12,6 +13,10 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 public class leftAltLinear extends genericAuton
 {
     private final Pose2d home = new Pose2d(-36.0, -63.0, Math.toRadians(90.0));
+    private final Pose2d endToStack = new Pose2d(-60, -12, Math.toRadians(180));
+    private final Pose2d endToLow = new Pose2d(-45, -12.5, Math.toRadians(270));
+
+
 
     private TrajectorySequence toMid;
     private TrajectorySequence toStack1;
@@ -21,6 +26,8 @@ public class leftAltLinear extends genericAuton
     private TrajectorySequence toStack2;
     private TrajectorySequence toHigh;
     private TrajectorySequence highBack;
+    private Trajectory toLowSpline;
+    private Trajectory splineToStack2;
     private TrajectorySequence toParking1;
     private TrajectorySequence toParking2;
     private TrajectorySequence toParking3;
@@ -53,33 +60,35 @@ public class leftAltLinear extends genericAuton
         drive.followTrajectorySequence(toStack1);
         utilities.wait(100,telemetry);
         utilities.openClaw(false);
-        utilities.liftArmAbsolutePosition(200);
+        utilities.liftArmAbsolutePosition(170);
         utilities.wait(750,telemetry);
 
         //To low
-        utilities.liftArmAbsolutePosition(170);
-        drive.followTrajectorySequence(toLow);
+        //utilities.liftArmAbsolutePosition(170);
+        //drive.followTrajectorySequence(toLow);
+        drive.followTrajectory(toLowSpline);
         utilities.liftArmDisplacementPosition(-30);
         utilities.wait(500, telemetry);
         utilities.openClaw(true);
-        drive.followTrajectorySequence(lowBack);
+//        drive.followTrajectorySequence(lowBack);
 
         //To stack
         utilities.liftArmAbsolutePosition(75);
-        drive.followTrajectorySequence(toStack2);
+//        drive.followTrajectorySequence(toStack2);
+        drive.followTrajectory(splineToStack2);
         utilities.wait(100,telemetry);
         utilities.openClaw(false);
         utilities.liftArmAbsolutePosition(200);
         utilities.wait(750,telemetry);
-
-        //To High
-        utilities.liftArmAbsolutePosition(355);
-        drive.followTrajectorySequence(toHigh);
-        utilities.liftArmAbsolutePosition(325);
-        utilities.wait(500, telemetry);
-        utilities.openClaw(true);
-        drive.followTrajectorySequence(highBack);
-        utilities.liftArmAbsolutePosition(100);
+//
+//        //To High
+//        utilities.liftArmAbsolutePosition(355);
+//        drive.followTrajectorySequence(toHigh);
+//        utilities.liftArmAbsolutePosition(325);
+//        utilities.wait(500, telemetry);
+//        utilities.openClaw(true);
+//        drive.followTrajectorySequence(highBack);
+//        utilities.liftArmAbsolutePosition(100);
 
 //        //Parking
 //        if(identifier == 1)
@@ -109,22 +118,27 @@ public class leftAltLinear extends genericAuton
                 .strafeRight(12.5)
                 .forward(51.00)
                 .build();
-        toLow = drive.trajectorySequenceBuilder(toStack1.end())
-                .back(13)
-                .strafeLeft(3)
-                .turn(Math.toRadians(90))
-                .strafeLeft(1)
-                .forward(4.5)
+//        toLow = drive.trajectorySequenceBuilder(toStack1.end())
+////                .back(14)
+//                .lineToLinearHeading(new Pose2d(toStack1.end().component1() + 14, toStack1.end().component2() -  7.5, toStack1.end().component3()))
+//                .turn(Math.toRadians(90))
+////                .forward(7.5)
+//                .build();
+        toLowSpline = drive.trajectoryBuilder(toStack1.end(), Math.toRadians(0))
+                .splineToSplineHeading(endToLow, Math.toRadians(280))
                 .build();
-        lowBack = drive.trajectorySequenceBuilder(toLow.end())
-                .back(4.5)
+        splineToStack2 = drive.trajectoryBuilder(toLowSpline.end(), Math.toRadians(120))
+                .splineToSplineHeading(endToStack, Math.toRadians(-120))
+                .build();
+        lowBack = drive.trajectorySequenceBuilder(toLowSpline.end())
+                .back(2.5)
                 .build();
         toStack2 = drive.trajectorySequenceBuilder(lowBack.end())
                 .turn(Math.toRadians(-90))
                 .strafeRight(2.0)
-                .forward(12.25)
+                .forward(15.25)
                 .build();
-        toHigh = drive.trajectorySequenceBuilder(toStack2.end())
+        toHigh = drive.trajectorySequenceBuilder(splineToStack2.end())
                 .back(38)
                 .strafeLeft(3)
                 .turn(Math.toRadians(-90))
