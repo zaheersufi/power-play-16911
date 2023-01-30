@@ -41,37 +41,39 @@ public class leftAltLinear extends genericAuton
         utilities.wait(250, telemetry);
 
         //Mid junction
-        utilities.liftArmAbsolutePosition(260);
+        utilities.liftArmAbsolutePosition(270);
         drive.followTrajectorySequence(toMid);
-        utilities.liftArmAbsolutePosition(230);
+        utilities.liftArmDisplacementPosition(-30);
         utilities.wait(500, telemetry);
         utilities.openClaw(true);
         drive.followTrajectorySequence(backMid);
-        utilities.liftArmAbsolutePosition(140);
 
         //To stack
+        utilities.liftArmAbsolutePosition(80);
         drive.followTrajectorySequence(toStack1);
+        utilities.wait(100,telemetry);
         utilities.openClaw(false);
-        utilities.liftArmDisplacementPosition(30);
-        utilities.wait(500,telemetry);
         utilities.liftArmAbsolutePosition(200);
+        utilities.wait(750,telemetry);
 
         //To low
-        drive.followTrajectorySequence(toLow);
         utilities.liftArmAbsolutePosition(170);
+        drive.followTrajectorySequence(toLow);
+        utilities.liftArmDisplacementPosition(-30);
         utilities.wait(500, telemetry);
         utilities.openClaw(true);
         drive.followTrajectorySequence(lowBack);
-        utilities.liftArmAbsolutePosition(120);
 
         //To stack
+        utilities.liftArmAbsolutePosition(75);
         drive.followTrajectorySequence(toStack2);
+        utilities.wait(100,telemetry);
         utilities.openClaw(false);
-        utilities.liftArmDisplacementPosition(30);
-        utilities.wait(500, telemetry);
-        utilities.liftArmAbsolutePosition(355);
+        utilities.liftArmAbsolutePosition(200);
+        utilities.wait(750,telemetry);
 
         //To High
+        utilities.liftArmAbsolutePosition(355);
         drive.followTrajectorySequence(toHigh);
         utilities.liftArmAbsolutePosition(325);
         utilities.wait(500, telemetry);
@@ -79,13 +81,13 @@ public class leftAltLinear extends genericAuton
         drive.followTrajectorySequence(highBack);
         utilities.liftArmAbsolutePosition(100);
 
-        //Parking
-        if(identifier == 1)
-            drive.followTrajectorySequence(toParking1);
-        else if (identifier == 2)
-            drive.followTrajectorySequence(toParking2);
-        else if (identifier == 3)
-            drive.followTrajectorySequence(toParking3);
+//        //Parking
+//        if(identifier == 1)
+//            drive.followTrajectorySequence(toParking1);
+//        else if (identifier == 2)
+//            drive.followTrajectorySequence(toParking2);
+//        else if (identifier == 3)
+//            drive.followTrajectorySequence(toParking3);
     }
 
     /**
@@ -94,32 +96,37 @@ public class leftAltLinear extends genericAuton
     public void buildTrajectories()
     {
         toMid = drive.trajectorySequenceBuilder(home)
-                .strafeRight(24)
-                .forward(36)
+                .forward(2)
+                .strafeRight(25)
+                .forward(39)
                 .turn(Math.toRadians(90))
-                .forward(4)
+                .forward(4.75)
                 .build();
         backMid = drive.trajectorySequenceBuilder(toMid.end())
-                .back(4)
+                .back(5)
                 .build();
         toStack1 = drive.trajectorySequenceBuilder(backMid.end())
-                .strafeRight(12)
-                .forward(48)
+                .strafeRight(12.5)
+                .forward(51.00)
                 .build();
         toLow = drive.trajectorySequenceBuilder(toStack1.end())
-                .back(12)
+                .back(13)
+                .strafeLeft(3)
                 .turn(Math.toRadians(90))
-                .forward(4)
+                .strafeLeft(1)
+                .forward(4.5)
                 .build();
         lowBack = drive.trajectorySequenceBuilder(toLow.end())
-                .back(4)
+                .back(4.5)
                 .build();
         toStack2 = drive.trajectorySequenceBuilder(lowBack.end())
                 .turn(Math.toRadians(-90))
-                .forward(12)
+                .strafeRight(2.0)
+                .forward(12.25)
                 .build();
         toHigh = drive.trajectorySequenceBuilder(toStack2.end())
-                .back(36)
+                .back(38)
+                .strafeLeft(3)
                 .turn(Math.toRadians(-90))
                 .forward(4)
                 .build();
