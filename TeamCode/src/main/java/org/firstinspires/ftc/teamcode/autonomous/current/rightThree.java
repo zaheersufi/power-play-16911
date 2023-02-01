@@ -113,20 +113,20 @@ public class rightThree extends genericAuton
                 .forward(52.00)
                 .build();
         toLow = drive.trajectorySequenceBuilder(toStack1.end())
-                .back(7)
+                .back(8)
                 .turn(Math.toRadians(-130))
                 .forward(8.5)
                 .build();
         lowBack = drive.trajectorySequenceBuilder(toLow.end())
                 .back(8.5)
                 .turn(Math.toRadians(130))
-                .forward(6.5)
+                .forward(8)
                 .build();
         toHigh = drive.trajectorySequenceBuilder(lowBack.end())
                 .back(37)
-                .strafeRight(2.75)
+                .strafeRight(1.75)
                 .turn(Math.toRadians(90))
-                .forward(4)
+                .forward(3)
                 .build();
         highBack = drive.trajectorySequenceBuilder(toHigh.end())
                 .back(4)
