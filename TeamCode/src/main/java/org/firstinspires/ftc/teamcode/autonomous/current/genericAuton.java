@@ -58,6 +58,7 @@ public abstract class genericAuton extends LinearOpMode
         buildTrajectories();
         utilities.openClaw(false);
 
+        utilities.wait(250, telemetry);
         telemetry.addData("Init Parking", sleevePipeline.getDestination());
         telemetry.update();
 
