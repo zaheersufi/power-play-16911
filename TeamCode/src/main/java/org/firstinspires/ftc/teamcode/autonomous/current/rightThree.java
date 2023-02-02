@@ -100,43 +100,43 @@ public class rightThree extends genericAuton
     {
         toMid = drive.trajectorySequenceBuilder(home)
                 .forward(2)
-                .strafeLeft(23.5)
-                .forward(35.5)
+                .strafeLeft(25)
+                .forward(34)
                 .turn(Math.toRadians(-90))
-                .forward(4)
+                .forward(5)
                 .build();
         backMid = drive.trajectorySequenceBuilder(toMid.end())
-                .back(5.6)
+                .back(6.1)
                 .build();
         toStack1 = drive.trajectorySequenceBuilder(backMid.end())
-                .strafeLeft(12.5)
+                .strafeLeft(13)
                 .forward(52.00)
                 .build();
         toLow = drive.trajectorySequenceBuilder(toStack1.end())
                 .back(8)
                 .turn(Math.toRadians(-130))
-                .forward(8.5)
+                .forward(5.5)
                 .build();
         lowBack = drive.trajectorySequenceBuilder(toLow.end())
-                .back(8.5)
+                .back(5.5)
                 .turn(Math.toRadians(130))
-                .forward(8)
+                .forward(7)
                 .build();
         toHigh = drive.trajectorySequenceBuilder(lowBack.end())
                 .back(37)
                 .strafeRight(1.75)
                 .turn(Math.toRadians(90))
-                .forward(3)
+                .forward(5)
                 .build();
         highBack = drive.trajectorySequenceBuilder(toHigh.end())
-                .back(4)
+                .back(5)
                 .turn(Math.toRadians(-90))
                 .build();
         toParking1 = drive.trajectorySequenceBuilder(highBack.end())
                 .back(12)
                 .build();
         toParking2 = drive.trajectorySequenceBuilder(highBack.end())
-                .forward(12)
+                .forward(9)
                 .build();
         toParking3 = drive.trajectorySequenceBuilder(highBack.end())
                 .forward(36)
