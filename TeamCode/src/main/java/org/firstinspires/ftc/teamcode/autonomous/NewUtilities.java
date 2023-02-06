@@ -25,7 +25,11 @@ public class NewUtilities
     }
 
 
-
+    /**
+     * Wait time method that allows for a buffer between commands
+     * which communicates with the phone and a predetermined variable
+     * wait time input
+     */
     public void wait(int waitTime, Telemetry telemetry)
     {
         ElapsedTime time = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
@@ -42,7 +46,11 @@ public class NewUtilities
     }
 
 
-
+    /**
+     * Open claw method that opens or closes the claw
+     * to set positions based on the value of the
+     * boolean variable
+     */
     public void openClaw(boolean shouldOpen)
     {
         if(!shouldOpen)
@@ -52,7 +60,11 @@ public class NewUtilities
     }
 
 
-
+    /**
+     * Method that raises the arm to a height
+     * based on a power and time which is
+     * passed in as a parameter
+     */
     public void liftArm(double power, int time, Telemetry telemetry)
     {
         hardware.liftArm1.setPower(power * FULL_POWER);
@@ -67,7 +79,11 @@ public class NewUtilities
     }
 
 
-
+    /**
+     * Method that moves the arm down to a height
+     * based on a power and time passed in as a
+     * parameter
+     */
     public void lowerArm(double power, int time, Telemetry telemetry)
     {
         hardware.liftArm1.setPower(-power * SLOW_POWER);
@@ -82,7 +98,11 @@ public class NewUtilities
     }
 
 
-
+    /**
+     * This method uses encoders to move the arm to
+     * a relative displacement based on its previous
+     * position
+     */
     public void liftArmDisplacementPosition(int pos)
     {
         double power = FULL_POWER;
@@ -102,7 +122,11 @@ public class NewUtilities
     }
 
 
-
+    /**
+     * This method moves the lift to a specific
+     * position through the use of encoders
+     * regardless of previous position
+     */
     public void liftArmAbsolutePosition (int pos)
     {
         double power = FULL_POWER;

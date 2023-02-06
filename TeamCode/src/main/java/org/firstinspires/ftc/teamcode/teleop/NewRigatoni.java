@@ -243,8 +243,14 @@ public class NewRigatoni extends LinearOpMode
     }
 
 
-
-    public void presetLift() {
+    /**
+     * This method integrates specific junction
+     * heights to each d-pad button on the
+     * gamepad 2 allowing for efficient means
+     * of scoring
+     */
+    public void presetLift()
+    {
 
         // High Junction
         if (gamepad2.dpad_up)
