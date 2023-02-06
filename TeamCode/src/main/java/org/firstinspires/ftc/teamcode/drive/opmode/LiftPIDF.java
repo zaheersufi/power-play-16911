@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.teamcode.teleop;
+package org.firstinspires.ftc.teamcode.drive.opmode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.internal.system.Assert;
@@ -12,7 +13,7 @@ import org.firstinspires.ftc.teamcode.hardware.NewRigatoniHardware;
 
 
 @Config
-@TeleOp(name="LiftPIDF")
+@Autonomous(group = "drive")
 public class LiftPIDF extends LinearOpMode {
     public static int target = 200;
 
@@ -27,7 +28,7 @@ public class LiftPIDF extends LinearOpMode {
     private NewRigatoniHardware hardware;
 
 
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException{
         Assert.assertNotNull(hardwareMap);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
