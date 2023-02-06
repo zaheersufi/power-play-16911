@@ -193,29 +193,6 @@ public class NewRigatoni extends LinearOpMode
             leftRearPower = -1;
         }
 
-<<<<<<< Updated upstream
-        //D-Pad Junction heights
-        if (gamepad2.dpad_up) //Ground Junction
-        {
-            utilities.liftArmAbsolutePosition(30);
-        }
-        else if (gamepad2.dpad_left)
-        {
-            utilities.liftArmAbsolutePosition(130);
-        }
-        else if (gamepad2.dpad_down)
-        {
-            utilities.liftArmAbsolutePosition(220);
-        }
-        else if (gamepad2.dpad_right)
-        {
-            utilities.liftArmAbsolutePosition(330);
-        }
-
-
-
-=======
->>>>>>> Stashed changes
         changeSpeed();
 
         hardware.leftFront.setPower(leftFrontPower * speed);
