@@ -14,8 +14,8 @@ public class NewUtilities
 
     private NewRigatoniHardware hardware;
 
-    private double RAISE_POWER = 0.95;
-    private double LOWER_POWER = 0.3;
+    private final double FULL_POWER = 0.95;
+    private final double SLOW_POWER = 0.75;
 
 
 
@@ -30,13 +30,15 @@ public class NewUtilities
     {
         ElapsedTime time = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         time.reset();
-        while (time.time() < waitTime)
-        {
-            telemetry.addData("Status", "Waiting");
-            telemetry.addData("Wait Time", waitTime / 1000);
-            telemetry.addData("Time Left", (waitTime - time.time()) / 1000);
-            telemetry.update();
-        }
+
+        Telemetry.Item status = telemetry.addData("Status:", "waiting");
+        telemetry.update();
+
+        while (time.time() < waitTime){}
+
+        telemetry.removeItem(status);
+        telemetry.update();
+
     }
 
 
@@ -53,23 +55,38 @@ public class NewUtilities
 
     public void liftArm(double power, int time, Telemetry telemetry)
     {
-        hardware.liftArm1.setPower(power*0.95);
-        hardware.liftArm2.setPower(power*0.95);
+        hardware.liftArm1.setPower(power * FULL_POWER);
+        hardware.liftArm2.setPower(power * FULL_POWER);
 
         wait(time, telemetry);
 
         hardware.liftArm1.setPower(0);
         hardware.liftArm2.setPower(0);
 
-        wait(500, telemetry);
+        wait(100, telemetry);
+    }
+
+
+
+    public void lowerArm(double power, int time, Telemetry telemetry)
+    {
+        hardware.liftArm1.setPower(-power * SLOW_POWER);
+        hardware.liftArm2.setPower(-power * SLOW_POWER);
+
+        wait(time, telemetry);
+
+        hardware.liftArm1.setPower(0);
+        hardware.liftArm2.setPower(0);
+
+        wait(100, telemetry);
     }
 
 
 
     public void liftArmDisplacementPosition(int pos)
     {
-        double power = RAISE_POWER;
-        if (pos < 0) power = LOWER_POWER;
+        double power = FULL_POWER;
+        if (pos < 0) power = SLOW_POWER;
 
         hardware.liftArm1.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         hardware.liftArm1.setTargetPosition(hardware.liftArm1.getCurrentPosition() + pos);
@@ -84,10 +101,12 @@ public class NewUtilities
         hardware.liftArm2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     }
 
+
+
     public void liftArmAbsolutePosition (int pos)
     {
-        double power = RAISE_POWER;
-        if (pos < hardware.liftArm1.getCurrentPosition()) power = LOWER_POWER;
+        double power = FULL_POWER;
+        if (pos < hardware.liftArm1.getCurrentPosition()) power = SLOW_POWER;
 
         hardware.liftArm1.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         hardware.liftArm1.setTargetPosition(pos);
@@ -102,27 +121,4 @@ public class NewUtilities
         hardware.liftArm2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     }
 
-
-    public void lowerArm(double power, int time, Telemetry telemetry)
-    {
-        hardware.liftArm1.setPower(-power* RAISE_POWER);
-        hardware.liftArm2.setPower(-power* RAISE_POWER);
-
-        wait(time, telemetry);
-
-        hardware.liftArm1.setPower(0);
-        hardware.liftArm2.setPower(0);
-
-    }
-    public void turnOnEncoders()
-    {
-        hardware.leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        hardware.leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        hardware.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        hardware.rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        hardware.liftArm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hardware.liftArm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        hardware.liftArm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hardware.liftArm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
 }

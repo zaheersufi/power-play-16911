@@ -1,10 +1,9 @@
-package org.firstinspires.ftc.teamcode.autonomous.current;
+package org.firstinspires.ftc.teamcode.autonomous.meet3;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
+import org.firstinspires.ftc.teamcode.autonomous.genericAuton;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 
@@ -13,8 +12,6 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 public class rightThree extends genericAuton
 {
     private final Pose2d home = new Pose2d(-36.0, -63.0, Math.toRadians(90.0));
-    private final Pose2d endToStack = new Pose2d(-60, -12, Math.toRadians(180));
-
 
 
     private TrajectorySequence toMid;
@@ -28,6 +25,8 @@ public class rightThree extends genericAuton
     private TrajectorySequence toParking2;
     private TrajectorySequence toParking3;
 
+
+
     /**
      * Reads the parking position, scores a cone in the
      * mid junction then grabs cone then scores on low
@@ -39,9 +38,6 @@ public class rightThree extends genericAuton
     public void run()
     {
         drive.setPoseEstimate(home);
-
-        //wait time to scan camera
-        utilities.wait(250, telemetry);
 
 
         //Mid junction

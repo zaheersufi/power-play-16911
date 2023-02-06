@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autonomous.current;
+package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -43,17 +43,21 @@ public abstract class genericAuton extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
+        Assert.assertNotNull(hardwareMap);
+        telemetry.setAutoClear(false);
+
         sleevePipeline = new SleevePipeline(telemetry);
         setUpCamera(sleevePipeline);
 
-
-        Assert.assertNotNull(hardwareMap);
         hardware = new NewRigatoniHardware();
+        utilities = new NewUtilities(hardware);
+        drive = new SampleMecanumDrive(hardwareMap);
+
         hardware.initializePrimaryMotors(hardwareMap);
         hardware.initializeClawServos(hardwareMap);
         hardware.initializeSupplementaryMotors(hardwareMap);
-        utilities = new NewUtilities(hardware);
-        drive = new SampleMecanumDrive(hardwareMap);
+        hardware.turnOnDriveEncoders();
+
 
         buildTrajectories();
         utilities.openClaw(false);
@@ -63,7 +67,8 @@ public abstract class genericAuton extends LinearOpMode
         telemetry.update();
 
         waitForStart();
-        if(!opModeIsActive()) {return;}
+        if (isStopRequested()) return;
+        if(!opModeIsActive()) return;
         utilities.wait(250, telemetry);
 
 
@@ -76,22 +81,11 @@ public abstract class genericAuton extends LinearOpMode
             run();
         } catch (Throwable t) {
             hardware.robotStopAllMotion();
+            utilities.wait(500, telemetry);
 
-            // Expected due to timer expiration or "Stop" button pressed.
-            if (t instanceof NewRigatoniHardware.StopImmediatelyException) {
-                telemetry.addData("Stop Requested", "");
-                telemetry.update();
-                return;
-            }
-
+            telemetry.clearAll();
             telemetry.addData("Exception caught!", t);
             telemetry.update();
-
-            if (t instanceof RuntimeException) {
-                throw (RuntimeException) t;
-            }
-
-            throw new RuntimeException(t);
         }
 
     }

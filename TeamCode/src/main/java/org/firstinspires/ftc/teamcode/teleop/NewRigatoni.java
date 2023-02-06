@@ -2,9 +2,12 @@ package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad.RumbleEffect;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.internal.system.Assert;
 import org.firstinspires.ftc.teamcode.autonomous.NewUtilities;
 import org.firstinspires.ftc.teamcode.hardware.NewRigatoniHardware;
@@ -17,22 +20,26 @@ public class NewRigatoni extends LinearOpMode
     private NewRigatoniHardware hardware;
     private NewUtilities utilities;
 
-    // With two motors it's best not to run at full capacity
-    final double RAISE_POWER = 0.95;
-    final double LOWER_POWER = 0.80;
-    final double LOWER_POWER_SLOW = .4;
+    // Lift Power
+    final double FULL_POWER = 0.95;     // With two motors it's best not to run at full capacity
+    final double SLOW_POWER = 0.75;
 
-    final double FAST_SPEED = .8;
-    final double SLOW_SPEED = .5;
-    final double SUPER_SLOW_SPEED = .3;
+    // Drive Power
+    final double FAST_SPEED = 1.0;
+    final double SLOW_SPEED = 0.8;
+    final double SUPER_SLOW_SPEED = 0.5;
     double speed = FAST_SPEED;
 
-    final double ALMOST_END_GAME = 75;        // Wait this many seconds before rumble-alert.
-    final double END_GAME = 90;               // Wait this many seconds before rumble-alert.
+    // Rumble timings
+    final double ALMOST_END_GAME = 80;  // Wait this many seconds before rumble-alert.
+    final double END_GAME = 90;         // Wait this many seconds before rumble-alert.
 
 
     ElapsedTime buttonTime = null;
     ElapsedTime timer = null;
+
+    Telemetry.Item position1;
+    Telemetry.Item position2;
 
 
     RumbleEffect customRumbleEffect = new RumbleEffect.Builder()
@@ -52,43 +59,34 @@ public class NewRigatoni extends LinearOpMode
     @Override
     public void runOpMode()
     {
+        Assert.assertNotNull(hardwareMap);
+        telemetry.setAutoClear(false);
+
         buttonTime = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         hardware = new NewRigatoniHardware();
-        Assert.assertNotNull(hardwareMap);
+        utilities = new NewUtilities(hardware);
 
         hardware.initializePrimaryMotors(hardwareMap);
         hardware.initializeClawServos(hardwareMap);
         hardware.initializeSupplementaryMotors(hardwareMap);
 
-        utilities = new NewUtilities(hardware);
-        utilities.turnOnEncoders();
 
         waitForStart();
-        timer = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
+        if (isStopRequested()) return;
+        if(!opModeIsActive()) return;
 
+        runRumble(customRumbleEffect);
+        timer = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
 
         try {
             run();
         } catch (Throwable t) {
             hardware.robotStopAllMotion();
-            sleep(100);
+            utilities.wait(500, telemetry);
 
-
-            // Expected due to "Stop" button pressed.
-            if (t instanceof NewRigatoniHardware.StopImmediatelyException) {
-                telemetry.addData("Stop Requested", "");
-                telemetry.update();
-                return;
-            }
-
+            telemetry.clearAll();
             telemetry.addData("Exception caught!", t);
             telemetry.update();
-
-            if (t instanceof RuntimeException) {
-                throw (RuntimeException) t;
-            }
-
-            throw new RuntimeException(t);
         }
 
     }
@@ -103,15 +101,30 @@ public class NewRigatoni extends LinearOpMode
      */
     public void run()
     {
+        double last = timer.milliseconds();
+
         boolean almostEndgame = false;
         boolean endgame = false;
 
-        runRumble(customRumbleEffect);
+        position1 = telemetry.addData("Lift1:", hardware.liftArm1.getCurrentPosition());
+        position2 = telemetry.addData("Lift2:", hardware.liftArm2.getCurrentPosition());
+
 
         while (opModeIsActive()) {
             drive();
-            moveArm();
+            presetLift();
+            lift();
             rotateClaw();
+
+
+            if (timer.milliseconds() > (last+250)) {
+                last = timer.milliseconds();
+
+                position1.setValue(hardware.liftArm1.getCurrentPosition());
+                position2.setValue(hardware.liftArm2.getCurrentPosition());
+                telemetry.update();
+            }
+
 
             if ((timer.seconds() > ALMOST_END_GAME) && !almostEndgame)  {
                 runRumble(customRumbleEffect);
@@ -139,31 +152,15 @@ public class NewRigatoni extends LinearOpMode
     public void drive()
     {
         // Mecanum drivecode
-        double y = -gamepad1.left_stick_y;  // Remember, this is reversed!
-        double x = gamepad1.left_stick_x;   // Counteract imperfect strafing
+        double y = -gamepad1.left_stick_y;        // Remember, this is reversed!
+        double x = gamepad1.left_stick_x * 1.1;   // Counteract imperfect strafing
         double rx = gamepad1.right_stick_x;
 
-        double leftFrontPower = y + x + rx;
-        double leftRearPower = y - x + rx;
-        double rightFrontPower = y - x - rx;
-        double rightRearPower = y + x - rx;
-
-
-        // Joystick Power
-        if (Math.abs(leftFrontPower) > 1 || Math.abs(leftRearPower) > 1 || Math.abs(rightFrontPower) > 1 || Math.abs(rightRearPower) > 1 )
-        {
-            // Find the largest power
-            double max;
-            max = Math.max(Math.abs(leftFrontPower), Math.abs(leftRearPower));
-            max = Math.max(Math.abs(rightFrontPower), max);
-            max = Math.max(Math.abs(rightRearPower), max);
-
-            // Divide everything by max
-            leftFrontPower /= max;
-            leftRearPower /= max;
-            rightFrontPower /= max;
-            rightRearPower /= max;
-        }
+        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+        double leftFrontPower = (y + x + rx) / denominator;
+        double leftRearPower = (y - x + rx) / denominator;
+        double rightFrontPower = (y - x - rx) / denominator;
+        double rightRearPower = (y + x - rx) / denominator;
 
 
         // D-PAD Power
@@ -196,6 +193,7 @@ public class NewRigatoni extends LinearOpMode
             leftRearPower = -1;
         }
 
+<<<<<<< Updated upstream
         //D-Pad Junction heights
         if (gamepad2.dpad_up) //Ground Junction
         {
@@ -216,8 +214,9 @@ public class NewRigatoni extends LinearOpMode
 
 
 
+=======
+>>>>>>> Stashed changes
         changeSpeed();
-
 
         hardware.leftFront.setPower(leftFrontPower * speed);
         hardware.leftRear.setPower(leftRearPower * speed);
@@ -268,6 +267,42 @@ public class NewRigatoni extends LinearOpMode
 
 
 
+    public void presetLift() {
+
+        // High Junction
+        if (gamepad2.dpad_up)
+        {
+            utilities.liftArmAbsolutePosition(355);
+        }
+
+        // Mid Junction
+        else if (gamepad2.dpad_left)
+        {
+            utilities.liftArmAbsolutePosition(270);
+        }
+
+        // Low Junction
+        else if (gamepad2.dpad_down)
+        {
+            utilities.liftArmAbsolutePosition(170);
+        }
+
+        // Ground Level
+        else if (gamepad2.dpad_right)
+        {
+            utilities.liftArmAbsolutePosition(10);
+        }
+
+        // Reset Encoders
+        if (gamepad2.options)
+        {
+            hardware.liftArm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            hardware.liftArm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+    }
+
+
+
     /**
      * This method moves the arm up and down based on the input of the right
      * and left triggers, which moves the pulley up and down respectively.
@@ -276,24 +311,33 @@ public class NewRigatoni extends LinearOpMode
      * - Move up at RAISE_POWER
      * - Move down at LOWER_POWER
      */
-    public void moveArm()
+    public void lift()
     {
         // Raising the lift
         if ( (gamepad2.right_trigger > 0) && (gamepad2.right_trigger > gamepad2.left_trigger) ) {
-            hardware.liftArm1.setPower(gamepad2.right_trigger * RAISE_POWER);
-            hardware.liftArm2.setPower(gamepad2.right_trigger * RAISE_POWER);
+            hardware.liftArm1.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+            hardware.liftArm2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+
+            hardware.liftArm1.setPower(gamepad2.right_trigger * FULL_POWER);
+            hardware.liftArm2.setPower(gamepad2.right_trigger * FULL_POWER);
         }
 
-        // Lowering the lift
+        // Lowering the lift (slow)
         else if ( (gamepad2.left_trigger > 0) && (gamepad2.left_trigger > gamepad2.right_trigger) ) {
-            hardware.liftArm1.setPower(-gamepad2.left_trigger * LOWER_POWER);
-            hardware.liftArm2.setPower(-gamepad2.left_trigger * LOWER_POWER);
+            hardware.liftArm1.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+            hardware.liftArm2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+
+            hardware.liftArm1.setPower(-gamepad2.left_trigger * SLOW_POWER);
+            hardware.liftArm2.setPower(-gamepad2.left_trigger * SLOW_POWER);
         }
 
-        //Lowering the lift low speed
+        //Lowering the lift
         else if(gamepad2.left_bumper) {
-            hardware.liftArm1.setPower(-LOWER_POWER_SLOW);
-            hardware.liftArm2.setPower(-LOWER_POWER_SLOW);
+            hardware.liftArm1.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+            hardware.liftArm2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+
+            hardware.liftArm1.setPower(-FULL_POWER);
+            hardware.liftArm2.setPower(-FULL_POWER);
         }
 
         // Nothing happens
@@ -301,10 +345,6 @@ public class NewRigatoni extends LinearOpMode
             hardware.liftArm1.setPower(0);
             hardware.liftArm2.setPower(0);
         }
-
-        telemetry.addData("Position1: ", hardware.liftArm1.getCurrentPosition());
-        telemetry.addData("Position2: ", hardware.liftArm2.getCurrentPosition());
-        telemetry.update();
 
     }
 

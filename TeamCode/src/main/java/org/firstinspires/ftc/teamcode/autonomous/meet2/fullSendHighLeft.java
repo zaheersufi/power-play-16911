@@ -1,10 +1,11 @@
-package org.firstinspires.ftc.teamcode.autonomous.current;
+package org.firstinspires.ftc.teamcode.autonomous.meet2;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.internal.system.Assert;
 import org.firstinspires.ftc.teamcode.autonomous.pipelines.SleevePipeline;
@@ -19,14 +20,16 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 
 
 @Disabled
-@Autonomous(name="fullSendHighRight")
-public class fullSendHighRight extends LinearOpMode
+@Autonomous(name="fullSendHighLeft")
+public class fullSendHighLeft extends LinearOpMode
 {
     private SampleMecanumDrive drive;
     private Utilities utilities;
     private OldRigatoniHardware hardware;
     private OpenCvInternalCamera webcam;
     private SleevePipeline sleevePipeline;
+
+    private ElapsedTime timer;
 
 
     private TrajectorySequence trajectoryToJunction;
@@ -36,11 +39,20 @@ public class fullSendHighRight extends LinearOpMode
     private TrajectorySequence trajectoryToParking3;
 
 
-    private final Pose2d HOME = new Pose2d(-36, 60, Math.toRadians(270));
+    private final Pose2d HOME = new Pose2d(36, 60, Math.toRadians(270));
+
 
 
 
     /**
+     * This method sets everything up for autonomous : it initializes components
+     * and variables and calls the build trajectory method. After initialization,
+     * the robot asynchronously lifts the arm up as it drives forward into the
+     * junction through the use of  trajectoryToJunction. Then following trajectory
+     * goForward, the cone is dropped onto the pylon. Then with the use of trajectory
+     * reCenter, the robot parks based on the zone read from the signal sleeve during
+     * the start time.
+     *
      * Reads the parking position, scores a cone in the
      * high junction, and parks in the space determined
      * by the custom sleeve.
@@ -100,28 +112,33 @@ public class fullSendHighRight extends LinearOpMode
 
 
     /**
+     * This method is to be called in the runOpMode, and it sets up all trajectories
+     * that will be used by the robot. It sets up trajectoryToJunction, goForward,
+     * and trajectoryRecenter and sets up three other trajectories which are parking locations.
+     *
      * Defines and builds the different trajectories used.
      */
     private void buildTrajectories()
     {
         trajectoryToJunction = drive.trajectorySequenceBuilder(HOME)
                 .forward(50)
-                .forward(2.6)
+                .forward(4.5)
                 .back(3)
-                .turn(Math.toRadians(37))
+                .turn(Math.toRadians(-50))
                 .build();
         goForward = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
-                .forward(8)
+                .forward(7.25)
                 .build();
         trajectoryRecenter = drive.trajectorySequenceBuilder(trajectoryToJunction.end())
+                .back(1.5)
+                .turn(Math.toRadians(140))
                 .back(1)
-                .turn(Math.toRadians(-127))
                 .build();
         trajectoryToParking1 = drive.trajectorySequenceBuilder(trajectoryRecenter.end())
-                .back(24)
+                .forward(19)
                 .build();
         trajectoryToParking3 = drive.trajectorySequenceBuilder(trajectoryRecenter.end())
-                .forward(19)
+                .back(25)
                 .build();
 
     }
@@ -142,7 +159,8 @@ public class fullSendHighRight extends LinearOpMode
 
 
     /**
-     * Set up the webcam in an inverted horizontal position
+     * Sets up the camera/webcam and reading box which scans in the parking zone
+     * through the use of color on our custom sleeve’s symbols.
      */
     public void setUpCamera(SleevePipeline pipeline)
     {
