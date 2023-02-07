@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.internal.system.Assert;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import org.firstinspires.ftc.teamcode.hardware.NewRigatoniHardware;
 
@@ -28,7 +29,7 @@ public class LiftPIDF extends LinearOpMode {
     private NewRigatoniHardware hardware;
 
 
-    public void runOpMode() throws InterruptedException{
+    public void runOpMode() throws InterruptedException {
         Assert.assertNotNull(hardwareMap);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -55,36 +56,32 @@ public class LiftPIDF extends LinearOpMode {
         telemetry.addLine("Ready!");
         telemetry.update();
 
+        
         waitForStart();
         if (isStopRequested()) return;
-
-
-        double lastKp = PIDF.p;
-        double lastKi = PIDF.i;
-        double lastKd = PIDF.d;
-        double lastKf = PIDF.f;
 
 
         while (!isStopRequested()) {
             hardware.liftArm1.setPower(1.0);
             hardware.liftArm2.setPower(1.0);
+            hardware.liftArm1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
-            telemetry.addData("Target:", target);
-            telemetry.addData("Lift1 Position:", hardware.liftArm1.getCurrentPosition());
-            telemetry.addData("Lift2 Position:", hardware.liftArm2.getCurrentPosition());
+            telemetry.addData("Target", target);
+            telemetry.addData("Lift1 Position", hardware.liftArm1.getCurrentPosition());
+            telemetry.addData("Lift2 Position", hardware.liftArm2.getCurrentPosition());
             telemetry.update();
 
 
-            if (lastKp != PIDF.p || lastKd != PIDF.d || lastKi != PIDF.i || lastKf != PIDF.f) {
+            if (kP != PIDF.p || kD != PIDF.d || kI != PIDF.i || kF != PIDF.f) {
                 PIDF = new PIDFCoefficients(kP,kI,kD,kF);
 
                 hardware.liftArm1.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, PIDF);
                 hardware.liftArm2.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, PIDF);
 
-                lastKp = PIDF.p;
-                lastKi = PIDF.i;
-                lastKd = PIDF.d;
-                lastKf = PIDF.f;
+                kP = PIDF.p;
+                kI = PIDF.i;
+                kD = PIDF.d;
+                kF = PIDF.f;
             }
 
             telemetry.update();
