@@ -49,7 +49,7 @@ public class rightThree extends genericAuton
         drive.followTrajectorySequence(backMid);
 
         //To stack 1
-        utilities.liftArmAbsolutePosition(80);
+        utilities.liftArmAbsolutePosition(65);
         drive.followTrajectorySequence(toStack1);
         utilities.wait(100,telemetry);
         utilities.openClaw(false);
@@ -63,7 +63,7 @@ public class rightThree extends genericAuton
         utilities.openClaw(true);
 
         //To stack 2
-        utilities.liftArmAbsolutePosition(75);
+        utilities.liftArmAbsolutePosition(60);
         drive.followTrajectorySequence(lowBack);
         utilities.wait(100,telemetry);
         utilities.openClaw(false);
@@ -96,17 +96,17 @@ public class rightThree extends genericAuton
     {
         toMid = drive.trajectorySequenceBuilder(home)
                 .forward(2)
-                .strafeLeft(25)
-                .forward(34)
+                .strafeLeft(24)
+                .forward(35.5)
                 .turn(Math.toRadians(-90))
-                .forward(5)
+                .forward(4)
                 .build();
         backMid = drive.trajectorySequenceBuilder(toMid.end())
-                .back(6.1)
+                .back(5.1)
                 .build();
         toStack1 = drive.trajectorySequenceBuilder(backMid.end())
-                .strafeLeft(13)
-                .forward(52.00)
+                .strafeLeft(12.5)
+                .forward(51.00)
                 .build();
         toLow = drive.trajectorySequenceBuilder(toStack1.end())
                 .back(8)
@@ -120,9 +120,9 @@ public class rightThree extends genericAuton
                 .build();
         toHigh = drive.trajectorySequenceBuilder(lowBack.end())
                 .back(37)
-                .strafeRight(1.75)
+//                .strafeRight(1)
                 .turn(Math.toRadians(90))
-                .forward(5)
+                .forward(4.25)
                 .build();
         highBack = drive.trajectorySequenceBuilder(toHigh.end())
                 .back(5)
