@@ -108,7 +108,7 @@ public class rightThree extends genericAuton
                 .strafeLeft(12.5)
                 .forward(51.00)
                 .build();
-        toLow = drive.trajectorySequenceBuilder(toStack1.end())
+       toLow = drive.trajectorySequenceBuilder(toStack1.end())
                 .back(8)
                 .turn(Math.toRadians(-130))
                 .forward(5.5)
@@ -129,7 +129,7 @@ public class rightThree extends genericAuton
                 .turn(Math.toRadians(-90))
                 .build();
         toParking1 = drive.trajectorySequenceBuilder(highBack.end())
-                .back(12)
+                .back(14)
                 .build();
         toParking2 = drive.trajectorySequenceBuilder(highBack.end())
                 .forward(9)

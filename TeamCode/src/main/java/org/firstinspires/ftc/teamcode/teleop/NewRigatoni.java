@@ -20,6 +20,7 @@ public class NewRigatoni extends LinearOpMode
     private NewRigatoniHardware hardware;
     private NewUtilities utilities;
 
+
     // Lift Power
     final double FULL_POWER = 0.95;     // With two motors it's best not to run at full capacity
     final double SLOW_POWER = 0.75;
@@ -251,33 +252,35 @@ public class NewRigatoni extends LinearOpMode
      */
     public void presetLift()
     {
-
         // High Junction
         if (gamepad2.dpad_up)
         {
+            telemetry.addLine("Up");
             utilities.liftArmAbsolutePosition(355);
         }
 
-        // Mid Junction
-        else if (gamepad2.dpad_left)
-        {
-            utilities.liftArmAbsolutePosition(270);
-        }
-
         // Low Junction
-        else if (gamepad2.dpad_down)
+        else if (gamepad2.dpad_left)
         {
             utilities.liftArmAbsolutePosition(170);
         }
 
         // Ground Level
-        else if (gamepad2.dpad_right)
+        else if (gamepad2.dpad_down)
         {
-            utilities.liftArmAbsolutePosition(10);
+            utilities.liftArmAbsolutePosition(30);
         }
 
+        // Medium Level
+        else if (gamepad2.dpad_right)
+        {
+            utilities.liftArmAbsolutePosition(270);
+        }
+        if(gamepad2.right_bumper)
+            utilities.liftArmAbsolutePosition(100);
+
         // Reset Encoders
-        if (gamepad2.options)
+        if (gamepad2.share)
         {
             hardware.liftArm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             hardware.liftArm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -318,13 +321,12 @@ public class NewRigatoni extends LinearOpMode
         else if(gamepad2.left_bumper) {
             hardware.liftArm1.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
             hardware.liftArm2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-
             hardware.liftArm1.setPower(-FULL_POWER);
             hardware.liftArm2.setPower(-FULL_POWER);
         }
 
         // Nothing happens
-        else {
+        else if(!hardware.liftArm1.isBusy() && !hardware.liftArm2.isBusy()) {
             hardware.liftArm1.setPower(0);
             hardware.liftArm2.setPower(0);
         }

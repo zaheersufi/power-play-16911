@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
@@ -25,7 +26,7 @@ public class NewRigatoniHardware
     // CLaw Servo
     public Servo grabServo = null;
 
-
+    private PIDFCoefficients PIDF = new PIDFCoefficients(10,2,0,75);
 
     /**
      * Initializes the drive motors of the robot and
@@ -126,6 +127,8 @@ public class NewRigatoniHardware
         liftArm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftArm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        liftArm1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, PIDF);
+        liftArm2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, PIDF);
     }
 
 

@@ -19,12 +19,12 @@ public class LiftPIDF extends LinearOpMode {
     public static int target = 200;
 
     public static double kP = 10;
-    public static double kI = 3;
+    public static double kI = 2;
     public static double kD = 0;
-    public static double kF = 0;
+    public static double kF = 75;
 
 
-    private PIDFCoefficients PIDF = new PIDFCoefficients(kP,kI,kD,kF);
+    private PIDFCoefficients PIDF = new PIDFCoefficients(10,2,0,75);
 
     private NewRigatoniHardware hardware;
 
@@ -82,8 +82,8 @@ public class LiftPIDF extends LinearOpMode {
             if (kP != PIDF.p || kD != PIDF.d || kI != PIDF.i || kF != PIDF.f) {
                 PIDF = new PIDFCoefficients(kP,kI,kD,kF);
 
-//                hardware.liftArm1.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, PIDF);
-//                hardware.liftArm2.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, PIDF);
+                hardware.liftArm1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, PIDF);
+                hardware.liftArm2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, PIDF);
 
                 kP = PIDF.p;
                 kI = PIDF.i;
