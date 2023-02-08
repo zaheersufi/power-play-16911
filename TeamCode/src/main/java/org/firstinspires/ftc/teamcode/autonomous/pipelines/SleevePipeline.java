@@ -44,7 +44,7 @@ public class SleevePipeline extends OpenCvPipeline
 
     static final int YELLOW_HUE = 30;
     static final int CYAN_HUE = 90;
-    static final int MAGENTA_HUE = 150;
+    static final int MAGENTA_HUE = 160;
     // Array with all the colors' hues being used
     static final int[] COLOR_HUES = new int[]{YELLOW_HUE, CYAN_HUE, MAGENTA_HUE};
     // Minimum saturation/value for the HSV mask. (Brightness)
@@ -70,7 +70,7 @@ public class SleevePipeline extends OpenCvPipeline
      * Working variables
      */
     Mat hsvRegion = new Mat();      // the subregion for the image that we care about (the analysis will be done on here)
-    private double[] sums = new double[COLOR_HUES.length]; // array of all the distances from the average color to each actual color
+    private double[] sums = new double[COLOR_HUES.length]; // array of counts of pixels of each color.
 
 
     /**
@@ -107,8 +107,7 @@ public class SleevePipeline extends OpenCvPipeline
     public Mat processFrame(Mat input)
     {
         /**
-         * Extract the region of interest in HSV, and
-         * compute the average hue value for the region.
+         * Extract the region of interest in HSV
          */
         extractRegion(input);
 
