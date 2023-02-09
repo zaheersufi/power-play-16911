@@ -76,6 +76,9 @@ public abstract class genericAuton extends LinearOpMode
         telemetry.addData("Parking", identifier);
         telemetry.update();
 
+        webcam.stopRecordingPipeline();
+        webcam.stopStreaming();
+
 
         try {
             run();

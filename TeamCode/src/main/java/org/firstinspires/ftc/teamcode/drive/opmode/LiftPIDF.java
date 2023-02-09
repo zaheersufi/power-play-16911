@@ -36,12 +36,6 @@ public class LiftPIDF extends LinearOpMode {
         hardware = new NewRigatoniHardware();
         hardware.initializeSupplementaryMotors(hardwareMap);
 
-        telemetry.addLine("Pos 1"+hardware.liftArm1.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION));
-        telemetry.addLine("Pos 2"+hardware.liftArm1.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION));
-        telemetry.addLine("Vel 1"+hardware.liftArm1.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER));
-        telemetry.addLine("Vel 2"+hardware.liftArm1.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER));
-
-
         hardware.liftArm1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, PIDF);
         hardware.liftArm2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, PIDF);
 

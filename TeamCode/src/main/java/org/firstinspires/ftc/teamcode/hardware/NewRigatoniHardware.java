@@ -26,7 +26,7 @@ public class NewRigatoniHardware
     // CLaw Servo
     public Servo grabServo = null;
 
-    private PIDFCoefficients PIDF = new PIDFCoefficients(10,2,0,75);
+    private PIDFCoefficients PIDF = new PIDFCoefficients(10,0.5,0,45);
 
     /**
      * Initializes the drive motors of the robot and
