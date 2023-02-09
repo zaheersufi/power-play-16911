@@ -14,8 +14,8 @@ public class NewUtilities
 
     private NewRigatoniHardware hardware;
 
-    private final double FULL_POWER = 0.95;
-    private final double SLOW_POWER = 0.75;
+    private final double FULL_POWER = 0.7;
+    private final double SLOW_POWER = 0.4;
 
 
 

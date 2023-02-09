@@ -51,27 +51,29 @@ public class rightThree extends genericAuton
         //To stack 1
         utilities.liftArmAbsolutePosition(65);
         drive.followTrajectorySequence(toStack1);
-        utilities.wait(100,telemetry);
+//        utilities.wait(100,telemetry);
         utilities.openClaw(false);
-        utilities.liftArmAbsolutePosition(170);
+        utilities.wait(200, telemetry);
+        utilities.liftArmAbsolutePosition(185);
         utilities.wait(750,telemetry);
 
         //To low
         drive.followTrajectorySequence(toLow);
-        utilities.liftArmDisplacementPosition(-30);
+        utilities.liftArmDisplacementPosition(-45);
         utilities.wait(500, telemetry);
         utilities.openClaw(true);
 
         //To stack 2
         utilities.liftArmAbsolutePosition(60);
         drive.followTrajectorySequence(lowBack);
-        utilities.wait(100,telemetry);
+//        utilities.wait(100,telemetry);
         utilities.openClaw(false);
+        utilities.wait(200, telemetry);
         utilities.liftArmAbsolutePosition(200);
         utilities.wait(750,telemetry);
 
         //To High
-        utilities.liftArmAbsolutePosition(370);
+        utilities.liftArmAbsolutePosition(360);
         drive.followTrajectorySequence(toHigh);
         utilities.liftArmAbsolutePosition(325);
         utilities.wait(500, telemetry);

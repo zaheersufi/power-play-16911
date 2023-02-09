@@ -23,7 +23,7 @@ public class NewRigatoni extends LinearOpMode
 
     // Lift Power
     final double FULL_POWER = 0.95;     // With two motors it's best not to run at full capacity
-    final double SLOW_POWER = 0.75;
+    final double SLOW_POWER = 0.4;
 
     // Drive Power
     final double FAST_SPEED = 1.0;
@@ -268,7 +268,7 @@ public class NewRigatoni extends LinearOpMode
         // Ground Level
         else if (gamepad2.dpad_down)
         {
-            utilities.liftArmAbsolutePosition(30);
+            utilities.liftArmAbsolutePosition(15);
         }
 
         // Medium Level
