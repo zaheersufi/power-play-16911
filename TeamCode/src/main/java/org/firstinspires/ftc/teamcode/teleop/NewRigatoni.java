@@ -22,7 +22,7 @@ public class NewRigatoni extends LinearOpMode
 
 
     // Lift Power
-    final double FULL_POWER = 0.95;     // With two motors it's best not to run at full capacity
+    final double FULL_POWER = 0.85;     // With two motors it's best not to run at full capacity
     final double SLOW_POWER = 0.4;
 
     // Drive Power
@@ -154,8 +154,12 @@ public class NewRigatoni extends LinearOpMode
     {
         // Mecanum drivecode
         double y = -gamepad1.left_stick_y;        // Remember, this is reversed!
-        double x = gamepad1.left_stick_x * 1.1;   // Counteract imperfect strafing
+        double x = gamepad1.left_stick_x*1.05;
         double rx = gamepad1.right_stick_x;
+
+        // Setting up dead-zones
+        if(y < 0.3) y = 0;
+        if(x < 0.3) x = 0;
 
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
         double leftFrontPower = (y + x + rx) / denominator;
