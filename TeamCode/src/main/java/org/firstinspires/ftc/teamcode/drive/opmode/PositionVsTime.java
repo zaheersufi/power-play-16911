@@ -24,8 +24,8 @@ import java.util.Objects;
 @Config
 @Autonomous(group = "drive")
 public class PositionVsTime extends LinearOpMode{
-    public static double X = 0;
-    public static double Y = 0;
+    public static double VX = 0;
+    public static double VY = 0;
     public static double W = 0;
 
     public static double RUNTIME = 2.0;
@@ -46,14 +46,14 @@ public class PositionVsTime extends LinearOpMode{
         telemetry.addLine("Press start when ready.");
         telemetry.update();
 
-        Datalog datalog = new Datalog("DataLog_001");
+        Datalog datalog = new Datalog("DataLog_"+"VX"+VX+"_VY"+VY+"_W"+W);
 
         waitForStart();
 
         telemetry.clearAll();
         telemetry.update();
 
-        drive.setDrivePower(new Pose2d(Math.min(X,1), Math.min(Y,1), Math.min(W,1)));
+        drive.setDrivePower(new Pose2d(Math.min(VX,1), Math.min(VY,1), Math.min(W,1)));
         timer = new ElapsedTime();
 
         int i=0;
