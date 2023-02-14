@@ -110,13 +110,13 @@ public class NewUtilities
 
         hardware.liftArm1.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         hardware.liftArm1.setTargetPosition(hardware.liftArm1.getCurrentPosition() + pos);
-        hardware.liftArm1.setTargetPositionTolerance(10);
+        hardware.liftArm1.setTargetPositionTolerance(3);
         hardware.liftArm1.setPower(power);
         hardware.liftArm1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
         hardware.liftArm2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         hardware.liftArm2.setTargetPosition(hardware.liftArm2.getCurrentPosition() + pos);
-        hardware.liftArm2.setTargetPositionTolerance(10);
+        hardware.liftArm2.setTargetPositionTolerance(3);
         hardware.liftArm2.setPower(power);
         hardware.liftArm2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     }
@@ -134,13 +134,13 @@ public class NewUtilities
 
         hardware.liftArm1.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         hardware.liftArm1.setTargetPosition(pos);
-        hardware.liftArm1.setTargetPositionTolerance(10);
+        hardware.liftArm1.setTargetPositionTolerance(3);
         hardware.liftArm1.setPower(power);
         hardware.liftArm1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
         hardware.liftArm2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         hardware.liftArm2.setTargetPosition(pos);
-        hardware.liftArm2.setTargetPositionTolerance(10);
+        hardware.liftArm2.setTargetPositionTolerance(3);
         hardware.liftArm2.setPower(power);
         hardware.liftArm2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     }

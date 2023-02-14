@@ -64,7 +64,7 @@ public class leftThree extends genericAuton
         utilities.openClaw(true);
 
         //To stack 2
-        utilities.liftArmAbsolutePosition(70);
+        utilities.liftArmAbsolutePosition(65);
         drive.followTrajectorySequence(lowBack);
 //        utilities.wait(100,telemetry);
         utilities.openClaw(false);

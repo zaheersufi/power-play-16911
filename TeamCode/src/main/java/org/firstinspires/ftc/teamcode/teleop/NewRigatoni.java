@@ -158,8 +158,8 @@ public class NewRigatoni extends LinearOpMode
         double rx = gamepad1.right_stick_x;
 
         // Setting up dead-zones
-        if(y < 0.3) y = 0;
-        if(x < 0.3) x = 0;
+        if(Math.abs(y)  < 0.3) y = 0;
+        if(Math.abs(x) < 0.3) x = 0;
 
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
         double leftFrontPower = (y + x + rx) / denominator;
