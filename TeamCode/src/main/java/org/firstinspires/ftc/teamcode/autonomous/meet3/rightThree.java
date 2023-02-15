@@ -53,7 +53,7 @@ public class rightThree extends genericAuton
         drive.followTrajectorySequence(toStack1);
 //        utilities.wait(100,telemetry);
         utilities.openClaw(false);
-        utilities.wait(200, telemetry);
+        utilities.wait(700, telemetry);
         utilities.liftArmAbsolutePosition(185);
         utilities.wait(750,telemetry);
 
@@ -68,7 +68,7 @@ public class rightThree extends genericAuton
         drive.followTrajectorySequence(lowBack);
 //        utilities.wait(100,telemetry);
         utilities.openClaw(false);
-        utilities.wait(200, telemetry);
+        utilities.wait(700, telemetry);
         utilities.liftArmAbsolutePosition(200);
         utilities.wait(750,telemetry);
 
