@@ -26,7 +26,7 @@ public class NewRigatoni extends LinearOpMode
     final double SLOW_POWER = 0.4;
 
     // Drive Power
-    final double FAST_SPEED = .95;
+    final double FAST_SPEED = 0.925;
     final double SLOW_SPEED = 0.7;
     final double SUPER_SLOW_SPEED = 0.5;
     double speed = FAST_SPEED;
