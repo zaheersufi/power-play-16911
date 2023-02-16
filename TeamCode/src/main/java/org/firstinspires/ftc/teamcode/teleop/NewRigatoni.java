@@ -68,7 +68,7 @@ public class NewRigatoni extends LinearOpMode
         utilities = new NewUtilities(hardware);
 
         hardware.initializePrimaryMotors(hardwareMap);
-        hardware.initializeClawServos(hardwareMap);
+        hardware.initializeClawServosTeleOp(hardwareMap);
         hardware.initializeSupplementaryMotors(hardwareMap);
 
 

@@ -97,6 +97,14 @@ public class NewRigatoniHardware
         grabServo.setDirection(Servo.Direction.FORWARD);
         grabServo.setPosition(.6);
     }
+    public void initializeClawServosTeleOp(HardwareMap hardwareMap)
+    {
+        // Claw Servo
+        grabServo = hardwareMap.get(Servo.class, RigatoniIds.GRAB_SERVO);
+
+        grabServo.setDirection(Servo.Direction.FORWARD);
+        grabServo.setPosition(.3);
+    }
 
 
 
