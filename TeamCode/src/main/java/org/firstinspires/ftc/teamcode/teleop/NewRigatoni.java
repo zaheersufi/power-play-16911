@@ -24,7 +24,8 @@ public class NewRigatoni extends LinearOpMode
     // Lift Power
     final double FULL_POWER = 0.85;     // With two motors it's best not to run at full capacity
     final double SLOW_POWER = 0.4;
-
+    final double SLOW_RAISE = 0.4;
+    final double SLOW_FALL = 0.15;
     // Drive Power
     final double FAST_SPEED = 0.925;
     final double SLOW_SPEED = 0.7;
@@ -325,8 +326,15 @@ public class NewRigatoni extends LinearOpMode
         else if(gamepad2.left_bumper) {
             hardware.liftArm1.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
             hardware.liftArm2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-            hardware.liftArm1.setPower(-FULL_POWER);
-            hardware.liftArm2.setPower(-FULL_POWER);
+            hardware.liftArm1.setPower(-SLOW_FALL);
+            hardware.liftArm2.setPower(-SLOW_FALL);
+        }
+        else if (gamepad2.right_bumper)
+        {
+            hardware.liftArm1.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+            hardware.liftArm2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+            hardware.liftArm1.setPower(SLOW_RAISE);
+            hardware.liftArm2.setPower(SLOW_RAISE);
         }
 
         // Nothing happens
