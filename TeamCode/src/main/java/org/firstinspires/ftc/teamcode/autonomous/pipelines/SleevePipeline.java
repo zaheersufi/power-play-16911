@@ -16,9 +16,10 @@ public class SleevePipeline extends OpenCvPipeline
      * Define and initialize the robot's Telemetry
      */
     private final Telemetry telemetry;
-    public SleevePipeline(Telemetry telemetry)
+    public SleevePipeline(Telemetry telemetry, int x, int y)
     {
         this.telemetry = telemetry;
+        REGION_TOPLEFT_POINT = new Point(x,y);
     }
 
 
@@ -54,7 +55,7 @@ public class SleevePipeline extends OpenCvPipeline
     /**
      * Core values that define the location and size of the region
      */
-    static final Point REGION_TOPLEFT_POINT = new Point(130,110);  // x,y (top left corner of the window is (0,0))
+    static Point REGION_TOPLEFT_POINT; // x,y (top left corner of the window is (0,0))
     static final int REGION_WIDTH = 80;
     static final int REGION_HEIGHT = 70;
 
@@ -70,7 +71,7 @@ public class SleevePipeline extends OpenCvPipeline
      * Working variables
      */
     Mat hsvRegion = new Mat();      // the subregion for the image that we care about (the analysis will be done on here)
-    private double[] sums = new double[COLOR_HUES.length]; // array of counts of pixels of each color.
+    private final double[] sums = new double[COLOR_HUES.length]; // array of counts of pixels of each color.
 
 
     /**
