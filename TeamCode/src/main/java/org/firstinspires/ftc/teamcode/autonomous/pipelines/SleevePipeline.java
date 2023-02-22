@@ -63,8 +63,8 @@ public class SleevePipeline extends OpenCvPipeline
     /**
      * Points which actually define the sample region rectangles, derived from above values
      */
-    final Point REGION_POINT_A = new Point(REGION_TOPLEFT_POINT.x, REGION_TOPLEFT_POINT.y);
-    final Point REGION_POINT_B = new Point(REGION_TOPLEFT_POINT.x + REGION_WIDTH, REGION_TOPLEFT_POINT.y + REGION_HEIGHT);
+    Point REGION_POINT_A;
+    Point REGION_POINT_B;
 
 
     /**
@@ -94,6 +94,9 @@ public class SleevePipeline extends OpenCvPipeline
     @Override
     public void init(Mat input)
     {
+        REGION_POINT_A = new Point(REGION_TOPLEFT_POINT.x, REGION_TOPLEFT_POINT.y);
+        REGION_POINT_B = new Point(REGION_TOPLEFT_POINT.x + REGION_WIDTH, REGION_TOPLEFT_POINT.y + REGION_HEIGHT);
+
         extractRegion(input);
     }
 

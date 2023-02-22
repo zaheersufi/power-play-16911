@@ -24,6 +24,9 @@ public class leftMLM extends genericAuton
     private TrajectorySequence toParking1;
     private TrajectorySequence toParking2;
     private TrajectorySequence toParking3;
+    public int cameraX = 50;
+    public int cameraY = 50;
+
 
 
 
@@ -98,7 +101,7 @@ public class leftMLM extends genericAuton
     {
         toMid = drive.trajectorySequenceBuilder(home)
                 .forward(2)
-                .strafeRight(23.5)
+                .strafeRight(20.5)
                 .forward(39)
                 .turn(Math.toRadians(90))
                 .forward(4)
@@ -111,34 +114,44 @@ public class leftMLM extends genericAuton
                 .forward(52)
                 .build();
         toLow = drive.trajectorySequenceBuilder(toStack1.end())
-                .back(6.5)
+                .back(7.5)
                 .turn(Math.toRadians(115))
                 .forward(8.5)
                 .build();
         lowBack = drive.trajectorySequenceBuilder(toLow.end())
                 .back(8.5)
                 .turn(Math.toRadians(-115))
-                .forward(6.5)
+                .forward(7.5)
                 .build();
         toMedEnd = drive.trajectorySequenceBuilder(lowBack.end())
-                .back(40)
-                .strafeRight(3)
+                .back(36)
                 .turn(Math.toRadians(90))
-                .forward(4)
+                .forward(6)
                 .build();
         medBack = drive.trajectorySequenceBuilder(toMedEnd.end())
-                .back(4)
+                .back(6)
                 .turn(Math.toRadians(-90))
                 .build();
         toParking1 = drive.trajectorySequenceBuilder(medBack.end())
-                .forward(36)
+                .forward(34)
                 .build();
         toParking2 = drive.trajectorySequenceBuilder(medBack.end())
-                .forward(12)
+                .forward(10)
                 .build();
         toParking3 = drive.trajectorySequenceBuilder(medBack.end())
-                .back(12)
+                .back(14)
                 .build();
+    }
+
+
+    public int cameraX()
+    {
+        return 80;
+    }
+
+    public int cameraY()
+    {
+        return 100;
     }
 
 }

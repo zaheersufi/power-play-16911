@@ -44,7 +44,7 @@ public class sweatyRight extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
-        pipeline = new SleevePipeline(telemetry);
+        pipeline = new SleevePipeline(telemetry, 130, 110);
         setUpCamera(pipeline);
 
 

@@ -50,7 +50,7 @@ public class fullSendHighRight extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
-        sleevePipeline = new SleevePipeline(telemetry);
+        sleevePipeline = new SleevePipeline(telemetry, 130, 110);
         setUpCamera(sleevePipeline);
 
 

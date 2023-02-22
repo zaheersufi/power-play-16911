@@ -32,8 +32,6 @@ public abstract class genericAuton extends LinearOpMode
 
     public int identifier;
 
-
-
     /**
      * This method sets everything up for autonomous: it initializes components
      * and variables.
@@ -46,7 +44,7 @@ public abstract class genericAuton extends LinearOpMode
         Assert.assertNotNull(hardwareMap);
         telemetry.setAutoClear(false);
 
-        sleevePipeline = new SleevePipeline(telemetry);
+        sleevePipeline = new SleevePipeline(telemetry, cameraX(), cameraY());
         setUpCamera(sleevePipeline);
 
         hardware = new NewRigatoniHardware();
@@ -63,6 +61,7 @@ public abstract class genericAuton extends LinearOpMode
         utilities.openClaw(false);
 
         utilities.wait(250, telemetry);
+        telemetry.addData("X, Y", cameraX()+ ", "+cameraY());
         telemetry.addData("Init Parking", sleevePipeline.getDestination());
         telemetry.update();
 
@@ -136,6 +135,16 @@ public abstract class genericAuton extends LinearOpMode
             }
         });
 
+    }
+
+    public int cameraX()
+    {
+        return 130;
+    }
+
+    public int cameraY()
+    {
+        return 110;
     }
 
 
