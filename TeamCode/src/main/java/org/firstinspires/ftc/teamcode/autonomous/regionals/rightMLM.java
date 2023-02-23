@@ -49,7 +49,7 @@ public class rightMLM extends genericAuton
         drive.followTrajectorySequence(backMid);
 
         //To stack 1
-        utilities.liftArmAbsolutePosition(65);
+        utilities.liftArmAbsolutePosition(80);
         drive.followTrajectorySequence(toStack1);
 //        utilities.wait(100,telemetry);
         utilities.openClaw(false);
@@ -121,13 +121,13 @@ public class rightMLM extends genericAuton
                 .forward(7)
                 .build();
         toMedEnd = drive.trajectorySequenceBuilder(lowBack.end())
-                .back(38)
-                .strafeLeft(2)
+                .back(38.5)
+                .strafeLeft(2.25)
                 .turn(Math.toRadians(-90))
-                .forward(5.75)
+                .forward(5.25)
                 .build();
         medBack = drive.trajectorySequenceBuilder(toMedEnd.end())
-                .back(4.5)
+                .back(5.25)
                 .turn(Math.toRadians(90))
                 .build();
         toParking1 = drive.trajectorySequenceBuilder(medBack.end())

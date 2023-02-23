@@ -124,7 +124,8 @@ public class leftMLM extends genericAuton
                 .forward(7.5)
                 .build();
         toMedEnd = drive.trajectorySequenceBuilder(lowBack.end())
-                .back(36)
+                .back(38)
+                .strafeLeft(2.5)
                 .turn(Math.toRadians(90))
                 .forward(6)
                 .build();
