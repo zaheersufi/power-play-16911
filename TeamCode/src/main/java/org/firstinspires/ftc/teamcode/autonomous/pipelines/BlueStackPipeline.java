@@ -16,8 +16,10 @@ public class BlueStackPipeline extends OpenCvPipeline
      * Define and initialize the robot's Telemetry
      */
     private final Telemetry telemetry;
-    public BlueStackPipeline(Telemetry telemetry) {
+    public BlueStackPipeline(Telemetry telemetry, double factor, double offset) {
         this.telemetry = telemetry;
+        this.FACTOR = factor;
+        this.CENTER_OFFSET = offset;
     }
 
 
@@ -27,10 +29,15 @@ public class BlueStackPipeline extends OpenCvPipeline
      */
     private volatile double displacement = 0;
 
-    // The possible error from the camera to the robot's claw
-    private final double CENTER_OFFSET = -0.2;
+    /**
+     * Scaling FACTOR to map the camera's displacement to the robot's displacement
+     */
+    private double FACTOR;
 
-    // Scaling factor (used to perform the operations faster)
+    // The possible error from the camera to the robot's claw
+    private double CENTER_OFFSET;
+
+    // Scaling FACTOR (used to perform the operations faster)
     final double SCALE = 0.5;
 
 
@@ -103,9 +110,9 @@ public class BlueStackPipeline extends OpenCvPipeline
 
         int center = (int)Math.round(x[1]/ SCALE);
 
-        displacement = (center - input.width()/2)/((double)input.width()) - CENTER_OFFSET;
+        displacement = Math.cbrt((center - input.width()*0.5)/((double)input.width()) - CENTER_OFFSET);
 
-        telemetry.addData("Offset: ", displacement); // Show the average color, just in case.
+        telemetry.addData("Displacement: ", displacement*FACTOR);
         telemetry.update();
 
 
@@ -182,12 +189,11 @@ public class BlueStackPipeline extends OpenCvPipeline
     /**
      * Get the displacement (in inches) from the robot to the junction.
      *
-     * @param   ratio    scaling factor to map the camera's displacement to the robot's displacement
      * @return  the displacement in inches
      */
-    public double getDisplacement(double ratio)
+    public double getDisplacement()
     {
-        return displacement*ratio;
+        return displacement * FACTOR;
     }
 
 }

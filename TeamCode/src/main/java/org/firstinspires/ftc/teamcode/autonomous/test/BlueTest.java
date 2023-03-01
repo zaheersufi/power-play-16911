@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.internal.system.Assert;
 import org.firstinspires.ftc.teamcode.autonomous.NewUtilities;
@@ -17,7 +18,6 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
 
-@Disabled
 @Autonomous(name="BlueTest")
 public class BlueTest extends LinearOpMode
 {
@@ -44,7 +44,7 @@ public class BlueTest extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
-        stackPipeline = new BlueStackPipeline(telemetry);
+        stackPipeline = new BlueStackPipeline(telemetry, 1.5, 0);
         setUpCamera();
         webcam.setPipeline(stackPipeline);
 
@@ -63,23 +63,24 @@ public class BlueTest extends LinearOpMode
 
 
         utilities.wait(100, telemetry);
-        double displacement = stackPipeline.getDisplacement(40);
-        telemetry.addData("Displacement", displacement);
+        double displacement = stackPipeline.getDisplacement();
+        telemetry.addData("Robot Displacement", displacement);
         telemetry.update();
 
 
         if (displacement > 1) {
             stackCorrection = drive.trajectorySequenceBuilder(HOME)
                     .strafeRight(Math.abs(displacement)).build();
+            drive.followTrajectorySequence(stackCorrection);
         } else if (displacement < -1) {
             stackCorrection = drive.trajectorySequenceBuilder(HOME)
                     .strafeLeft(Math.abs(displacement)).build();
-        } else {
-            stackCorrection = drive.trajectorySequenceBuilder(HOME)
-                    .forward(0).build();
+            drive.followTrajectorySequence(stackCorrection);
         }
 
-        drive.followTrajectorySequence(stackCorrection);
+        ElapsedTime timer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+
+        while (timer.time() < 5000 && opModeIsActive());
     }
 
 
