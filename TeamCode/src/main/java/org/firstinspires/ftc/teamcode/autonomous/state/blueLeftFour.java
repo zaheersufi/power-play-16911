@@ -12,7 +12,7 @@ public class blueLeftFour extends genericAuton
     private final Pose2d atMid1 = new Pose2d(29, 29, Math.toRadians(225));
 
     //toStack1
-    private final Pose2d atStack1Inbetween = new Pose2d(39, 18, Math.toRadians(75));
+    private final Pose2d atStack1Inbetween = new Pose2d(39, 18, Math.toRadians(-75));
     private final Pose2d atStack1Final = new Pose2d(63, 12, Math.toRadians(0));
 
     //toMidRepeat
@@ -44,6 +44,15 @@ public class blueLeftFour extends genericAuton
         toStack1 = drive.trajectoryBuilder(toMid1.end())
                 .splineToSplineHeading(atStack1Inbetween, Math.toRadians(-45))
                 .splineToSplineHeading(atStack1Final, Math.toRadians(-6))
+                .build();
+        toMidRepeat = drive.trajectoryBuilder(toStack1.end())
+                .splineToSplineHeading(atMid2Inbetween, Math.toRadians(-180))
+                .splineToSplineHeading(atMid2Final, Math.toRadians(100))
+                .build();
+        toStackRepeat = drive.trajectoryBuilder(toMidRepeat.end())
+                .splineToSplineHeading(atStack2Inbetween1, Math.toRadians(-30))
+                .splineToSplineHeading(atStack2Inbetween2, Math.toRadians(-15))
+                .splineToSplineHeading(atStack2Inbetween3, Math.toRadians(0))
                 .build();
     }
 }
