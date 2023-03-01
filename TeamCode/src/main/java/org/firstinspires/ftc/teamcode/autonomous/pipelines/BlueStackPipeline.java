@@ -110,7 +110,7 @@ public class BlueStackPipeline extends OpenCvPipeline
 
         int center = (int)Math.round(x[1]/ SCALE);
 
-        displacement = Math.cbrt((center - input.width()*0.5)/((double)input.width()) - CENTER_OFFSET);
+        displacement = (center - input.width()*0.5)/((double)input.width()) - CENTER_OFFSET;
 
         telemetry.addData("Displacement: ", displacement*FACTOR);
         telemetry.update();

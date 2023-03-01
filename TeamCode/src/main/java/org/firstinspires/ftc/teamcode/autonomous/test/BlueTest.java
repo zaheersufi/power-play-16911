@@ -44,7 +44,7 @@ public class BlueTest extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
-        stackPipeline = new BlueStackPipeline(telemetry, 1.5, 0);
+        stackPipeline = new BlueStackPipeline(telemetry, 13, 0);
         setUpCamera();
         webcam.setPipeline(stackPipeline);
 
@@ -62,17 +62,17 @@ public class BlueTest extends LinearOpMode
         if(!opModeIsActive()) return;
 
 
-        utilities.wait(100, telemetry);
+        utilities.wait(300, telemetry);
         double displacement = stackPipeline.getDisplacement();
         telemetry.addData("Robot Displacement", displacement);
         telemetry.update();
 
 
-        if (displacement > 1) {
+        if (displacement > 0.1) {
             stackCorrection = drive.trajectorySequenceBuilder(HOME)
                     .strafeRight(Math.abs(displacement)).build();
             drive.followTrajectorySequence(stackCorrection);
-        } else if (displacement < -1) {
+        } else if (displacement < -0.1) {
             stackCorrection = drive.trajectorySequenceBuilder(HOME)
                     .strafeLeft(Math.abs(displacement)).build();
             drive.followTrajectorySequence(stackCorrection);

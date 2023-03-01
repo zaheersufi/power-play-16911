@@ -25,6 +25,7 @@ public class NewRigatoniHardware
 
     // CLaw Servo
     public Servo grabServo = null;
+    public Servo tiltServo = null;
 
     private PIDFCoefficients PIDF = new PIDFCoefficients(10,0.5,0,45);
 
@@ -96,6 +97,10 @@ public class NewRigatoniHardware
 
         grabServo.setDirection(Servo.Direction.FORWARD);
         grabServo.setPosition(.6);
+
+        tiltServo = hardwareMap.get(Servo.class, RigatoniIds.TILT_SERVO);
+        tiltServo.setDirection(Servo.Direction.FORWARD);
+        tiltServo.setPosition(0.6);
     }
     public void initializeClawServosTeleOp(HardwareMap hardwareMap)
     {
@@ -104,6 +109,10 @@ public class NewRigatoniHardware
 
         grabServo.setDirection(Servo.Direction.FORWARD);
         grabServo.setPosition(.3);
+
+        tiltServo = hardwareMap.get(Servo.class, RigatoniIds.TILT_SERVO);
+        tiltServo.setDirection(Servo.Direction.FORWARD);
+        tiltServo.setPosition(0.6);
     }
 
 
