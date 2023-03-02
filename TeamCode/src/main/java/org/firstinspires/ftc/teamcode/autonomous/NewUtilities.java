@@ -17,7 +17,9 @@ public class NewUtilities
     private final double FULL_POWER = 0.7;
     private final double SLOW_POWER = 0.4;
 
-
+    //Servo position for tilt claw
+    private final double TILT_OPENED = 0.6;
+    private final double TILT_CLOSED = 0.45;
 
     public NewUtilities(NewRigatoniHardware hardware)
     {
@@ -143,6 +145,21 @@ public class NewUtilities
         hardware.liftArm2.setTargetPositionTolerance(3);
         hardware.liftArm2.setPower(power);
         hardware.liftArm2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+    }
+    /**
+     * The method that tilts the claw
+     * forwards and backwards
+     */
+    public void tiltClaw(boolean isStraight)
+    {
+        if(isStraight)
+        {
+            hardware.tiltServo.setPosition(TILT_OPENED);
+        }
+        else
+        {
+            hardware.tiltServo.setPosition(TILT_CLOSED);
+        }
     }
 
 }
