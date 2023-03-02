@@ -358,4 +358,10 @@ public class SampleMecanumDrive extends MecanumDrive {
     public static TrajectoryAccelerationConstraint getAccelerationConstraint(double maxAccel) {
         return new ProfileAccelerationConstraint(maxAccel);
     }
+
+    //get the imu
+    public BNO055IMU getImu()
+    {
+        return imu;
+    }
 }

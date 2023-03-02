@@ -36,6 +36,8 @@ public class NewRigatoni extends LinearOpMode
     final double ALMOST_END_GAME = 80;  // Wait this many seconds before rumble-alert.
     final double END_GAME = 90;         // Wait this many seconds before rumble-alert.
 
+    //Field orientation
+    double flipConstant = 1;
 
     ElapsedTime buttonTime = null;
     ElapsedTime timer = null;
@@ -117,6 +119,7 @@ public class NewRigatoni extends LinearOpMode
             presetLift();
             lift();
             rotateClaw();
+            flipOrienation();
 
 
             if (timer.milliseconds() > (last+250)) {
@@ -201,10 +204,10 @@ public class NewRigatoni extends LinearOpMode
 
         changeSpeed();
 
-        hardware.leftFront.setPower(leftFrontPower * speed);
-        hardware.leftRear.setPower(leftRearPower * speed);
-        hardware.rightFront.setPower(rightFrontPower * speed);
-        hardware.rightRear.setPower(rightRearPower * speed);
+        hardware.leftFront.setPower(leftFrontPower * speed * flipConstant);
+        hardware.leftRear.setPower(leftRearPower * speed * flipConstant);
+        hardware.rightFront.setPower(rightFrontPower * speed * flipConstant);
+        hardware.rightRear.setPower(rightRearPower * speed * flipConstant);
 
     }
 
@@ -374,6 +377,18 @@ public class NewRigatoni extends LinearOpMode
         gamepad1.runRumbleEffect(e);
         gamepad2.runRumbleEffect(e);
 
+    }
+    public void flipOrienation() {
+        if(flipConstant == 1 && buttonTime.time() >= 500)
+        {
+            flipConstant = -1;
+            buttonTime.reset();
+        }
+        else if(flipConstant == -1 && buttonTime.time() >= 500)
+        {
+            flipConstant = 1;
+            buttonTime.reset();
+        }
     }
 
 
