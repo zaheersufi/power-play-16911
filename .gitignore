@@ -90,3 +90,4 @@ lint/tmp/
 .idea/codeStyles/codeStyleConfig.xml
 .idea/codeStyles/Project.xml
 *.xml
+PathVisualizer/build.gradle

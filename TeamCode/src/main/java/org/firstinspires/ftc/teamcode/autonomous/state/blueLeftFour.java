@@ -2,11 +2,17 @@ package org.firstinspires.ftc.teamcode.autonomous.state;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.autonomous.genericAuton;
+import org.firstinspires.ftc.teamcode.autonomous.pipelines.BlueStackPipeline;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
+@Autonomous (name="blueLeftFour")
 public class blueLeftFour extends genericAuton
 {
+    private BlueStackPipeline stackPipeline;
+
     //toMid1
     private final Pose2d blueLeftHome = new Pose2d(36.0, 62.5, Math.toRadians(-90.0));
     private final Pose2d atMid1 = new Pose2d(29, 29, Math.toRadians(225));
@@ -25,9 +31,8 @@ public class blueLeftFour extends genericAuton
     private final Pose2d atStack2Inbetween3 = new Pose2d(63, 12, Math.toRadians(0));
 
     //toParking 3
-    private final Pose2d toParking3OTW1 = new Pose2d(29,19,Math.toRadians(135));
-    private final Pose2d toParking3OTW2 = new Pose2d(30,12,Math.toRadians(0));
-    private final Pose2d toParking3OTW3 = new Pose2d(12,12,Math.toRadians(0));
+    private final Pose2d toParking3OTW1 = new Pose2d(30,12,Math.toRadians(0));
+    private final Pose2d toParking3OTW2 = new Pose2d(12,12,Math.toRadians(0));
 
     private Trajectory toMid1;
     private Trajectory toStack1;
@@ -36,8 +41,12 @@ public class blueLeftFour extends genericAuton
     private Trajectory toParking1;
     private Trajectory toParking2;
     private Trajectory toParking3;
+    private TrajectorySequence stackCorrection;
+    private TrajectorySequence forward1;
+    private TrajectorySequence forward2;
 
-    //******Change to stack and to mid repeat splines to be 14.8 inches in front of the stack and change paths
+    //just fix toStack and toStackRepeat to be 14 inches in front of stack and change the corresponding points
+    //leave current toStackRepeat for parking1
 
     @Override
     public void run()
@@ -55,8 +64,26 @@ public class blueLeftFour extends genericAuton
         utilities.tiltClaw(true);
         drive.followTrajectory(toStack1); //needs to be readjusted for stack alignment (move back 14)
         utilities.tiltClaw(false);
-        //call in stack alignment
-        //forward trajectory of 14/15 to go to stack
+
+            //call in stack alignment
+
+        utilities.wait(300, telemetry);
+        double displacement = stackPipeline.getDisplacement();
+        telemetry.addData("Robot Displacement", displacement);
+        telemetry.update();
+
+
+        if (displacement > 0) {
+            stackCorrection = drive.trajectorySequenceBuilder(toStack1.end())
+                    .strafeRight(Math.abs(displacement)).build();
+            drive.followTrajectorySequence(stackCorrection);
+        } else {
+            stackCorrection = drive.trajectorySequenceBuilder(toStack1.end())
+                    .strafeLeft(Math.abs(displacement)).build();
+            drive.followTrajectorySequence(stackCorrection);
+        }
+
+        drive.followTrajectorySequence(forward1);
         utilities.openClaw(false);
         utilities.wait(500, telemetry);
         utilities.liftArmAbsolutePosition(290);
@@ -71,40 +98,94 @@ public class blueLeftFour extends genericAuton
         utilities.liftArmAbsolutePosition(65);
         utilities.tiltClaw(false);
         drive.followTrajectory(toStackRepeat); //needs to be readjusted for stack alignment (move back 14)
-        //stack realignment
-        //forward trajectory into stack
+
+            //stack realignment
+
+        utilities.wait(300, telemetry);
+        displacement = stackPipeline.getDisplacement();
+        telemetry.addData("Robot Displacement", displacement);
+        telemetry.update();
+
+
+        if (displacement > 0) {
+            stackCorrection = drive.trajectorySequenceBuilder(toStackRepeat.end())
+                    .strafeRight(Math.abs(displacement)).build();
+            drive.followTrajectorySequence(stackCorrection);
+        } else {
+            stackCorrection = drive.trajectorySequenceBuilder(toStackRepeat.end())
+                    .strafeLeft(Math.abs(displacement)).build();
+            drive.followTrajectorySequence(stackCorrection);
+        }
+
+        drive.followTrajectorySequence(forward2);
         utilities.openClaw(false);
         utilities.wait(500, telemetry);
         utilities.liftArmAbsolutePosition(290);
         utilities.wait(500, telemetry);
 
         //Go to Mid Repeat 2
-        //utilities.tilty
+        utilities.tiltClaw(true);
         drive.followTrajectory(toMidRepeat);
         utilities.openClaw(true);
 
         //Go to Stack Repeat 2
         utilities.liftArmAbsolutePosition(65);
-        //utilities.tilty
+        utilities.tiltClaw(false);
         drive.followTrajectory(toStackRepeat); //needs to be readjusted for stack alignment (move back 14)
-        //stack realignment
-        //forward trajectory into stack
+
+            //stack realignment
+
+        utilities.wait(300, telemetry);
+        displacement = stackPipeline.getDisplacement();
+        telemetry.addData("Robot Displacement", displacement);
+        telemetry.update();
+
+
+        if (displacement > 0) {
+            stackCorrection = drive.trajectorySequenceBuilder(toStackRepeat.end())
+                    .strafeRight(Math.abs(displacement)).build();
+            drive.followTrajectorySequence(stackCorrection);
+        } else {
+            stackCorrection = drive.trajectorySequenceBuilder(toStackRepeat.end())
+                    .strafeLeft(Math.abs(displacement)).build();
+            drive.followTrajectorySequence(stackCorrection);
+        }
+
+        drive.followTrajectorySequence(forward2);
         utilities.openClaw(false);
         utilities.wait(500, telemetry);
         utilities.liftArmAbsolutePosition(290);
         utilities.wait(500, telemetry);
 
         //Go to Mid Repeat 3
-        //utilities.tilty
+        utilities.tiltClaw(true);
         drive.followTrajectory(toMidRepeat);
         utilities.openClaw(true);
 
         //Go to Stack Repeat 3
         utilities.liftArmAbsolutePosition(65);
-        //utilities.tilty
+        utilities.tiltClaw(false);
         drive.followTrajectory(toStackRepeat); //needs to be readjusted for stack alignment (move back 14)
-        //stack realignment
-        //forward trajectory into stack
+
+            //stack realignment
+
+        utilities.wait(300, telemetry);
+        displacement = stackPipeline.getDisplacement();
+        telemetry.addData("Robot Displacement", displacement);
+        telemetry.update();
+
+
+        if (displacement > 0) {
+            stackCorrection = drive.trajectorySequenceBuilder(toStackRepeat.end())
+                    .strafeRight(Math.abs(displacement)).build();
+            drive.followTrajectorySequence(stackCorrection);
+        } else {
+            stackCorrection = drive.trajectorySequenceBuilder(toStackRepeat.end())
+                    .strafeLeft(Math.abs(displacement)).build();
+            drive.followTrajectorySequence(stackCorrection);
+        }
+
+        drive.followTrajectorySequence(forward2);
         utilities.openClaw(false);
         utilities.wait(500, telemetry);
         utilities.liftArmAbsolutePosition(290);
@@ -129,6 +210,9 @@ public class blueLeftFour extends genericAuton
                 .splineToSplineHeading(atStack1Inbetween, Math.toRadians(-45))
                 .splineToSplineHeading(atStack1Final, Math.toRadians(-6))
                 .build();
+        forward1 = drive.trajectorySequenceBuilder(toStack1.end())
+                .forward(14)
+                .build();
         toMidRepeat = drive.trajectoryBuilder(toStack1.end(), Math.toRadians(180))
                 .splineToSplineHeading(atMid2Inbetween, Math.toRadians(-180))
                 .splineToSplineHeading(atMid2Final, Math.toRadians(100))
@@ -137,6 +221,9 @@ public class blueLeftFour extends genericAuton
                 .splineToSplineHeading(atStack2Inbetween1, Math.toRadians(-30))
                 .splineToSplineHeading(atStack2Inbetween2, Math.toRadians(-15))
                 .splineToSplineHeading(atStack2Inbetween3, Math.toRadians(0))
+                .build();
+        forward2 = drive.trajectorySequenceBuilder(toStackRepeat.end())
+                .forward(14)
                 .build();
         toParking1 = drive.trajectoryBuilder(toMidRepeat.end(), Math.toRadians(-30))
                 .splineToSplineHeading(atStack2Inbetween1, Math.toRadians(-30))
@@ -147,8 +234,8 @@ public class blueLeftFour extends genericAuton
                 .back(7)
                 .build();
         toParking3 = drive.trajectoryBuilder(toMidRepeat.end(), Math.toRadians(-45))
-                .splineToSplineHeading(toParking3OTW2, Math.toRadians(200))
-                .splineToSplineHeading(toParking3OTW3, Math.toRadians(190))
+                .splineToSplineHeading(toParking3OTW1, Math.toRadians(200))
+                .splineToSplineHeading(toParking3OTW2, Math.toRadians(190))
                 .build();
     }
 }
