@@ -360,7 +360,7 @@ public class NewRigatoni extends LinearOpMode
         if(gamepad2.square)
             hardware.grabServo.setPosition(.6);
         if(gamepad2.circle)
-            hardware.grabServo.setPosition(0.3);
+            hardware.grabServo.setPosition(0.38);
         if(gamepad2.triangle)
             hardware.tiltServo.setPosition(0.45);
         if(gamepad2.cross)

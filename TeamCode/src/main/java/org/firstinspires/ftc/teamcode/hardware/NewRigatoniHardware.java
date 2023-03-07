@@ -108,7 +108,7 @@ public class NewRigatoniHardware
         grabServo = hardwareMap.get(Servo.class, RigatoniIds.GRAB_SERVO);
 
         grabServo.setDirection(Servo.Direction.FORWARD);
-        grabServo.setPosition(.3);
+        grabServo.setPosition(.38);
 
         tiltServo = hardwareMap.get(Servo.class, RigatoniIds.TILT_SERVO);
         tiltServo.setDirection(Servo.Direction.FORWARD);
