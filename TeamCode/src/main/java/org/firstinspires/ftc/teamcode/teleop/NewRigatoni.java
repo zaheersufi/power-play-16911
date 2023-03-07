@@ -379,12 +379,12 @@ public class NewRigatoni extends LinearOpMode
 
     }
     public void flipOrienation() {
-        if(flipConstant == 1 && buttonTime.time() >= 500)
+        if(flipConstant == 1 && buttonTime.time() >= 500 && gamepad1.triangle)
         {
             flipConstant = -1;
             buttonTime.reset();
         }
-        else if(flipConstant == -1 && buttonTime.time() >= 500)
+        else if(flipConstant == -1 && buttonTime.time() >= 500 && gamepad1.triangle)
         {
             flipConstant = 1;
             buttonTime.reset();

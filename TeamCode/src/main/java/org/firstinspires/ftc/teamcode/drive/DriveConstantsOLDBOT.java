@@ -55,9 +55,9 @@ public class DriveConstantsOLDBOT
      * motor encoders or have elected not to use them for velocity control, these values should be
      * empirically tuned.
      */
-    public static double kV = 0.02059;//1.0 / rpmToVelocity(MAX_RPM);
+    public static double kV = 0.02064;//1.0 / rpmToVelocity(MAX_RPM);
     public static double kA = 0.003;
-    public static double kStatic = 0.01714;
+    public static double kStatic = 0.01962;
 
 
     /*
