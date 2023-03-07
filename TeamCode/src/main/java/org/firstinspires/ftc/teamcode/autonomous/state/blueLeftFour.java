@@ -46,15 +46,15 @@ public class blueLeftFour extends genericAuton
 
         //Go to mid junction 1
         utilities.liftArmAbsolutePosition(290);
-        //utilities.tilty
+        utilities.tiltClaw(false);
         drive.followTrajectory(toMid1);
         utilities.openClaw(true);
 
         //Go to stack 1
         utilities.liftArmAbsolutePosition(80);
-        //utilities.tilty
+        utilities.tiltClaw(true);
         drive.followTrajectory(toStack1); //needs to be readjusted for stack alignment (move back 14)
-        //utilities.tilty
+        utilities.tiltClaw(false);
         //call in stack alignment
         //forward trajectory of 14/15 to go to stack
         utilities.openClaw(false);
@@ -63,13 +63,13 @@ public class blueLeftFour extends genericAuton
         utilities.wait(500, telemetry);
 
         //Go to Mid Repeat 1
-        //utilities.tilty
+        utilities.tiltClaw(true);
         drive.followTrajectory(toMidRepeat);
         utilities.openClaw(true);
 
         //Go to stack repeat 1
         utilities.liftArmAbsolutePosition(65);
-        //utilities.tilty
+        utilities.tiltClaw(false);
         drive.followTrajectory(toStackRepeat); //needs to be readjusted for stack alignment (move back 14)
         //stack realignment
         //forward trajectory into stack
