@@ -19,16 +19,21 @@ public class blueLeftFour extends genericAuton
 
     //toStack1
     private final Pose2d atStack1Inbetween = new Pose2d(39, 18, Math.toRadians(-75));
-    private final Pose2d atStack1Final = new Pose2d(63, 12, Math.toRadians(0));
+    private final Pose2d atStack1Final = new Pose2d(58, 12, Math.toRadians(0));
 
     //toMidRepeat
     private final Pose2d atMid2Inbetween = new Pose2d(41, 12, Math.toRadians(110));
     private final Pose2d atMid2Final = new Pose2d(29, 19, Math.toRadians(135));
 
-    //toStackRepeat (serves as Parking 1)
-    private final Pose2d atStack2Inbetween1 = new Pose2d(31, 18, Math.toRadians(135));
-    private final Pose2d atStack2Inbetween2 = new Pose2d(38, 14, Math.toRadians(20));
-    private final Pose2d atStack2Inbetween3 = new Pose2d(63, 12, Math.toRadians(0));
+    //toStackRepeat
+    private final Pose2d toStackRepeat1 = new Pose2d(31, 18, Math.toRadians(135));
+    private final Pose2d toStackRepeat2 = new Pose2d(38, 14, Math.toRadians(20));
+    private final Pose2d toStackRepeat3 = new Pose2d(58, 12, Math.toRadians(0));
+
+    //toParking1 (serves as Parking 1)
+    private final Pose2d toParking1Inbetween1 = new Pose2d(31, 18, Math.toRadians(135));
+    private final Pose2d toParking1Inbetween2 = new Pose2d(38, 14, Math.toRadians(20));
+    private final Pose2d toParking1Inbetween3 = new Pose2d(63, 12, Math.toRadians(0));
 
     //toParking 3
     private final Pose2d toParking3OTW1 = new Pose2d(30,12,Math.toRadians(0));
@@ -45,9 +50,6 @@ public class blueLeftFour extends genericAuton
     private TrajectorySequence forward1;
     private TrajectorySequence forward2;
 
-    //just fix toStack and toStackRepeat to be 14 inches in front of stack and change the corresponding points
-    //leave current toStackRepeat for parking1
-
     @Override
     public void run()
     {
@@ -62,7 +64,7 @@ public class blueLeftFour extends genericAuton
         //Go to stack 1
         utilities.liftArmAbsolutePosition(80);
         utilities.tiltClaw(true);
-        drive.followTrajectory(toStack1); //needs to be readjusted for stack alignment (move back 14)
+        drive.followTrajectory(toStack1);
         utilities.tiltClaw(false);
 
             //call in stack alignment
@@ -97,7 +99,7 @@ public class blueLeftFour extends genericAuton
         //Go to stack repeat 1
         utilities.liftArmAbsolutePosition(65);
         utilities.tiltClaw(false);
-        drive.followTrajectory(toStackRepeat); //needs to be readjusted for stack alignment (move back 14)
+        drive.followTrajectory(toStackRepeat);
 
             //stack realignment
 
@@ -131,7 +133,7 @@ public class blueLeftFour extends genericAuton
         //Go to Stack Repeat 2
         utilities.liftArmAbsolutePosition(65);
         utilities.tiltClaw(false);
-        drive.followTrajectory(toStackRepeat); //needs to be readjusted for stack alignment (move back 14)
+        drive.followTrajectory(toStackRepeat);
 
             //stack realignment
 
@@ -165,7 +167,7 @@ public class blueLeftFour extends genericAuton
         //Go to Stack Repeat 3
         utilities.liftArmAbsolutePosition(65);
         utilities.tiltClaw(false);
-        drive.followTrajectory(toStackRepeat); //needs to be readjusted for stack alignment (move back 14)
+        drive.followTrajectory(toStackRepeat);
 
             //stack realignment
 
@@ -218,17 +220,17 @@ public class blueLeftFour extends genericAuton
                 .splineToSplineHeading(atMid2Final, Math.toRadians(100))
                 .build();
         toStackRepeat = drive.trajectoryBuilder(toMidRepeat.end(), Math.toRadians(-30))
-                .splineToSplineHeading(atStack2Inbetween1, Math.toRadians(-30))
-                .splineToSplineHeading(atStack2Inbetween2, Math.toRadians(-15))
-                .splineToSplineHeading(atStack2Inbetween3, Math.toRadians(0))
+                .splineToSplineHeading(toStackRepeat1, Math.toRadians(-30))
+                .splineToSplineHeading(toStackRepeat2, Math.toRadians(-15))
+                .splineToSplineHeading(toStackRepeat3, Math.toRadians(0))
                 .build();
         forward2 = drive.trajectorySequenceBuilder(toStackRepeat.end())
                 .forward(14)
                 .build();
         toParking1 = drive.trajectoryBuilder(toMidRepeat.end(), Math.toRadians(-30))
-                .splineToSplineHeading(atStack2Inbetween1, Math.toRadians(-30))
-                .splineToSplineHeading(atStack2Inbetween2, Math.toRadians(-15))
-                .splineToSplineHeading(atStack2Inbetween3, Math.toRadians(0))
+                .splineToSplineHeading(toParking1Inbetween1, Math.toRadians(-30))
+                .splineToSplineHeading(toParking1Inbetween2, Math.toRadians(-15))
+                .splineToSplineHeading(toParking1Inbetween3, Math.toRadians(0))
                 .build();
         toParking2 = drive.trajectoryBuilder(toMidRepeat.end())
                 .back(7)
