@@ -15,11 +15,11 @@ public class blueLeftFour extends genericAuton
 
     //toMid1
     private final Pose2d blueLeftHome = new Pose2d(36.0, 62.5, Math.toRadians(-90.0));
-    private final Pose2d atMid1 = new Pose2d(31, 31, Math.toRadians(225));
+    private final Pose2d atMid1 = new Pose2d(30, 30, Math.toRadians(225));
 
     //toStack1
     private final Pose2d atStack1Inbetween = new Pose2d(39, 18, Math.toRadians(-75));
-    private final Pose2d atStack1Final = new Pose2d(58, 12, Math.toRadians(0));
+    private final Pose2d atStack1Final = new Pose2d(50, 12, Math.toRadians(0));
 
     //toMidRepeat
     private final Pose2d atMid2Inbetween = new Pose2d(41, 12, Math.toRadians(110));
@@ -28,7 +28,7 @@ public class blueLeftFour extends genericAuton
     //toStackRepeat
     private final Pose2d toStackRepeat1 = new Pose2d(31, 18, Math.toRadians(135));
     private final Pose2d toStackRepeat2 = new Pose2d(38, 14, Math.toRadians(20));
-    private final Pose2d toStackRepeat3 = new Pose2d(58, 12, Math.toRadians(0));
+    private final Pose2d toStackRepeat3 = new Pose2d(50, 12, Math.toRadians(0));
 
     //toParking1 (serves as Parking 1)
     private final Pose2d toParking1Inbetween1 = new Pose2d(31, 18, Math.toRadians(135));
@@ -50,6 +50,9 @@ public class blueLeftFour extends genericAuton
     private TrajectorySequence forward1;
     private TrajectorySequence forward2;
 
+    //beginning of stack correction realignment
+    private Pose2d begStackCorrection = new Pose2d(58, 12, Math.toRadians(0));
+
     @Override
     public void run()
     {
@@ -58,13 +61,14 @@ public class blueLeftFour extends genericAuton
         webcam.setPipeline(stackPipeline);
 
         //Go to mid junction 1
-        utilities.liftArmAbsolutePosition(290);
+        utilities.liftArmAbsolutePosition(270); //290
         utilities.tiltClaw(false);
         drive.followTrajectory(toMid1);
         utilities.openClaw(true);
 
         //Go to stack 1
         utilities.liftArmAbsolutePosition(80);
+        utilities.tiltClaw(true);
         drive.followTrajectory(toStack1);
 
             //call in stack alignment
@@ -75,30 +79,37 @@ public class blueLeftFour extends genericAuton
         telemetry.update();
 
 
-        if (displacement > 0) {
-            stackCorrection = drive.trajectorySequenceBuilder(toStack1.end())
-                    .strafeRight(Math.abs(displacement)).build();
-            drive.followTrajectorySequence(stackCorrection);
-        } else {
-            stackCorrection = drive.trajectorySequenceBuilder(toStack1.end())
-                    .strafeLeft(Math.abs(displacement)).build();
-            drive.followTrajectorySequence(stackCorrection);
-        }
+//        if (displacement > 0.1) {
+//            stackCorrection = drive.trajectorySequenceBuilder(toStack1.end())
+//                    .strafeRight(Math.abs(displacement)).build();
+//            drive.followTrajectorySequence(stackCorrection);
+//            begStackCorrection = stackCorrection.end();
+//        } else if (displacement < -0.1){
+//            stackCorrection = drive.trajectorySequenceBuilder(toStack1.end())
+//                    .strafeLeft(Math.abs(displacement)).build();
+//            drive.followTrajectorySequence(stackCorrection);
+//            begStackCorrection = stackCorrection.end();
+//        } else {
+//            begStackCorrection = toStack1.end();
+//        }
+        begStackCorrection = toStack1.end();
+        buildTrajectories();
 
         drive.followTrajectorySequence(forward1);
         utilities.openClaw(false);
         utilities.wait(500, telemetry);
-        utilities.liftArmAbsolutePosition(290);
+        utilities.liftArmAbsolutePosition(270);
         utilities.wait(500, telemetry);
 
         //Go to Mid Repeat 1
-        utilities.tiltClaw(true);
+        utilities.tiltClaw(false);
         drive.followTrajectory(toMidRepeat);
         utilities.openClaw(true);
 
+
         //Go to stack repeat 1
         utilities.liftArmAbsolutePosition(65);
-        utilities.tiltClaw(false);
+        utilities.tiltClaw(true);
         drive.followTrajectory(toStackRepeat);
 
             //stack realignment
@@ -113,26 +124,32 @@ public class blueLeftFour extends genericAuton
             stackCorrection = drive.trajectorySequenceBuilder(toStackRepeat.end())
                     .strafeRight(Math.abs(displacement)).build();
             drive.followTrajectorySequence(stackCorrection);
+            begStackCorrection = stackCorrection.end();
         } else if (displacement < -.1){
             stackCorrection = drive.trajectorySequenceBuilder(toStackRepeat.end())
                     .strafeLeft(Math.abs(displacement)).build();
             drive.followTrajectorySequence(stackCorrection);
+            begStackCorrection = stackCorrection.end();
         }
+        else{
+            begStackCorrection = toStackRepeat.end();
+        }
+        buildTrajectories();
 
-        drive.followTrajectorySequence(forward2);
+        drive.followTrajectorySequence(forward1);
         utilities.openClaw(false);
         utilities.wait(500, telemetry);
-        utilities.liftArmAbsolutePosition(290);
+        utilities.liftArmAbsolutePosition(270);
         utilities.wait(500, telemetry);
 
         //Go to Mid Repeat 2
-        utilities.tiltClaw(true);
+        utilities.tiltClaw(false);
         drive.followTrajectory(toMidRepeat);
         utilities.openClaw(true);
 
         //Go to Stack Repeat 2
         utilities.liftArmAbsolutePosition(65);
-        utilities.tiltClaw(false);
+        utilities.tiltClaw(true);
         drive.followTrajectory(toStackRepeat);
 
             //stack realignment
@@ -143,30 +160,35 @@ public class blueLeftFour extends genericAuton
         telemetry.update();
 
 
-        if (displacement > 0) {
+        if (displacement > 0.1) {
             stackCorrection = drive.trajectorySequenceBuilder(toStackRepeat.end())
                     .strafeRight(Math.abs(displacement)).build();
             drive.followTrajectorySequence(stackCorrection);
-        } else {
+            begStackCorrection = stackCorrection.end();
+        } else if (displacement < -0.1){
             stackCorrection = drive.trajectorySequenceBuilder(toStackRepeat.end())
                     .strafeLeft(Math.abs(displacement)).build();
             drive.followTrajectorySequence(stackCorrection);
+            begStackCorrection = stackCorrection.end();
+        }
+        else {
+            begStackCorrection = toStackRepeat.end();
         }
 
-        drive.followTrajectorySequence(forward2);
+        drive.followTrajectorySequence(forward1);
         utilities.openClaw(false);
         utilities.wait(500, telemetry);
-        utilities.liftArmAbsolutePosition(290);
+        utilities.liftArmAbsolutePosition(270);
         utilities.wait(500, telemetry);
 
         //Go to Mid Repeat 3
-        utilities.tiltClaw(true);
+        utilities.tiltClaw(false);
         drive.followTrajectory(toMidRepeat);
         utilities.openClaw(true);
 
         //Go to Stack Repeat 3
         utilities.liftArmAbsolutePosition(65);
-        utilities.tiltClaw(false);
+        utilities.tiltClaw(true);
         drive.followTrajectory(toStackRepeat);
 
             //stack realignment
@@ -177,21 +199,35 @@ public class blueLeftFour extends genericAuton
         telemetry.update();
 
 
-        if (displacement > 0) {
+        if (displacement > 0.1) {
             stackCorrection = drive.trajectorySequenceBuilder(toStackRepeat.end())
                     .strafeRight(Math.abs(displacement)).build();
             drive.followTrajectorySequence(stackCorrection);
-        } else {
+            begStackCorrection = stackCorrection.end();
+        } else if (displacement < -0.1){
             stackCorrection = drive.trajectorySequenceBuilder(toStackRepeat.end())
                     .strafeLeft(Math.abs(displacement)).build();
             drive.followTrajectorySequence(stackCorrection);
+            begStackCorrection = stackCorrection.end();
         }
+        else {
+            begStackCorrection = toStackRepeat.end();
+        }
+        buildTrajectories();
 
-        drive.followTrajectorySequence(forward2);
+        drive.followTrajectorySequence(forward1);
         utilities.openClaw(false);
         utilities.wait(500, telemetry);
-        utilities.liftArmAbsolutePosition(290);
+        utilities.liftArmAbsolutePosition(270);
         utilities.wait(500, telemetry);
+
+        //Go to Mid Repeat 4
+        utilities.tiltClaw(true);
+        drive.followTrajectory(toMidRepeat);
+        utilities.openClaw(true);
+
+        utilities.tiltClaw(false);
+        utilities.liftArmAbsolutePosition(30);
 
         //Parking
         if(identifier == 1)
@@ -212,10 +248,10 @@ public class blueLeftFour extends genericAuton
                 .splineToSplineHeading(atStack1Inbetween, Math.toRadians(-45))
                 .splineToSplineHeading(atStack1Final, Math.toRadians(-6))
                 .build();
-        forward1 = drive.trajectorySequenceBuilder(toStack1.end())
+        forward1 = drive.trajectorySequenceBuilder(begStackCorrection) //toStack1.end()
                 .forward(14)
                 .build();
-        toMidRepeat = drive.trajectoryBuilder(toStack1.end(), Math.toRadians(180))
+        toMidRepeat = drive.trajectoryBuilder(forward1.end(), Math.toRadians(180))
                 .splineToSplineHeading(atMid2Inbetween, Math.toRadians(-180))
                 .splineToSplineHeading(atMid2Final, Math.toRadians(100))
                 .build();
@@ -224,18 +260,18 @@ public class blueLeftFour extends genericAuton
                 .splineToSplineHeading(toStackRepeat2, Math.toRadians(-15))
                 .splineToSplineHeading(toStackRepeat3, Math.toRadians(0))
                 .build();
-        forward2 = drive.trajectorySequenceBuilder(toStackRepeat.end())
+        forward2 = drive.trajectorySequenceBuilder(begStackCorrection) //toStackRepeat.end() //stackCorrection.end()
                 .forward(14)
                 .build();
-        toParking1 = drive.trajectoryBuilder(toMidRepeat.end(), Math.toRadians(-30))
+        toParking1 = drive.trajectoryBuilder(drive.getPoseEstimate(), Math.toRadians(-30)) //toMidRepeat.end()
                 .splineToSplineHeading(toParking1Inbetween1, Math.toRadians(-30))
                 .splineToSplineHeading(toParking1Inbetween2, Math.toRadians(-15))
                 .splineToSplineHeading(toParking1Inbetween3, Math.toRadians(0))
                 .build();
-        toParking2 = drive.trajectoryBuilder(toMidRepeat.end())
+        toParking2 = drive.trajectoryBuilder(drive.getPoseEstimate()) //toMidRepeat.end()
                 .back(7)
                 .build();
-        toParking3 = drive.trajectoryBuilder(toMidRepeat.end(), Math.toRadians(-45))
+        toParking3 = drive.trajectoryBuilder(drive.getPoseEstimate(), Math.toRadians(-45)) //toMidRepeat.end()
                 .splineToSplineHeading(toParking3OTW1, Math.toRadians(200))
                 .splineToSplineHeading(toParking3OTW2, Math.toRadians(190))
                 .build();

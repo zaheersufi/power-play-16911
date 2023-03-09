@@ -1,0 +1,15 @@
+Initial start: -36, 66, 270
+Forward: -36, 60, 270
+Turn: -36, 60, 0
+Forward: -14.75, 60, 0
+StrafeRight: -14.75, 22, 0
+Forward: -13.25, 22, 0
+
+High Junction
+
+GoForward: -11.25, 22, 0
+
+
+
+ParkingMiddle:
+Right: -13.25, 10, 180

@@ -22,7 +22,7 @@ public class NewRigatoni extends LinearOpMode
 
 
     // Lift Power
-    final double FULL_POWER = 0.85;     // With two motors it's best not to run at full capacity
+    final double FULL_POWER = 0.95;     // With two motors it's best not to run at full capacity
     final double SLOW_POWER = 0.4;
     final double SLOW_RAISE = 0.4;
     final double SLOW_FALL = 0.15;
