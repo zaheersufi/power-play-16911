@@ -15,7 +15,7 @@ public class blueLeftFour extends genericAuton
 
     //toMid1
     private final Pose2d blueLeftHome = new Pose2d(36.0, 62.5, Math.toRadians(-90.0));
-    private final Pose2d atMid1 = new Pose2d(29, 29, Math.toRadians(225));
+    private final Pose2d atMid1 = new Pose2d(31, 31, Math.toRadians(225));
 
     //toStack1
     private final Pose2d atStack1Inbetween = new Pose2d(39, 18, Math.toRadians(-75));
@@ -54,6 +54,8 @@ public class blueLeftFour extends genericAuton
     public void run()
     {
         drive.setPoseEstimate(blueLeftHome);
+        stackPipeline = new BlueStackPipeline(telemetry, 13, 0);
+        webcam.setPipeline(stackPipeline);
 
         //Go to mid junction 1
         utilities.liftArmAbsolutePosition(290);
@@ -63,9 +65,7 @@ public class blueLeftFour extends genericAuton
 
         //Go to stack 1
         utilities.liftArmAbsolutePosition(80);
-        utilities.tiltClaw(true);
         drive.followTrajectory(toStack1);
-        utilities.tiltClaw(false);
 
             //call in stack alignment
 
@@ -109,11 +109,11 @@ public class blueLeftFour extends genericAuton
         telemetry.update();
 
 
-        if (displacement > 0) {
+        if (displacement > 0.1) {
             stackCorrection = drive.trajectorySequenceBuilder(toStackRepeat.end())
                     .strafeRight(Math.abs(displacement)).build();
             drive.followTrajectorySequence(stackCorrection);
-        } else {
+        } else if (displacement < -.1){
             stackCorrection = drive.trajectorySequenceBuilder(toStackRepeat.end())
                     .strafeLeft(Math.abs(displacement)).build();
             drive.followTrajectorySequence(stackCorrection);

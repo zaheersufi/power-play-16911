@@ -84,12 +84,12 @@ public abstract class genericAuton extends LinearOpMode
         try {
             run();
         } catch (Throwable t) {
-            hardware.robotStopAllMotion();
-            utilities.wait(500, telemetry);
-
             telemetry.clearAll();
             telemetry.addData("Exception caught!", t);
             telemetry.update();
+
+            hardware.robotStopAllMotion();
+            utilities.wait(3000, telemetry);
         }
 
     }

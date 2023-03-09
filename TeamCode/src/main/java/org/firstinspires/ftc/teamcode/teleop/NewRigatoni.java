@@ -119,7 +119,7 @@ public class NewRigatoni extends LinearOpMode
             presetLift();
             lift();
             rotateClaw();
-            flipOrienation();
+            flipOrientation();
 
 
             if (timer.milliseconds() > (last+250)) {
@@ -378,7 +378,7 @@ public class NewRigatoni extends LinearOpMode
         gamepad2.runRumbleEffect(e);
 
     }
-    public void flipOrienation() {
+    public void flipOrientation() {
         if(flipConstant == 1 && buttonTime.time() >= 500 && gamepad1.triangle)
         {
             flipConstant = -1;
