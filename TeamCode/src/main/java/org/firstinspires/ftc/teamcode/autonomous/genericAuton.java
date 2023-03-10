@@ -38,8 +38,6 @@ public abstract class genericAuton extends LinearOpMode
      *
      * @throws  InterruptedException    in case the thread is interrupted
      */
-
-
     @Override
     public void runOpMode() throws InterruptedException
     {
@@ -58,27 +56,28 @@ public abstract class genericAuton extends LinearOpMode
         hardware.initializeSupplementaryMotors(hardwareMap);
         hardware.turnOnDriveEncoders();
 
-
-        buildTrajectories();
         utilities.openClaw(false);
+        buildTrajectories();
 
         utilities.wait(250, telemetry);
         telemetry.addData("X, Y", cameraX()+ ", "+cameraY());
         telemetry.addData("Init Parking", sleevePipeline.getDestination());
+        telemetry.addData("Status", "Ready!");
         telemetry.update();
 
         waitForStart();
         if (isStopRequested()) return;
         if(!opModeIsActive()) return;
+        telemetry.clearAll();
         utilities.wait(250, telemetry);
 
 
         identifier = sleevePipeline.getDestination();
-        telemetry.addData("Parking", identifier);
-        telemetry.update();
-
         webcam.stopRecordingPipeline();
         webcam.stopStreaming();
+
+        telemetry.addData("Parking", identifier);
+        telemetry.update();
 
 
         try {

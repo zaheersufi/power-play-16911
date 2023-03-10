@@ -58,7 +58,7 @@ public class NewUtilities
         if(!shouldOpen)
             hardware.grabServo.setPosition(0.6);
         else
-            hardware.grabServo.setPosition(0.3);
+            hardware.grabServo.setPosition(0.38);
     }
 
 
