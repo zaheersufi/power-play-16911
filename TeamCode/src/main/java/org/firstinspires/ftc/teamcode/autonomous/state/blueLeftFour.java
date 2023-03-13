@@ -22,7 +22,7 @@ public class blueLeftFour extends genericAuton
     private final Pose2d atStack1Final = new Pose2d(51, 12.5, Math.toRadians(0));
 
     //forward
-    private final Pose2d forwardFinal = new Pose2d(62, 18, Math.toRadians(3));
+    private final Pose2d forwardFinal = new Pose2d(63, 18, Math.toRadians(3));
 
     //toMidRepeat
     private final Pose2d atMid2Inbetween = new Pose2d(41, 13.5, Math.toRadians(110));
@@ -52,6 +52,8 @@ public class blueLeftFour extends genericAuton
     private TrajectorySequence stackCorrection;
     private TrajectorySequence forward1;
     private TrajectorySequence forward2;
+    private Trajectory forward;
+    private Trajectory backwards;
 
     //beginning of stack correction realignment
     private Pose2d begStackCorrection = new Pose2d(58, 12, Math.toRadians(0));
@@ -108,7 +110,9 @@ public class blueLeftFour extends genericAuton
         //Go to Mid Repeat 1
         utilities.tiltClaw(false);
         drive.followTrajectory(toMidRepeat);
+        drive.followTrajectory(forward);
         utilities.openClaw(true);
+        drive.followTrajectory(backwards);
 
 
 //        //Go to stack repeat 1
@@ -265,10 +269,17 @@ public class blueLeftFour extends genericAuton
                 .build();
         toMidRepeat = drive.trajectoryBuilder(forward1.end(), Math.toRadians(180))
 //                .splineToSplineHeading(atMid2Inbetween, Math.toRadians(-180))
-                .splineToSplineHeading(new Pose2d(40, 19, Math.toRadians(0)), Math.toRadians(160))
-                .splineToSplineHeading(new Pose2d(27, 23, Math.toRadians(120)), Math.toRadians(160))
+                .splineToSplineHeading(new Pose2d(42, 18, Math.toRadians(0)), Math.toRadians(180))
+                .splineToSplineHeading(new Pose2d(28, 18, Math.toRadians(90)), Math.toRadians(180))
+                .splineToSplineHeading(new Pose2d(24, 18, Math.toRadians(90)), Math.toRadians(180))
                 .build();
-        toStackRepeat = drive.trajectoryBuilder(toMidRepeat.end(), Math.toRadians(-30))
+        forward = drive.trajectoryBuilder(toMidRepeat.end())
+                .forward(2)
+                .build();
+        backwards = drive.trajectoryBuilder(forward.end())
+                .back(3)
+                .build();
+        toStackRepeat = drive.trajectoryBuilder(backwards.end(), Math.toRadians(-30))
                 .splineToSplineHeading(toStackRepeat1, Math.toRadians(-30))
                 .splineToSplineHeading(toStackRepeat2, Math.toRadians(-15))
                 .splineToSplineHeading(toStackRepeat3, Math.toRadians(0))
