@@ -45,8 +45,8 @@ public class BlueStackPipeline extends OpenCvPipeline
      * Values used to perform color analysis
      */
     static final Scalar BLACK = new Scalar(0,0,0);
-    static final Scalar BLUE = new Scalar(0,0,255);
-    static final int BLUE_HUE = 120;
+    static Scalar COLOR = new Scalar(0,0,255);
+    static int COLOR_HUE = 120;
     // The brightness threshold is used to filter very dark or bright colors
     static final double BRIGHTNESS_THR = 0.2;
 
@@ -67,7 +67,7 @@ public class BlueStackPipeline extends OpenCvPipeline
      */
     public void maskYellow(Mat input) {
         Imgproc.cvtColor(input, mask, Imgproc.COLOR_RGB2HSV);
-        Core.inRange(mask, new Scalar(BLUE_HUE -15, BRIGHTNESS_THR*255, BRIGHTNESS_THR*255), new Scalar(BLUE_HUE +15, 255, 255), mask);
+        Core.inRange(mask, new Scalar(COLOR_HUE -15, BRIGHTNESS_THR*255, BRIGHTNESS_THR*255), new Scalar(COLOR_HUE +15, 255, 255), mask);
 
         Mat kernel = new Mat();
 
@@ -123,10 +123,10 @@ public class BlueStackPipeline extends OpenCvPipeline
                 input,
                 new Point(Math.round(x[0]/ SCALE), Math.round(y[0]/ SCALE)),
                 new Point(Math.round(x[2]/ SCALE), Math.round(y[2]/ SCALE)),
-                BLUE,
+                COLOR,
                 2);
 
-        Imgproc.line(input, new Point(center, 0), new Point(center, input.height()), BLUE, 2);
+        Imgproc.line(input, new Point(center, 0), new Point(center, input.height()), COLOR, 2);
         Imgproc.line(input, new Point(input.width()*(CENTER_OFFSET+0.5), 0), new Point(input.width()*(CENTER_OFFSET+0.5), input.height()),BLACK, 2);
 
 
