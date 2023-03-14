@@ -20,7 +20,7 @@ public class newLeft extends genericAuton
     private final Pose2d toMidFinalbet1 = new Pose2d(65, 12, Math.toRadians(0));
     private final Pose2d toMidFinalbet2 = new Pose2d(42, 12, Math.toRadians(0));
     private final Pose2d toMidFinalbet3 = new Pose2d(29, 12, Math.toRadians(90));
-//    private final Pose2d toMidFinalbet4 = new Pose2d(29, 12, Math.toRadians(90));
+//  private final Pose2d toMidFinalbet4 = new Pose2d(29, 12, Math.toRadians(90));
 
     private Trajectory toMid1;
     private TrajectorySequence forwardMid1;
