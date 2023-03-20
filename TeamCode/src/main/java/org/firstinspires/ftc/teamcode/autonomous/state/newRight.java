@@ -115,7 +115,7 @@ public class newRight extends genericAuton
 //                .back(3)
 //                .build();
         toStack1 = drive.trajectorySequenceBuilder(toMid1.end())
-                .strafeLeft(11)
+                .strafeRight(11)
                 .turn(Math.toRadians(-180))
                 .forward(31.5)
                 .build();
@@ -148,13 +148,13 @@ public class newRight extends genericAuton
                 .forward(4)
                 .build();
         parking1 = drive.trajectorySequenceBuilder(toFinalMid.end())
-                .strafeRight(38)
-                .build();
-        parking2 = drive.trajectorySequenceBuilder(toFinalMid.end())
                 .strafeRight(12)
                 .build();
-        parking3 = drive.trajectorySequenceBuilder(toFinalMid.end())
+        parking2 = drive.trajectorySequenceBuilder(toFinalMid.end())
                 .strafeLeft(12)
+                .build();
+        parking3 = drive.trajectorySequenceBuilder(toFinalMid.end())
+                .strafeLeft(38)
                 .build();
 
     }
