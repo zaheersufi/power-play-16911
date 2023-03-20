@@ -309,10 +309,10 @@ public class NewRigatoni extends LinearOpMode
     {
         // Raising the lift
         if ( (gamepad2.right_trigger > 0) && (gamepad2.right_trigger > gamepad2.left_trigger) ) {
-            if(hardware.liftArm2.getCurrentPosition() > 100)
-            {
-                utilities.tiltClaw(false);
-            }
+//            if(hardware.liftArm2.getCurrentPosition() > 100)
+//            {
+//                utilities.tiltClaw(false);
+//            }
             hardware.liftArm1.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
             hardware.liftArm2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
@@ -322,10 +322,10 @@ public class NewRigatoni extends LinearOpMode
 
         // Lowering the lift (slow)
         else if ( (gamepad2.left_trigger > 0) && (gamepad2.left_trigger > gamepad2.right_trigger) ) {
-            if(hardware.liftArm2.getCurrentPosition() < 100)
-            {
-                utilities.tiltClaw(true);
-            }
+//            if(hardware.liftArm2.getCurrentPosition() < 100)
+//            {
+//                utilities.tiltClaw(true);
+//            }
             hardware.liftArm1.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
             hardware.liftArm2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
