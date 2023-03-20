@@ -56,7 +56,7 @@ public class newLeft extends genericAuton
         drive.followTrajectorySequence(toStack1);
         utilities.openClaw(false);
         utilities.wait(500, telemetry);
-        utilities.liftArmAbsolutePosition(185);
+        utilities.liftArmAbsolutePosition(165);
         utilities.wait(500, telemetry);
         utilities.tiltClaw(false);
 
@@ -67,13 +67,15 @@ public class newLeft extends genericAuton
         utilities.liftArmAbsolutePosition(60);
         drive.followTrajectorySequence(lowBack1);
 
-        //toLow2
+        //toStack2
         utilities.openClaw(false);
         utilities.wait(500, telemetry);
-        utilities.liftArmAbsolutePosition(185);
+        utilities.liftArmAbsolutePosition(165);
         utilities.wait(500, telemetry);
         utilities.tiltClaw(false);
         drive.followTrajectorySequence(toLow2);
+
+        //toLow2
         utilities.openClaw(true);
         utilities.tiltClaw(true);
         utilities.liftArmAbsolutePosition(50);
