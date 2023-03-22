@@ -24,6 +24,7 @@ public class newLeft extends genericAuton
 
     private Trajectory toMid1;
     private TrajectorySequence forwardMid1;
+    private TrajectorySequence forwardMid2;
     private TrajectorySequence backMid1;
     private TrajectorySequence toStack1;
     private TrajectorySequence toLow1;
@@ -42,13 +43,14 @@ public class newLeft extends genericAuton
         drive.setPoseEstimate(blueLeftHome);
 
         //go to mid1
-        utilities.liftArmAbsolutePosition(270);
+        utilities.liftArmAbsolutePosition(240);
         utilities.wait(100, telemetry);
         utilities.tiltClaw(false);
         drive.followTrajectory(toMid1);
-        //drive.followTrajectorySequence(forwardMid1);
+        drive.followTrajectorySequence(forwardMid1);
         utilities.openClaw(true);
-        //drive.followTrajectorySequence(backMid1);
+        utilities.wait(250, telemetry);
+        drive.followTrajectorySequence(backMid1);
 
         //toStack1
         utilities.liftArmAbsolutePosition(75);
@@ -88,7 +90,7 @@ public class newLeft extends genericAuton
         utilities.wait(500, telemetry);
         utilities.tiltClaw(false);
         drive.followTrajectory(toFinalMid);
-        drive.followTrajectorySequence(forwardMid1);
+        drive.followTrajectorySequence(forwardMid2);
         utilities.wait(250, telemetry);
         utilities.openClaw(true);
         utilities.tiltClaw(true);
@@ -112,13 +114,13 @@ public class newLeft extends genericAuton
                 .splineToSplineHeading(toMid1bet2, Math.toRadians(-90))
                 .splineToSplineHeading(toMid1bet3, Math.toRadians(-90))
                 .build();
-//        forwardMid1 = drive.trajectorySequenceBuilder(toFinalMid.end())
-//                .forward(3)
-//                .build();
-//        backMid1 = drive.trajectorySequenceBuilder(forwardMid1.end())
-//                .back(3)
-//                .build();
-        toStack1 = drive.trajectorySequenceBuilder(toMid1.end())
+        forwardMid1 = drive.trajectorySequenceBuilder(toMid1.end())
+                .forward(2)
+                .build();
+        backMid1 = drive.trajectorySequenceBuilder(forwardMid1.end())
+                .back(2)
+                .build();
+        toStack1 = drive.trajectorySequenceBuilder(backMid1.end())
                 .strafeLeft(11.5)
                 .turn(Math.toRadians(180))
                 .forward(31.5)
@@ -131,28 +133,28 @@ public class newLeft extends genericAuton
         lowBack1 = drive.trajectorySequenceBuilder(toLow1.end())
                 .back(6.5)
                 .turn(Math.toRadians(-117))
-                .forward(8)
+                .forward(8.5)
                 .build();
         toLow2 = drive.trajectorySequenceBuilder(lowBack1.end())
-                .back(8)
+                .back(8.5)
                 .turn(Math.toRadians(117))
                 .forward(6.5)
                 .build();
         lowBack2 = drive.trajectorySequenceBuilder(toLow2.end())
                 .back(6.5)
                 .turn(Math.toRadians(-117))
-                .forward(8)
+                .forward(8.5)
                 .build();
         toFinalMid = drive.trajectoryBuilder(toMidFinalbet1, Math.toRadians(180))
                 .splineToSplineHeading(toMidFinalbet2, Math.toRadians(180))
                 .splineToSplineHeading(toMidFinalbet3, Math.toRadians(180))
 //                .splineToSplineHeading(toMidFinalbet4, Math.toRadians(180))
                 .build();
-        forwardMid1 = drive.trajectorySequenceBuilder(toFinalMid.end())
-                .forward(4.5)
+        forwardMid2 = drive.trajectorySequenceBuilder(toFinalMid.end())
+                .forward(5)
                 .build();
         parking1 = drive.trajectorySequenceBuilder(toFinalMid.end())
-                .strafeRight(38)
+                .strafeRight(35)
                 .forward(4)
                 .build();
         parking2 = drive.trajectorySequenceBuilder(toFinalMid.end())
@@ -164,5 +166,15 @@ public class newLeft extends genericAuton
                 .forward(4)
                 .build();
 
+    }
+
+    public int cameraX()
+    {
+        return 110;
+    }
+
+    public int cameraY()
+    {
+        return 120;
     }
 }

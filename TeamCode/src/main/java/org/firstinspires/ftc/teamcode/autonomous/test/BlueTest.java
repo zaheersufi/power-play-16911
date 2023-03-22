@@ -17,7 +17,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
-
+@Disabled
 @Autonomous(name="BlueTest")
 public class BlueTest extends LinearOpMode
 {

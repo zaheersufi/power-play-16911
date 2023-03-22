@@ -130,17 +130,17 @@ public class newRight extends genericAuton
         lowBack1 = drive.trajectorySequenceBuilder(toLow1.end())
                 .back(6.5)
                 .turn(Math.toRadians(117))
-                .forward(8)
+                .forward(8.5)
                 .build();
         toLow2 = drive.trajectorySequenceBuilder(lowBack1.end())
-                .back(8)
+                .back(8.5)
                 .turn(Math.toRadians(-117))
                 .forward(6.5)
                 .build();
         lowBack2 = drive.trajectorySequenceBuilder(toLow2.end())
                 .back(6.5)
                 .turn(Math.toRadians(117))
-                .forward(8)
+                .forward(8.5)
                 .build();
         toFinalMid = drive.trajectoryBuilder(toMidFinalbet1, Math.toRadians(0 ))
                 .splineToSplineHeading(toMidFinalbet2, Math.toRadians(0))
@@ -159,9 +159,20 @@ public class newRight extends genericAuton
                 .forward(4)
                 .build();
         parking3 = drive.trajectorySequenceBuilder(toFinalMid.end())
-                .strafeLeft(38)
+                .strafeLeft(35)
                 .forward(4)
                 .build();
 
+    }
+
+
+    public int cameraX()
+    {
+        return 90;
+    }
+
+    public int cameraY()
+    {
+        return 120;
     }
 }

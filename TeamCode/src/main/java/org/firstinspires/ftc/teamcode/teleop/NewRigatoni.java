@@ -27,7 +27,7 @@ public class NewRigatoni extends LinearOpMode
     final double SLOW_RAISE = 0.4;
     final double SLOW_FALL = 0.15;
     // Drive Power
-    final double FAST_SPEED = 0.925;
+    final double FAST_SPEED = 0.85;
     final double SLOW_SPEED = 0.7;
     final double SUPER_SLOW_SPEED = 0.5;
     double speed = FAST_SPEED;
@@ -44,6 +44,8 @@ public class NewRigatoni extends LinearOpMode
 
     Telemetry.Item position1;
     Telemetry.Item position2;
+
+    private boolean isTiltStraight = true;
 
 
     RumbleEffect customRumbleEffect = new RumbleEffect.Builder()
@@ -238,12 +240,12 @@ public class NewRigatoni extends LinearOpMode
 
 
         // SuperSlow Speed
-        if (gamepad1.circle && speed == SUPER_SLOW_SPEED && buttonTime.time() >= 500)
+        if ((gamepad1.circle || gamepad1.right_bumper) && speed == SUPER_SLOW_SPEED && buttonTime.time() >= 500)
         {
             speed = FAST_SPEED;
             buttonTime.reset();
         }
-        else if (gamepad1.circle && buttonTime.time() >= 500)
+        else if ((gamepad1.circle || gamepad1.right_bumper) && buttonTime.time() >= 500)
         {
             speed = SUPER_SLOW_SPEED;
             buttonTime.reset();
@@ -264,13 +266,13 @@ public class NewRigatoni extends LinearOpMode
         if (gamepad2.dpad_up)
         {
             telemetry.addLine("Up");
-            utilities.liftArmAbsolutePosition(355);
+            utilities.liftArmAbsolutePosition(324);
         }
 
         // Low Junction
         else if (gamepad2.dpad_left)
         {
-            utilities.liftArmAbsolutePosition(170);
+            utilities.liftArmAbsolutePosition(145);
         }
 
         // Ground Level
@@ -282,7 +284,7 @@ public class NewRigatoni extends LinearOpMode
         // Medium Level
         else if (gamepad2.dpad_right)
         {
-            utilities.liftArmAbsolutePosition(270);
+            utilities.liftArmAbsolutePosition(235);
         }
         if(gamepad2.right_bumper)
             utilities.liftArmAbsolutePosition(100);
@@ -365,14 +367,23 @@ public class NewRigatoni extends LinearOpMode
      */
     public void rotateClaw()
     {
+        if(isTiltStraight && gamepad2.triangle && buttonTime.time() >= 500)
+        {
+            hardware.tiltServo.setPosition(0.45);
+            buttonTime.reset();
+            isTiltStraight = false;
+        }
+        if(!isTiltStraight && gamepad2.triangle && buttonTime.time() >= 500)
+        {
+            buttonTime.reset();
+            hardware.tiltServo.setPosition(0.6);
+            isTiltStraight = true;
+        }
         if(gamepad2.square)
             hardware.grabServo.setPosition(.6);
         if(gamepad2.circle)
-            hardware.grabServo.setPosition(0.38);
-        if(gamepad2.triangle)
-            hardware.tiltServo.setPosition(0.45);
-        if(gamepad2.cross)
-            hardware.tiltServo.setPosition(0.6);
+            hardware.grabServo.setPosition(0.31);
+
 
     }
 
