@@ -3,11 +3,13 @@ package org.firstinspires.ftc.teamcode.autonomous.state;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.autonomous.genericAuton;
 import org.firstinspires.ftc.teamcode.autonomous.pipelines.BlueStackPipeline;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
+@Disabled
 @Autonomous (name="blueLeftFour")
 public class blueLeftFour extends genericAuton
 {

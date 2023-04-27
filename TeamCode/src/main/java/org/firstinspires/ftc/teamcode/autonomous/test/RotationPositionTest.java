@@ -2,10 +2,12 @@ package org.firstinspires.ftc.teamcode.autonomous.test;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.autonomous.genericAuton;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
+@Disabled
 public class RotationPositionTest extends genericAuton
 {
     private final Pose2d home = new Pose2d(-36.0, -63.0, Math.toRadians(90.0));

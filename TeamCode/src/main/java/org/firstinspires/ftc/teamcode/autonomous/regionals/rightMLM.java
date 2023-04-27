@@ -2,12 +2,13 @@ package org.firstinspires.ftc.teamcode.autonomous.regionals;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.autonomous.genericAuton;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 
-//@Disabled
+@Disabled
 @Autonomous(name="rightMLM")
 public class rightMLM extends genericAuton
 {
