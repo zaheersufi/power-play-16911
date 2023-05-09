@@ -118,9 +118,9 @@ public class NewRigatoni extends LinearOpMode
 
         while (opModeIsActive()) {
             drive();
-            presetLift();
             lift();
             rotateClaw();
+            passServo();
             flipOrientation();
 
 
@@ -260,44 +260,72 @@ public class NewRigatoni extends LinearOpMode
      * gamepad 2 allowing for efficient means
      * of scoring
      */
-    public void presetLift()
+//    public void presetLift()
+//    {
+//        // High Junction
+//        if (gamepad2.dpad_up)
+//        {
+//            telemetry.addLine("Up");
+//            utilities.liftArmAbsolutePosition(355);
+//        }
+//
+//        // Low Junction
+//        else if (gamepad2.dpad_left)
+//        {
+//            utilities.liftArmAbsolutePosition(170);
+//        }
+//
+//        // Ground Level
+//        else if (gamepad2.dpad_down)
+//        {
+//            utilities.liftArmAbsolutePosition(15);
+//        }
+//
+//        // Medium Level
+//        else if (gamepad2.dpad_right)
+//        {
+//            utilities.liftArmAbsolutePosition(270);
+//        }
+//        if(gamepad2.right_bumper)
+//            utilities.liftArmAbsolutePosition(100);
+//
+//        // Reset Encoders
+//        if (gamepad2.share)
+//        {
+//            hardware.liftArm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            hardware.liftArm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        }
+//    }
+    public void passServo()
     {
-        // High Junction
-        if (gamepad2.dpad_up)
+        if(gamepad2.triangle)
         {
-            telemetry.addLine("Up");
-            utilities.liftArmAbsolutePosition(355);
+            hardware.passServo1.setPosition(hardware.PASS_INIT);
+            hardware.passServo2.setPosition(hardware.PASS_INIT);
         }
-
-        // Low Junction
-        else if (gamepad2.dpad_left)
+        else if(gamepad2.circle)
         {
-            utilities.liftArmAbsolutePosition(170);
+            hardware.passServo1.setPosition(hardware.PASS_MIDDLE);
+            hardware.passServo2.setPosition(hardware.PASS_MIDDLE);
         }
-
-        // Ground Level
-        else if (gamepad2.dpad_down)
+        else if(gamepad2.cross)
         {
-            utilities.liftArmAbsolutePosition(15);
+            hardware.passServo1.setPosition(hardware.PASS_ALMOST_FINAL);
+            hardware.passServo2.setPosition(hardware.PASS_ALMOST_FINAL);
         }
-
-        // Medium Level
-        else if (gamepad2.dpad_right)
+        else if(gamepad2.square)
         {
-            utilities.liftArmAbsolutePosition(270);
-        }
-        if(gamepad2.right_bumper)
-            utilities.liftArmAbsolutePosition(100);
-
-        // Reset Encoders
-        if (gamepad2.share)
-        {
-            hardware.liftArm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            hardware.liftArm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            hardware.passServo1.setPosition(hardware.PASS_FINAL);
+            hardware.passServo2.setPosition(hardware.PASS_FINAL);
         }
     }
-
-
+    public void flipServo()
+    {
+        if(gamepad2.left_bumper)
+        {
+            utilities.shouldFlip();
+        }
+    }
 
     /**
      * This method moves the arm up and down based on the input of the right

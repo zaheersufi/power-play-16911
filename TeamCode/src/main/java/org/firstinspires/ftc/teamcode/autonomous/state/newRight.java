@@ -19,7 +19,7 @@ public class newRight extends genericAuton
     //toMidFinal
     private final Pose2d toMidFinalbet1 = new Pose2d(-65, 12, Math.toRadians(180));
     private final Pose2d toMidFinalbet2 = new Pose2d(-42, 12, Math.toRadians(180));
-    private final Pose2d toMidFinalbet3 = new Pose2d(-29, 18, Math.toRadians(90));
+    private final Pose2d toMidFinalbet3 = new Pose2d(-27, 12, Math.toRadians(90));
 //  private final Pose2d toMidFinalbet4 = new Pose2d(29, 12, Math.toRadians(90));
 
     private Trajectory toMid1;
@@ -49,6 +49,7 @@ public class newRight extends genericAuton
         drive.followTrajectory(toMid1);
         drive.followTrajectorySequence(forwardMid1);
         utilities.openClaw(true);
+        utilities.wait(250, telemetry);
         drive.followTrajectorySequence(backMid1);
 
         //toStack1
@@ -87,10 +88,10 @@ public class newRight extends genericAuton
         utilities.wait(500, telemetry);
         utilities.tiltClaw(false);
         drive.followTrajectory(toFinalMid);
-        utilities.wait(250, telemetry);
-        //drive.followTrajectorySequence(forwardMid2);
+        drive.followTrajectorySequence(forwardMid2);
         utilities.openClaw(true);
         utilities.tiltClaw(true);
+        utilities.wait(500, telemetry);
 
         //parking
         if(identifier == 1)
@@ -112,44 +113,44 @@ public class newRight extends genericAuton
                 .splineToSplineHeading(toMid1bet3, Math.toRadians(-90))
                 .build();
         forwardMid1 = drive.trajectorySequenceBuilder(toMid1.end())
-                .forward(2)
+                .forward(1.5)
                 .build();
         backMid1 = drive.trajectorySequenceBuilder(forwardMid1.end())
-                .back(2)
+                .back(1.75)
                 .build();
         toStack1 = drive.trajectorySequenceBuilder(toMid1.end())
-                .strafeRight(12)
+                .strafeRight(12.5)
                 .turn(Math.toRadians(-180))
                 .forward(29)
                 .build();
         toLow1 = drive.trajectorySequenceBuilder(toStack1.end())
                 .back(8)
                 .turn(Math.toRadians(-117))
-                .forward(6.5)
+                .forward(5.75)
                 .build();
         lowBack1 = drive.trajectorySequenceBuilder(toLow1.end())
-                .back(6.5)
+                .back(5.75)
                 .turn(Math.toRadians(117))
                 .forward(8.5)
                 .build();
         toLow2 = drive.trajectorySequenceBuilder(lowBack1.end())
                 .back(8.5)
                 .turn(Math.toRadians(-117))
-                .forward(6.5)
+                .forward(5.75)
                 .build();
         lowBack2 = drive.trajectorySequenceBuilder(toLow2.end())
-                .back(6.5)
+                .back(5.75)
                 .turn(Math.toRadians(117))
                 .forward(8.5)
                 .build();
-        toFinalMid = drive.trajectoryBuilder(toMidFinalbet1, Math.toRadians(0 ))
+        toFinalMid = drive.trajectoryBuilder(toMidFinalbet1, Math.toRadians(0))
                 .splineToSplineHeading(toMidFinalbet2, Math.toRadians(0))
                 .splineToSplineHeading(toMidFinalbet3, Math.toRadians(40))
 //                .splineToSplineHeading(toMidFinalbet4, Math.toRadians(180))
                 .build();
-//        forwardMid2 = drive.trajectorySequenceBuilder(toFinalMid.end())
-//                .forward(4)
-//                .build();
+        forwardMid2 = drive.trajectorySequenceBuilder(toFinalMid.end())
+                .forward(5)
+                .build();
         parking1 = drive.trajectorySequenceBuilder(toFinalMid.end())
                 .strafeRight(12)
                 .forward(4)

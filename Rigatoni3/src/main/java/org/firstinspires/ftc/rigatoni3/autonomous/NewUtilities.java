@@ -21,6 +21,8 @@ public class NewUtilities
     private final double ROTATE_OPENED = 0;
     private final double ROTATE_CLOSED = 0.5;
 
+    private boolean isFlipped = false;
+
     public NewUtilities(NewRigatoniHardware hardware)
     {
         this.hardware = hardware;
@@ -150,16 +152,33 @@ public class NewUtilities
      * The method that tilts the claw
      * forwards and backwards
      */
-    public void rotClaw(boolean isStraight)
+//    public void rotClaw(boolean isStraight)
+//    {
+//        if(isStraight)
+//        {
+//            hardware.rotServo.setPosition(ROTATE_OPENED);
+//        }
+//        else
+//        {
+//            hardware.rotServo.setPosition(ROTATE_CLOSED);
+//        }
+//    }
+
+    public void setPassServo(double angle)
     {
-        if(isStraight)
+        hardware.passServo1.setPosition(angle);
+        hardware.passServo2.setPosition(angle);
+    }
+    public void shouldFlip()
+    {
+        if(isFlipped == false)
         {
-            hardware.rotServo.setPosition(ROTATE_OPENED);
+            hardware.rotServo.setPosition(1);
+            isFlipped = true;
         }
-        else
-        {
-            hardware.rotServo.setPosition(ROTATE_CLOSED);
+        else {
+            hardware.rotServo.setPosition(0);
+            isFlipped = false;
         }
     }
-
 }

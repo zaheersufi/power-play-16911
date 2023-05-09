@@ -30,14 +30,16 @@ public class NewRigatoniHardware
     public Servo passServo2 = null;
 
 
-    private PIDFCoefficients PIDF = new PIDFCoefficients(10,0.5,0,45);
+    //private PIDFCoefficients PIDF = new PIDFCoefficients(10,0.5,0,45);
 
     //Constants
     public static final double GRAB_CLOSED = 0.6;
     public static final double GRAB_OPENED = 0.38;
     public static final double ROTATE_OPENED = 0;
     public static final double PASS_INIT = 0; //initialize position of passover servo
-
+    public static final double PASS_MIDDLE = .5;
+    public static final double PASS_ALMOST_FINAL = 0.75;
+    public static final double PASS_FINAL = 1.0;
     /**
      * Initializes the drive motors of the robot and
      * sets them to run without encoder.
@@ -82,14 +84,14 @@ public class NewRigatoniHardware
     /**
      * Sets drive motors to run with encoder.
      */
-    public void turnOnDriveEncoders()
-    {
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-    }
+//    public void turnOnDriveEncoders()
+//    {
+//        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//
+//    }
 
 
 
@@ -167,8 +169,8 @@ public class NewRigatoniHardware
         liftArm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftArm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        liftArm1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, PIDF);
-        liftArm2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, PIDF);
+        // liftArm1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, PIDF);
+        // liftArm2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, PIDF);
     }
 
 

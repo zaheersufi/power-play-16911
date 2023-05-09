@@ -160,49 +160,26 @@ public class NewRigatoni extends LinearOpMode
     {
         // Mecanum drivecode
         double y = -gamepad1.left_stick_y;        // Remember, this is reversed!
-        double x = gamepad1.left_stick_x*1.05;
+        double x = gamepad1.left_stick_x * 1.05;
         double rx = gamepad1.right_stick_x;
 
         // Setting up dead-zones
-        if(Math.abs(y)  < 0.3) y = 0;
-        if(Math.abs(x) < 0.3) x = 0;
+        double deadZone = 0.3;
+        //if(Math.abs(y)  < deadZone) y = 0;
+        //if(Math.abs(x) < deadZone) x = 0;
+        if(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2))  < deadZone) {y = 0; x = 0;}
 
+        //Smooth transition from dead-zone
+        if(y > 0) y = (y - Math.signum(y) * deadZone) * (1 / (1 - deadZone));
+        if(x > 0) x = (x - Math.signum(x) * deadZone) * (1 / (1 - deadZone));
+
+        //Quadratic acceleration for easier maneuverability at slow speeds
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-        double leftFrontPower = (y + x + rx) / denominator;
-        double leftRearPower = (y - x + rx) / denominator;
-        double rightFrontPower = (y - x - rx) / denominator;
-        double rightRearPower = (y + x - rx) / denominator;
+        double leftFrontPower = Math.signum((y + x + rx) / denominator) * Math.pow((y + x + rx) / denominator, 2);
+        double leftRearPower = Math.signum((y - x + rx) / denominator) * Math.pow((y - x + rx) / denominator, 2);
+        double rightFrontPower = Math.signum((y - x - rx) / denominator) * Math.pow((y - x - rx) / denominator, 2);
+        double rightRearPower = Math.signum((y + x - rx) / denominator) * Math.pow((y + x - rx) / denominator, 2);
 
-
-        // D-PAD Power
-        if(gamepad1.dpad_up)
-        {
-            leftFrontPower = 1;
-            rightRearPower = 1;
-            leftRearPower = 1;
-            rightFrontPower = 1;
-        }
-        else if (gamepad1.dpad_right)
-        {
-            leftFrontPower = 1;
-            rightRearPower = 1;
-            rightFrontPower = -1;
-            leftRearPower = -1;
-        }
-        else if (gamepad1.dpad_left)
-        {
-            leftFrontPower = -1;
-            rightRearPower = -1;
-            rightFrontPower = 1;
-            leftRearPower = 1;
-        }
-        else if (gamepad1.dpad_down)
-        {
-            leftFrontPower = -1;
-            rightRearPower = -1;
-            rightFrontPower = -1;
-            leftRearPower = -1;
-        }
 
         changeSpeed();
 
@@ -210,8 +187,8 @@ public class NewRigatoni extends LinearOpMode
         hardware.leftRear.setPower(leftRearPower * speed * flipConstant);
         hardware.rightFront.setPower(rightFrontPower * speed * flipConstant);
         hardware.rightRear.setPower(rightRearPower * speed * flipConstant);
-
     }
+
 
 
 
@@ -382,7 +359,7 @@ public class NewRigatoni extends LinearOpMode
         if(gamepad2.square)
             hardware.grabServo.setPosition(.6);
         if(gamepad2.circle)
-            hardware.grabServo.setPosition(0.31);
+            hardware.grabServo.setPosition(0.33);
 
 
     }

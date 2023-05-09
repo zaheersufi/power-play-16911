@@ -115,10 +115,10 @@ public class newLeft extends genericAuton
                 .splineToSplineHeading(toMid1bet3, Math.toRadians(-90))
                 .build();
         forwardMid1 = drive.trajectorySequenceBuilder(toMid1.end())
-                .forward(2)
+                .forward(1.5)
                 .build();
         backMid1 = drive.trajectorySequenceBuilder(forwardMid1.end())
-                .back(2)
+                .back(1.5)
                 .build();
         toStack1 = drive.trajectorySequenceBuilder(backMid1.end())
                 .strafeLeft(11.5)
