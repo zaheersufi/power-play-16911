@@ -33,8 +33,8 @@ public class NewRigatoniHardware
     //private PIDFCoefficients PIDF = new PIDFCoefficients(10,0.5,0,45);
 
     //Constants
-    public static final double GRAB_CLOSED = 0.6;
-    public static final double GRAB_OPENED = 0.38;
+    public static final double GRAB_CLOSED = 1; //.6
+    public static final double GRAB_OPENED = .6; //.38
     public static final double ROTATE_OPENED = 0;
     public static final double PASS_INIT = 0; //initialize position of passover servo
     public static final double PASS_MIDDLE = .5;
@@ -54,10 +54,10 @@ public class NewRigatoniHardware
         rightFront = hardwareMap.get(DcMotorEx.class, RigatoniIds.RIGHT_FRONT_MOTOR);
         rightRear = hardwareMap.get(DcMotorEx.class, RigatoniIds.RIGHT_REAR_MOTOR);
 
-        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightRear.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftRear.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         // Set Zero Power Behavior and Initialize Motors
@@ -152,7 +152,7 @@ public class NewRigatoniHardware
         // LiftArm2
         liftArm2 = hardwareMap.get(DcMotorEx.class, RigatoniIds.LIFT_ARM2);
 
-        liftArm2.setDirection(DcMotorSimple.Direction.REVERSE);
+        liftArm2.setDirection(DcMotorSimple.Direction.FORWARD);
 
         liftArm2.setPower(0);
         liftArm2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

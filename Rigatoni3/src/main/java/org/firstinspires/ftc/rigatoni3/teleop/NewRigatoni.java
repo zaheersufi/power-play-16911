@@ -122,6 +122,7 @@ public class NewRigatoni extends LinearOpMode
             rotateClaw();
             passServo();
             flipOrientation();
+            flipServo();
 
 
             if (timer.milliseconds() > (last+250)) {
@@ -298,22 +299,22 @@ public class NewRigatoni extends LinearOpMode
 //    }
     public void passServo()
     {
-        if(gamepad2.triangle)
+        if(gamepad2.dpad_up)
         {
             hardware.passServo1.setPosition(hardware.PASS_INIT);
             hardware.passServo2.setPosition(hardware.PASS_INIT);
         }
-        else if(gamepad2.circle)
+        else if(gamepad2.dpad_right)
         {
             hardware.passServo1.setPosition(hardware.PASS_MIDDLE);
             hardware.passServo2.setPosition(hardware.PASS_MIDDLE);
         }
-        else if(gamepad2.cross)
+        else if(gamepad2.dpad_down)
         {
             hardware.passServo1.setPosition(hardware.PASS_ALMOST_FINAL);
             hardware.passServo2.setPosition(hardware.PASS_ALMOST_FINAL);
         }
-        else if(gamepad2.square)
+        else if(gamepad2.dpad_left)
         {
             hardware.passServo1.setPosition(hardware.PASS_FINAL);
             hardware.passServo2.setPosition(hardware.PASS_FINAL);
@@ -357,19 +358,19 @@ public class NewRigatoni extends LinearOpMode
         }
 
         //Lowering the lift
-        else if(gamepad2.left_bumper) {
-            hardware.liftArm1.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-            hardware.liftArm2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-            hardware.liftArm1.setPower(-SLOW_FALL);
-            hardware.liftArm2.setPower(-SLOW_FALL);
-        }
-        else if (gamepad2.right_bumper)
-        {
-            hardware.liftArm1.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-            hardware.liftArm2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-            hardware.liftArm1.setPower(SLOW_RAISE);
-            hardware.liftArm2.setPower(SLOW_RAISE);
-        }
+//        else if(gamepad2.left_bumper) {
+//            hardware.liftArm1.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+//            hardware.liftArm2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+//            hardware.liftArm1.setPower(-SLOW_FALL);
+//            hardware.liftArm2.setPower(-SLOW_FALL);
+//        }
+//        else if (gamepad2.right_bumper)
+//        {
+//            hardware.liftArm1.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+//            hardware.liftArm2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+//            hardware.liftArm1.setPower(SLOW_RAISE);
+//            hardware.liftArm2.setPower(SLOW_RAISE);
+//        }
 
         // Nothing happens
         else if(!hardware.liftArm1.isBusy() && !hardware.liftArm2.isBusy()) {
@@ -389,9 +390,9 @@ public class NewRigatoni extends LinearOpMode
     public void rotateClaw()
     {
         if(gamepad2.square)
-            hardware.grabServo.setPosition(.6);
+            hardware.grabServo.setPosition(hardware.GRAB_CLOSED);
         if(gamepad2.circle)
-            hardware.grabServo.setPosition(0.38);
+            hardware.grabServo.setPosition(hardware.GRAB_OPENED);
 //        if(gamepad2.triangle)
 //            hardware.tiltServo.setPosition(0.45);
 //        if(gamepad2.cross)
