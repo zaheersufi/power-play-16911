@@ -14,10 +14,10 @@ public class RigatoniIds
 
 
     // Claw Servos
-    public static final String GRAB_SERVO = "servo1";
-    public static final String ROT_SERVO = "servo2";
-    public static final String PASS_SERVO1 = "servo3";
-    public static final String PASS_SERVO2 = "servo4";
+    public static final String GRAB_SERVO = "servo4";
+    public static final String ROT_SERVO = "servo1"; //correct
+    public static final String PASS_SERVO1 = "servo2";
+    public static final String PASS_SERVO2 = "servo3";
 
 
 }

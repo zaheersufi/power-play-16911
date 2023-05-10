@@ -20,7 +20,7 @@ public class DriveConstants
     /*
      * These are motor constants that should be listed online for your motors.
      */
-    public static final double TICKS_PER_REV = 560;
+    public static final double TICKS_PER_REV = 537.6;
     public static final double MAX_RPM = 300;
 
 
@@ -45,8 +45,8 @@ public class DriveConstants
      * convenience. Make sure to exclude any gear ratio included in MOTOR_CONFIG from GEAR_RATIO.
      */
     public static double WHEEL_RADIUS = 2;    // in
-    public static double GEAR_RATIO = 1.02462731351586;            // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 9.62;//10.66;        // in (distance between two parallel wheels)
+    public static double GEAR_RATIO = 1;            // output (wheel) speed / input (motor) speed
+    public static double TRACK_WIDTH = 9.5;//10.66;        // in (distance between two parallel wheels)
 
 
     /*
@@ -55,9 +55,9 @@ public class DriveConstants
      * motor encoders or have elected not to use them for velocity control, these values should be
      * empirically tuned.
      */
-    public static double kV = 0.01593;//1.0 / rpmToVelocity(MAX_RPM);
-    public static double kA = 0.003;
-    public static double kStatic = 0.02165;
+    public static double kV = 1.0 / rpmToVelocity(MAX_RPM);
+    public static double kA = 0;
+    public static double kStatic = 0;
 
 
     /*
@@ -79,9 +79,9 @@ public class DriveConstants
      */
 
 
-    public static double MAX_VEL = 64;  //60 //67.5442420521805
-    public static double MAX_ACCEL = 45;
-    public static double MAX_ANG_VEL = 9.740282619676833;//Math.toRadians((MAX_VEL*1.0 / TRACK_WIDTH) * (180.0 / Math.PI));//Math.toRadians((MAX_VEL*1.0 / TRACK_WIDTH) * (180.0 / Math.PI));
+    public static double MAX_VEL = 30;  //60 //67.5442420521805
+    public static double MAX_ACCEL = 30;
+    public static double MAX_ANG_VEL = Math.toRadians((MAX_VEL*1.0 / TRACK_WIDTH) * (180.0 / Math.PI));//Math.toRadians((MAX_VEL*1.0 / TRACK_WIDTH) * (180.0 / Math.PI));
     public static double MAX_ANG_ACCEL = Math.toRadians((MAX_ACCEL*1.0 / TRACK_WIDTH) * (180.0 / Math.PI));
 
 

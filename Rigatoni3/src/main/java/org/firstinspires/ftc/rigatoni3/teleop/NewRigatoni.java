@@ -322,9 +322,10 @@ public class NewRigatoni extends LinearOpMode
     }
     public void flipServo()
     {
-        if(gamepad2.left_bumper)
+        if(gamepad2.left_bumper && buttonTime.time() >= 500)
         {
             utilities.shouldFlip();
+            buttonTime.reset();
         }
     }
 
