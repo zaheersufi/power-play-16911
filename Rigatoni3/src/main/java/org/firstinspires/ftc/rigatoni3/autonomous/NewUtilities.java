@@ -164,11 +164,25 @@ public class NewUtilities
 //        }
 //    }
 
+    /**
+     * This method allows for a preset functionality
+     * on the passthrough. This essentially just
+     * tells the arm to go to whatever angle we
+     * decide and assign to a button.
+     *
+     * @param angle
+     */
     public void setPassServo(double angle)
     {
         hardware.passServo1.setPosition(angle);
         hardware.passServo2.setPosition(angle);
     }
+
+    /**
+     * This method just flips the claw
+     * 180 degrees for when we score on
+     * a junction behind the robot.
+     */
     public void shouldFlip()
     {
         if(isFlipped == false)

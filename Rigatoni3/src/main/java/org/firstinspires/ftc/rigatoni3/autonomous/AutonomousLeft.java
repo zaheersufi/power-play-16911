@@ -13,6 +13,11 @@ import org.firstinspires.ftc.robotcore.internal.system.Assert;
 @Autonomous(name = "AutonLeft")
 public class AutonomousLeft extends LinearOpMode
 {
+    /**
+     * These statements are just declarations for
+     * points used in creating Trajectories that
+     * allow the robot to travel a desired path
+     */
     private SampleMecanumDrive drive;
     private NewUtilities utilities;
     private NewRigatoniHardware hardware;
@@ -30,6 +35,11 @@ public class AutonomousLeft extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
+        /**
+         * These lines are statements that assigns
+         * initialization functions and instantiates
+         * variables
+         */
         Assert.assertNotNull(hardwareMap);
 
         hardware = new NewRigatoniHardware();
@@ -47,6 +57,14 @@ public class AutonomousLeft extends LinearOpMode
         run();
 
     }
+
+    /**
+     * The run method is just a method
+     * that calls in methods from the
+     * utilities class and follows trajectories
+     * created in the buildTrajectories
+     * class
+     */
     public void run()
     {
         drive.setPoseEstimate(blueHome);
@@ -139,6 +157,12 @@ public class AutonomousLeft extends LinearOpMode
 
     }
 
+    /**
+     * this method builds the four trajectories
+     * which are paths based upon a coordinate
+     * grid allowing the robot to move in a
+     * predetermined manner
+     */
     public void buildTrajectories()
     {
         toMid = drive.trajectoryBuilder(blueHome, Math.toRadians(270))

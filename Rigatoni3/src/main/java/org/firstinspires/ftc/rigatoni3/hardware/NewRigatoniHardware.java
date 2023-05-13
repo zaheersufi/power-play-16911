@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class NewRigatoniHardware
 {
-    // Primary Motors
+    // Primary Motors initialization
     public DcMotorEx leftFront = null;
     public DcMotorEx leftRear = null;
     public DcMotorEx rightFront = null;
@@ -19,11 +19,11 @@ public class NewRigatoniHardware
 
     public DcMotorEx[] motors;
 
-    // Lift Motors
+    // Lift Motors initialization
     public DcMotorEx liftArm1 = null;
     public DcMotorEx liftArm2 = null;
 
-    // Claw Servo
+    // Claw Servo initialization
     public Servo grabServo = null;
     public Servo rotServo = null; //Servo that rotates like a wrist
     public Servo passServo1 = null;
@@ -32,7 +32,7 @@ public class NewRigatoniHardware
 
     //private PIDFCoefficients PIDF = new PIDFCoefficients(10,0.5,0,45);
 
-    //Constants
+    //Constants for initialization position or preset buttons
     public static final double GRAB_CLOSED = 1; //.6
     public static final double GRAB_OPENED = .6; //.38
     public static final double ROTATE_OPENED = 0;
@@ -118,9 +118,9 @@ public class NewRigatoniHardware
         passServo2.setDirection(Servo.Direction.FORWARD);
         passServo1.setPosition(PASS_INIT);
         passServo2.setPosition(PASS_INIT);
-
-
     }
+
+
     public void initializeClawServosTeleOp(HardwareMap hardwareMap)
     {
         // Claw Servo
